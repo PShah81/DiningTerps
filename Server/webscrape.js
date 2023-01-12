@@ -1,17 +1,26 @@
-import { table } from "console";
-import { get } from "http";
 import {JSDOM} from "jsdom";
 import fetch from 'node-fetch';
 
-
-// let date = new Date().toLocaleDateString();
-let date = "11/29/2022";
-let itemMap = 
+async function webscrapeData(date)
 {
-   "Yahentamitsi": {},
-   "251 North": {},
-   "South Campus Dining": {}
+   let itemMap = 
+   {
+      "Yahentamitsi": {},
+      "251 North": {},
+      "South": {}
+   }
+   let locationNumArr = ['16', '19', '51'];
+   let locationArr = ['South Campus Dining', 'Yahentamitsi', '251 North'];
+   for(let i=0; i<3; i++)
+   {
+      let URL = "https://nutrition.umd.edu/?locationNum=" + locationNumArr[i] + "&dtdate=" + date;
+      let location = locationArr[i];
+      await getItemArr(location, date, itemMap, URL);
+   }
+   return itemMap;
+   
 }
+
 const getDocument = (URL) => {
    return fetch(URL)
       .then((response) => response.text())
@@ -19,20 +28,16 @@ const getDocument = (URL) => {
          return new JSDOM(data).window.document;
       });
 };
-let locationNumArr = ['16', '19', '51'];
-let locationArr = ['South Campus Dining', 'Yahentamitsi', '251 North'];
-for(let i=0; i<3; i++)
-{
-   let URL = "https://nutrition.umd.edu/?locationNum=" + locationNumArr[i] + "&dtdate=" + date;
-   let location = locationArr[i];
-   getItemArr(location, date, itemMap, URL);
-}
 
 async function getItemArr(location, date, itemMap, URL)
 {
    let document = await getDocument(URL);
-   itemMap[location][date] = {};
+   itemMap[location] = {};
    let infoContainer = document.getElementsByClassName("container")[0].getElementsByClassName("row")[0].getElementsByClassName("section")[1];
+   if(infoContainer === undefined)
+   {
+      return {};
+   }
    let breakfastLunchDinnerArray = infoContainer.getElementsByClassName("nav nav-tabs")[0].children;
    let itemContainerArray = infoContainer.getElementsByClassName("tab-content editor-content")[0].children;
    let breakfastLunchDinner;
@@ -50,7 +55,7 @@ async function getItemArr(location, date, itemMap, URL)
    for(let i=0; i<itemContainerArray.length; i++)
    {
       breakfastLunchDinner = breakfastLunchDinnerArray[i].getElementsByClassName("nav-link")[0].text;
-      itemMap[location][date][breakfastLunchDinner] = {};
+      itemMap[location][breakfastLunchDinner] = {};
       itemContainer = itemContainerArray[i];
       cardArr = itemContainer.children;
       for(let j=0; j<cardArr.length; j++)
@@ -58,14 +63,14 @@ async function getItemArr(location, date, itemMap, URL)
          card = cardArr[j];
          cardTitle = card.getElementsByClassName("card-title")[0].textContent;
          cardTitle = cardTitle.substring(1);
-         itemMap[location][date][breakfastLunchDinner][cardTitle] = {};
+         itemMap[location][breakfastLunchDinner][cardTitle] = {};
          cardText = card.getElementsByClassName("card-text")[0];
          itemArr = cardText.children;
          for(let k=0; k<itemArr.length; k++)
          {
             item = itemArr[k];
             itemName = item.getElementsByClassName("menu-item-name")[0].text;
-            itemMap[location][date][breakfastLunchDinner][cardTitle][itemName] = {};
+            itemMap[location][breakfastLunchDinner][cardTitle][itemName] = {};
             itemLink = "https://nutrition.umd.edu/" + item.getElementsByClassName("menu-item-name")[0].href;
             if(item.getElementsByClassName("col-md-4")[0] != undefined)
             {
@@ -77,9 +82,9 @@ async function getItemArr(location, date, itemMap, URL)
                }
             }
             
-            itemMap[location][date][breakfastLunchDinner][cardTitle][itemName]["itemLink"] = itemLink;
-            itemMap[location][date][breakfastLunchDinner][cardTitle][itemName]["nutritioFacts"] = getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink);
-            itemMap[location][date][breakfastLunchDinner][cardTitle][itemName]["itemAllergyArr"] = itemAllergyArr;
+            itemMap[location][breakfastLunchDinner][cardTitle][itemName]["itemLink"] = itemLink;
+            itemMap[location][breakfastLunchDinner][cardTitle][itemName]["nutritionFacts"] = await getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink);
+            itemMap[location][breakfastLunchDinner][cardTitle][itemName]["itemAllergyArr"] = itemAllergyArr;
          }
       }
    }
@@ -95,6 +100,7 @@ async function getNutritionFacts(location, date, breakfastLunchDinner, cardTitle
    }
    nutritionFactsMap["serving size"] = document.getElementsByClassName("facts_table")[0].getElementsByTagName("tbody")[0].children[0].children[0].getElementsByClassName("nutfactsservsize")[1].textContent;
    nutritionFactsMap["calories"] = document.getElementsByClassName("facts_table")[0].getElementsByTagName("tbody")[0].children[0].children[0].getElementsByTagName("p")[1].textContent;
+   nutritionFactsMap["Nutrition Metrics"] = {};
    let tableRowArr = document.getElementsByClassName("facts_table")[0].getElementsByTagName("tbody")[0].children;
    let tableDataArr;
    let nutritionMetric;
@@ -112,12 +118,12 @@ async function getNutritionFacts(location, date, breakfastLunchDinner, cardTitle
          
          nutritionMetric = tableDataArr[i].getElementsByTagName("span")[0].textContent.replace(gramAmount, '').trim();
          dailyValue = tableDataArr[i+1].getElementsByTagName("span")[0].textContent;
-         nutritionFactsMap["Nutrition Metrics"] = {};
          nutritionFactsMap["Nutrition Metrics"][nutritionMetric] = {};
          nutritionFactsMap["Nutrition Metrics"][nutritionMetric]["gram amount"] = gramAmount;
          nutritionFactsMap["Nutrition Metrics"][nutritionMetric]["daily value"] = dailyValue;
-         console.log(nutritionFactsMap)
       }
    }
    return nutritionFactsMap;
 }
+
+export default webscrapeData;
