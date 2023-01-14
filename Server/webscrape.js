@@ -10,7 +10,7 @@ async function webscrapeData(date)
       "South": {}
    }
    let locationNumArr = ['16', '19', '51'];
-   let locationArr = ['South Campus Dining', 'Yahentamitsi', '251 North'];
+   let locationArr = ['South', 'Yahentamitsi', '251 North'];
    for(let i=0; i<3; i++)
    {
       let URL = "https://nutrition.umd.edu/?locationNum=" + locationNumArr[i] + "&dtdate=" + date;
@@ -26,6 +26,14 @@ const getDocument = (URL) => {
       .then((response) => response.text())
       .then((data) => {
          return new JSDOM(data).window.document;
+      })
+      .catch((err)=>{
+         console.log("REDO")
+         return fetch(URL)
+         .then((response) => response.text())
+         .then((data) => {
+            return new JSDOM(data).window.document;
+         })
       });
 };
 
@@ -93,7 +101,16 @@ async function getItemArr(location, date, itemMap, URL)
 async function getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink)
 {
    let nutritionFactsMap  = {};
+   let start = Date.now();
+   
    let document = await getDocument(itemLink);
+
+   let end = Date.now();
+   let elapsed = end - start;   
+   if(elapsed/1000 > 3 )
+   {
+      console.log(itemLink)
+   }
    if(document.getElementsByClassName("facts_table")[0] == undefined)
    {
       return undefined;
