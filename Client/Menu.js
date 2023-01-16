@@ -6,8 +6,10 @@ import {Tab} from '@rneui/themed';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import MenuSearchBar from "./MenuSearchBar";
 import FilterBox from "./FilterBox";
+import Filter from "./Filter";
 import {DairyImage, EggImage, FishImage, GlutenImage, NutsImage, ShellFishImage,
     SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from './pictures/allPictures';
+import Nutrition from "./Nutrition";
 
 export default function Menu(props)
 {
@@ -17,16 +19,35 @@ export default function Menu(props)
     const [filtering, setFiltering] = useState(false);
     const [displayType, setDisplayType] = useState("Menu");
     const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{ "Halal" : false, "Locally Grown" : false, "Vegetarian" : false, "Vegan" : false}})
+    const [search, setSearch] = useState("");
+    const [isItemClicked, setIsItemClicked] = useState(false);
+    const [itemClicked, setItemClicked] = useState({})
 
+    function onItemClick(clickedItem)
+    {
+        setItemClicked(clickedItem);
+        setIsItemClicked(true);
+    }
+    function unclickItem()
+    {
+        setIsItemClicked(false);
+    }
     function tabSelectMealTime(index)
     {
         setMealTime(Object.keys(menu[diningHall])[index]);
     }
-    function onSearch(searchedText)
+    function onSearch(updatedSearch)
     {
-        console.log(searchedText)
+        setSearch(updatedSearch)
     }
-
+    function stopFiltering()
+    {
+        setFiltering(false);
+    }
+    function changeDisplayType(newDisplayType)
+    {
+        setDisplayType(newDisplayType);
+    }
     function changeFilter(filter)
     {
         let newFilters = {...filters};
@@ -41,9 +62,19 @@ export default function Menu(props)
         setFilters(newFilters);
     }
     
-    
     function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
     {
+        if(allergyArr === undefined)
+        {
+            if(inclusionArr.length > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         let includedAllergiesCount = 0;
         for(let i=0; i<allergyArr.length; i++)
         {
@@ -110,6 +141,7 @@ export default function Menu(props)
         }
     })
 
+    console.log(itemClicked)
     let exclusionArr = [];
     let inclusionArr = [];
     for(let i=0; i<Object.keys(filters["Exclude"]).length; i++)
@@ -140,33 +172,35 @@ export default function Menu(props)
         }
         if(mealTime != "" && menu[diningHall][mealTime] != undefined)
         {
-            let sectionName;
-            let itemName;
             for(let i=0; i< Object.keys(menu[diningHall][mealTime]).length; i++)
             {
-                sectionName = Object.keys(menu[diningHall][mealTime])[i];
+                let sectionName = Object.keys(menu[diningHall][mealTime])[i];
                 for(let j=0; j< Object.keys(menu[diningHall][mealTime][sectionName]).length; j++)
                 {
-                    itemName = Object.keys(menu[diningHall][mealTime][sectionName])[j];
+                    let itemName = Object.keys(menu[diningHall][mealTime][sectionName])[j];
                     
-                    if(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'] === undefined || processAllergyArr(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr))
+                    if(processAllergyArr(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr))
                     {
-                        arrOfItems.push(
-                            <View key={j} style={{borderWidth: 1, height: 40}}>
-                                <TouchableOpacity key={j} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
-                                    <Text key={(j+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
-                                    <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
-                                        {createAllergyImages(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
-                                    </View>
-                                    
-                                </TouchableOpacity>
-                            </View>
-                        )   
-                    }
+                        if(itemName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
+                        {
+                            arrOfItems.push(
+                                <View key={j} style={{borderWidth: 1, height: 40}}>
+                                    <TouchableOpacity key={j} onPress={() => {onItemClick(menu[diningHall][mealTime][sectionName][itemName])}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                                        <Text key={(j+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
+                                        <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
+                                            {createAllergyImages(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
+                                        </View>
+                                        
+                                    </TouchableOpacity>
+                                </View>
+                            )   
+                        }
+                        }
+                        
                 }
                 scrollViewDivs.push(
                 <View key={i} style={{margin: "3%", borderWidth: 1}}>
-                    <Text  key={i} style={{fontSize: '24px', textAlign: 'center',borderBottomWidth: 1, textDecorationLine: 'underline'}}>{sectionName}</Text>
+                    <Text  key={i} style={{fontSize: '24px', textAlign: 'center', borderBottomWidth: 1, textDecorationLine: 'underline'}}>{sectionName}</Text>
                     {arrOfItems}
                 </View>
                 );
@@ -182,59 +216,12 @@ export default function Menu(props)
         scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NO DATA AVAILAVBLE</Text>)
     }
 
-    console.log(arrOfItems)
     return(
         <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={filtering}
-                onRequestClose={() => {
-                    setFiltering(false)
-                }}
-            >
-                <View style={{paddingTop: '10%'}}>
-                    <TouchableOpacity onPress={()=>{setFiltering(false)}} style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', marginBottom: '2%'}}>
-                            <Icon size={30} name="close" type='ionicon' color='orange'></Icon>
-                    </TouchableOpacity>
-                    <View style= {{marginLeft: '7%', marginRight: '5%'}}>
-                        <SegmentedControl
-                            values={['Menu', 'Database']}
-                            selectedIndex = {['Menu', 'Database'].indexOf(displayType)}
-                            onValueChange = {(value)=>{
-                                setDisplayType(value)
-                            }}
-                            style = {{width: '100%'}}
-                        />
-                        
-                        <View style={{display: 'flex', flexDirection: "row", justifyContent: 'space-around', marginTop: '3%'}}>
-                            <View>
-                                <Text style={{fontSize: 24}}>Exclude</Text>
-                                <FilterBox attribute ={"Dairy"} checked={filters["Exclude"]["Dairy"]} changeFilter={changeFilter} image= {DairyImage}/>
-                                <FilterBox attribute ={"Egg"} checked={filters["Exclude"]["Egg"]} changeFilter={changeFilter} image= {EggImage}/>
-                                <FilterBox attribute ={"Fish"} checked={filters["Exclude"]["Fish"]} changeFilter={changeFilter} image= {FishImage}/>
-                                <FilterBox attribute ={"Gluten"} checked={filters["Exclude"]["Gluten"]} changeFilter={changeFilter} image= {GlutenImage}/>
-                                <FilterBox attribute ={"Nuts"} checked={filters["Exclude"]["Nuts"]} changeFilter={changeFilter} image= {NutsImage}/>
-                                <FilterBox attribute ={"Shellfish"} checked={filters["Exclude"]["Shellfish"]} changeFilter={changeFilter} image=  {ShellFishImage}/>
-                                <FilterBox attribute ={"Soy"} checked={filters["Exclude"]["Soy"]} changeFilter={changeFilter} image= {SoyImage}/>
-                                <FilterBox attribute ={"Sesame"} checked={filters["Exclude"]["Sesame"]} changeFilter={changeFilter} image= {SesameImage}/>
-                            </View>
-                            <View>
-                                <Text style={{fontSize: 24}}>Include</Text>
-                                <FilterBox attribute ={"Vegetarian"} checked={filters["Include"]["Vegetarian"]} changeFilter={changeFilter} image= {VegetarianImage}/>
-                                <FilterBox attribute ={"Halal"} checked={filters["Include"]["Halal"]} changeFilter={changeFilter} image= {HalalFriendlyImage}/>
-                                <FilterBox attribute ={"Vegan"} checked={filters["Include"]["Vegan"]} changeFilter={changeFilter} image= {VeganImage}/>
-                                <FilterBox attribute ={"Locally Grown"} checked={filters["Include"]["Locally Grown"]} changeFilter={changeFilter} image= {LocalImage}/>
-                            </View>
-                        </View>
-                            
-                       
-                    </View>
-                    
-                </View>
-            </Modal>
+            <Filter filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
+            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} nutritionFacts={itemClicked["nutritionFacts"]}/>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
-                <MenuSearchBar onSearch={onSearch}></MenuSearchBar>
+                <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                 <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
             </View>
             <View style={{width: '96%'}}>

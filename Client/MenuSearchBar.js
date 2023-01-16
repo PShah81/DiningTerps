@@ -2,24 +2,15 @@ import {SearchBar} from 'react-native-elements';
 import { useState } from "react";
 export default function MenuSearchBar(props)
 {
-    const [search, setSearch] = useState('');
-    function onChangeSearch(updatedSearch)
-    {
-        setSearch(updatedSearch);
-    }
 
-    function searched(search)
-    {
-        setSearch("");
-        props.onSearch(search);
-    }
     return(
-        <SearchBar onSubmitEditing={()=>{searched(search)}} 
+        <SearchBar 
         containerStyle={{width: "85%", padding: '0.5%', backgroundColor:"white", borderBottomColor: 'transparent',
         borderTopColor: 'transparent'}} 
         inputContainerStyle={{backgroundColor: '#CDCDCD'}} inputStyle={{color:'black', outline: '0'}} 
-        onChangeText={(updatedSearch)=>{onChangeSearch(updatedSearch)}} 
-        value={search} searchIcon={{iconStyle:{color: 'black'}}}
+        onChangeText={(updatedSearch)=>{props.onSearch(updatedSearch)}} 
+        onClear={()=>{props.onSearch("")}}
+        value={[props.value]} searchIcon={{iconStyle:{color: 'black'}}}
         clearIcon={{iconStyle:{color: 'black'}}}
         round="true"
         ></SearchBar>
