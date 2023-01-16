@@ -3,12 +3,10 @@ import { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Modal, Image} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {Tab} from '@rneui/themed';
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import MenuSearchBar from "./MenuSearchBar";
-import FilterBox from "./FilterBox";
+import MenuSearchBar from "../HelperComponents/MenuSearchBar";
 import Filter from "./Filter";
 import {DairyImage, EggImage, FishImage, GlutenImage, NutsImage, ShellFishImage,
-    SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from './pictures/allPictures';
+    SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from '../pictures/allPictures';
 import Nutrition from "./Nutrition";
 
 export default function Menu(props)

@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, Modal} from 'react-native';
 import {Icon} from 'react-native-elements';
-import FilterBox from "./FilterBox";
+import FilterBox from "../HelperComponents/FilterBox";
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import {DairyImage, EggImage, FishImage, GlutenImage, NutsImage, ShellFishImage,
-    SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from './pictures/allPictures';
+    SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from '../pictures/allPictures';
 function Filter(props)
 {
     return(

@@ -3,7 +3,6 @@ import {Icon} from 'react-native-elements';
 function Nutrition(props)
 {
     let statsArr = [];
-    console.log(props.nutritionFacts)
     if(props.nutritionFacts !== undefined)
     { 
         let stats = props.nutritionFacts["Nutrition Metrics"];

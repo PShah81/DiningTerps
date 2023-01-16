@@ -1,8 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useEffect, useState } from "react";
-import NavBar from './NavBar';
-import Menu from './Menu';
+import NavBar from './HelperComponents/NavBar';
+import Menu from './Pages/Menu';
 import data from './SampleData.json';
 
 export default function App() {
