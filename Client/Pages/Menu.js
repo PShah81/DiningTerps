@@ -19,11 +19,14 @@ export default function Menu(props)
     const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{ "Halal" : false, "Locally Grown" : false, "Vegetarian" : false, "Vegan" : false}})
     const [search, setSearch] = useState("");
     const [isItemClicked, setIsItemClicked] = useState(false);
-    const [itemClicked, setItemClicked] = useState({})
+    const [itemClicked, setItemClicked] = useState({"Object": {}, "Name": {}})
 
-    function onItemClick(clickedItem)
+    function onItemClick(clickedItem, clickedItemName)
     {
-        setItemClicked(clickedItem);
+        let itemClickedObject = {};
+        itemClickedObject["Object"] = clickedItem;
+        itemClickedObject["Name"] = clickedItemName;
+        setItemClicked(itemClickedObject);
         setIsItemClicked(true);
     }
     function unclickItem()
@@ -131,7 +134,7 @@ export default function Menu(props)
     useEffect(()=>{
         if(Object.keys(menu).length === 0)
         {
-            setMenu({...props.getDataForDate(new Date().toLocaleDateString())})
+            setMenu({...props.getData()})
         }
         else if(Object.keys(menu[diningHall]).length !== 0 && (mealTime === ""  || menu[diningHall][mealTime] === undefined))
         {
@@ -139,7 +142,6 @@ export default function Menu(props)
         }
     })
 
-    console.log(itemClicked)
     let exclusionArr = [];
     let inclusionArr = [];
     for(let i=0; i<Object.keys(filters["Exclude"]).length; i++)
@@ -183,7 +185,7 @@ export default function Menu(props)
                         {
                             arrOfItems.push(
                                 <View key={j} style={{borderWidth: 1, height: 40}}>
-                                    <TouchableOpacity key={j} onPress={() => {onItemClick(menu[diningHall][mealTime][sectionName][itemName])}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                                    <TouchableOpacity key={j} onPress={() => {onItemClick(menu[diningHall][mealTime][sectionName][itemName], itemName)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
                                         <Text key={(j+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
                                         <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
                                             {createAllergyImages(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
@@ -217,7 +219,7 @@ export default function Menu(props)
     return(
         <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
             <Filter filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
-            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} nutritionFacts={itemClicked["nutritionFacts"]}/>
+            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} foodName={itemClicked["Name"]} foodObject = {itemClicked["Object"]}/>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
                 <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                 <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
@@ -243,7 +245,7 @@ export default function Menu(props)
                 </ScrollView>
             </View>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%', position: 'absolute', bottom: 0}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>{props.changeMode("Home")}}>
                     <Text>Home</Text>
                     <Icon size={30} name="home-outline" type='ionicon' color='orange'></Icon>
                 </TouchableOpacity>
