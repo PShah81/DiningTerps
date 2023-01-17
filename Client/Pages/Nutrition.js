@@ -19,8 +19,6 @@ function Nutrition(props)
                     statName = Object.keys(stats)[j];
                 }
             }
-            console.log(modifiedName);
-            console.log(statName);
             let marginLeftForName = modifiedStats[modifiedName]*10;
             let fontWeightForName = "normal";
             if(modifiedStats[modifiedName]===0)

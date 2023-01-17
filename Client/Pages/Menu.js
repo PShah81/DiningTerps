@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Modal, Image} from 'react-native';
 import {Icon} from 'react-native-elements';
-import {Tab} from '@rneui/themed';
 import MenuSearchBar from "../HelperComponents/MenuSearchBar";
 import Filter from "./Filter";
 import {DairyImage, EggImage, FishImage, GlutenImage, NutsImage, ShellFishImage,
@@ -32,10 +31,6 @@ export default function Menu(props)
     function unclickItem()
     {
         setIsItemClicked(false);
-    }
-    function tabSelectMealTime(index)
-    {
-        setMealTime(Object.keys(menu[diningHall])[index]);
     }
     function onSearch(updatedSearch)
     {
@@ -167,7 +162,12 @@ export default function Menu(props)
     {
         for(let i=0; i< Object.keys(menu[diningHall]).length; i++)
         {
-            mealTimeArrTabs.push(<Tab.Item key={i} title={Object.keys(menu[diningHall])[i]} titleStyle={{fontSize: 12, color: 'green'}}/>);
+            let mealTimeTabName = Object.keys(menu[diningHall])[i];
+            mealTimeArrTabs.push(
+            <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, flexGrow: 1, borderBottomColor: "orange"}}>
+                <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>{mealTimeTabName}</Text>
+            </TouchableOpacity>
+            );
             
         }
         if(mealTime != "" && menu[diningHall][mealTime] != undefined)
@@ -224,19 +224,8 @@ export default function Menu(props)
                 <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                 <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
             </View>
-            <View style={{width: '96%'}}>
-                <Tab
-                    value={Object.keys(menu).length === 0? 0: Object.keys(menu[diningHall]).indexOf(mealTime) }
-                    onChange={(e) => tabSelectMealTime(e)}
-                    dense
-                    indicatorStyle={{
-                        backgroundColor: 'orange',
-                        width: '32%',
-                        height: '3%'
-                    }}
-                >
-                    {mealTimeArrTabs}
-                </Tab>
+            <View style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
+                {mealTimeArrTabs}
             </View>
             <View style={{height: "83%"}}>
                 
