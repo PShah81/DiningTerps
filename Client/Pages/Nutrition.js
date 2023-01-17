@@ -6,26 +6,26 @@ function Nutrition(props)
     if(props.foodObject.nutritionFacts !== undefined)
     { 
         let stats = props.foodObject.nutritionFacts["Nutrition Metrics"];
-        let modifiedStatsArr = [{"Total Fat": 0}, {"Saturated Fat": 1}, {"Trans Fat": 1}, {"Cholesterol": 0}, {"Sodium": 0}, {"Total Carbohydrate.": 0}, {"Dietary Fiber":1}, {"Total Sugars":1}, {"Includes  Added Sugars":2}, {"Protein": 0}]
+        let modifiedStats = {"Total Fat": 0, "Saturated Fat": 1, "Trans Fat": 1, "Cholesterol": 0, "Sodium": 0, "Total Carbohydrate": 0, "Dietary Fiber":1, "Total Sugars":1, "Added Sugars":2, "Protein": 0};
         
-        for(let i=0; i<modifiedStatsArr.length; i++)
+        for(let i=0; i<Object.keys(modifiedStats).length; i++)
         {
-            let statName = Object.keys(modifiedStatsArr[i])[0];
-            let marginLeftForName = modifiedStatsArr[i][statName]*10;
+            let statName;
+            let modifiedName = Object.keys(modifiedStats)[i];
+            for(let j=0; j<Object.keys(stats).length;j++)
+            {
+                if(Object.keys(stats)[j].indexOf(modifiedName) != -1)
+                {
+                    statName = Object.keys(stats)[j];
+                }
+            }
+            console.log(modifiedName);
+            console.log(statName);
+            let marginLeftForName = modifiedStats[modifiedName]*10;
             let fontWeightForName = "normal";
-            if(modifiedStatsArr[i][statName]===0)
+            if(modifiedStats[modifiedName]===0)
             {
                 fontWeightForName = "bold";
-            }
-            
-            let modifiedName = statName;
-            if(modifiedName === "Total Carbohydrate.")
-            {
-                modifiedName = "Total Carbohydrate";
-            }
-            if(modifiedName.indexOf("Added Sugars") != -1)
-            {
-                modifiedName = "Added Sugars";
             }
             statsArr.push(
                 <View key={i} style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1}}>
