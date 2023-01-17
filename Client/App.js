@@ -4,6 +4,7 @@ import NavBar from './HelperComponents/NavBar';
 import Menu from './Pages/Menu';
 import data from './SampleData.json';
 import Notifications from './Pages/Notifications';
+import Home from './Pages/Home';
 
 export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
@@ -57,7 +58,9 @@ export default function App() {
     <View style={styles.container}>
       {currentMode === "Menu" ? <Menu getData = {getData} changeMode= {changeMode} addFoodToNotifications={addFoodToNotifications}></Menu> : null}
       {currentMode === "Notifications" ? <Notifications foods={notificationFoods} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null}
+      {currentMode === "Home" ? <Home></Home> : null}
       {currentMode === "Menu" ? null: <NavBar changeMode={changeMode}></NavBar>}
+
     </View>
   );
 }
