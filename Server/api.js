@@ -1,7 +1,5 @@
 import webscrapeData from './webscrape.js';
 import express from 'express';
-import https from 'https';
-import fs from 'fs';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
@@ -14,13 +12,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const options = 
-{
-    key: 
-    fs.readFileSync("./config/cert.key"),
-    cert:
-    fs.readFileSync("./config/cert.crt")
-};
 
 app.use(function(req, res, next){
     res.setHeader('Access-Control-Allow-Origin', "*");
@@ -38,7 +29,3 @@ app.get('/menu', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
-
-// https.createServer(options, app).listen(3080, () => {
-//     console.log(`Hello world app listening on port 3080!`)
-// })
