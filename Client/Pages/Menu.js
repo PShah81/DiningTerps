@@ -4,8 +4,6 @@ import { View, Text, TouchableOpacity, ScrollView, Modal, Image} from 'react-nat
 import {Icon} from 'react-native-elements';
 import MenuSearchBar from "../HelperComponents/MenuSearchBar";
 import Filter from "./Filter";
-import {DairyImage, EggImage, FishImage, GlutenImage, NutsImage, ShellFishImage,
-    SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from '../pictures/allPictures';
 import Nutrition from "./Nutrition";
 
 export default function Menu(props)
@@ -103,28 +101,34 @@ export default function Menu(props)
             return [];
         }
         let allergyMap = {
-            "Contains dairy": DairyImage,
-            "Contains egg": EggImage,
-            "Contains nuts": NutsImage,
-            "Contains fish": FishImage,
-            "Contains sesame": SesameImage,
-            "Contains soy": SoyImage,
-            "Contains gluten": GlutenImage,
-            "Contains Shellfish": ShellFishImage,
-            "vegetarian": VegetarianImage,
-            "vegan": VeganImage,
-            "Halal Friendly": HalalFriendlyImage,
-            "Locally Grown": LocalImage
+            "Contains dairy": {"D": '#1826de'},
+            "Contains egg": {"E": '#d4c822'},
+            "Contains nuts": {"N":'#de0b24'},
+            "Contains fish": {"F": '#dd37f0'},
+            "Contains sesame": {"SS": '#ed8a11'},
+            "Contains soy": {"S": '#b5e016'},
+            "Contains gluten": {"G": '#ed7802'},
+            "Contains Shellfish": {"SF": '#02ede1'},
+            "vegetarian": {"V": '#1f4a04'},
+            "vegan": {"VG": '#7604b0'},
+            "Halal Friendly": {"HF": '#3ac2c2'},
+            "Locally Grown": {"L": '#767a7a'}
         }
-        let imageArr = [];
+        let cardArr = [];
         for(let i=0; i<allergyArr.length; i++)
         {
             if(allergyMap[allergyArr[i]] != undefined)
             {
-                imageArr.push(<Image key={i} source={allergyMap[allergyArr[i]]} style= {{width: 20, height: 20}}/>)
+                let infoObject = allergyMap[allergyArr[i]];
+                let infoObjectKey = Object.keys(infoObject)[0];
+                cardArr.push(
+                    <View key={i} style={{borderWidth: 1, borderRadius: 25, width: 20, height: 20, backgroundColor: infoObject[infoObjectKey]}}>
+                        <Text style={{textAlign: 'center', color: 'white'}}>{infoObjectKey}</Text>
+                    </View>
+                )
             }
         }
-        return imageArr;
+        return cardArr;
     }
     useEffect(()=>{
         if(Object.keys(menu).length === 0)
@@ -190,7 +194,6 @@ export default function Menu(props)
                                         <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
                                             {createAllergyImages(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
                                         </View>
-                                        
                                     </TouchableOpacity>
                                 </View>
                             )   

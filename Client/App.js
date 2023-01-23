@@ -33,9 +33,9 @@ export default function App() {
   function fetchTodaysMenu()
   {
     setTodaysMenu(data);
-    // fetch("http://localhost:3000/menu?date=" + date)
+    // fetch("http://ec2-3-134-205-216.us-east-2.compute.amazonaws.com:3000/menu")
     // .then((response) => response.json())
-    // .then((data) => setWeeksData(data))
+    // .then((data) => console.log(data))
     // .catch((error)=>{
     //   console.log(error)
     // })

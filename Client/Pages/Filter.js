@@ -2,8 +2,6 @@ import { View, Text, TouchableOpacity, Modal} from 'react-native';
 import {Icon} from 'react-native-elements';
 import FilterBox from "../HelperComponents/FilterBox";
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import {DairyImage, EggImage, FishImage, GlutenImage, NutsImage, ShellFishImage,
-    SoyImage, SesameImage, VegetarianImage, HalalFriendlyImage, VeganImage, LocalImage} from '../pictures/allPictures';
 function Filter(props)
 {
     return(
@@ -32,21 +30,21 @@ function Filter(props)
                     <View style={{display: 'flex', flexDirection: "row", justifyContent: 'space-around', marginTop: '3%'}}>
                         <View>
                             <Text style={{fontSize: 24}}>Exclude</Text>
-                            <FilterBox attribute ={"Dairy"} checked={props.filters["Exclude"]["Dairy"]} changeFilter={props.changeFilter} image= {DairyImage}/>
-                            <FilterBox attribute ={"Egg"} checked={props.filters["Exclude"]["Egg"]} changeFilter={props.changeFilter} image= {EggImage}/>
-                            <FilterBox attribute ={"Fish"} checked={props.filters["Exclude"]["Fish"]} changeFilter={props.changeFilter} image= {FishImage}/>
-                            <FilterBox attribute ={"Gluten"} checked={props.filters["Exclude"]["Gluten"]} changeFilter={props.changeFilter} image= {GlutenImage}/>
-                            <FilterBox attribute ={"Nuts"} checked={props.filters["Exclude"]["Nuts"]} changeFilter={props.changeFilter} image= {NutsImage}/>
-                            <FilterBox attribute ={"Shellfish"} checked={props.filters["Exclude"]["Shellfish"]} changeFilter={props.changeFilter} image=  {ShellFishImage}/>
-                            <FilterBox attribute ={"Soy"} checked={props.filters["Exclude"]["Soy"]} changeFilter={props.changeFilter} image= {SoyImage}/>
-                            <FilterBox attribute ={"Sesame"} checked={props.filters["Exclude"]["Sesame"]} changeFilter={props.changeFilter} image= {SesameImage}/>
+                            <FilterBox attribute ={"Dairy"} checked={props.filters["Exclude"]["Dairy"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Egg"} checked={props.filters["Exclude"]["Egg"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Fish"} checked={props.filters["Exclude"]["Fish"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Gluten"} checked={props.filters["Exclude"]["Gluten"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Nuts"} checked={props.filters["Exclude"]["Nuts"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Shellfish"} checked={props.filters["Exclude"]["Shellfish"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Soy"} checked={props.filters["Exclude"]["Soy"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Sesame"} checked={props.filters["Exclude"]["Sesame"]} changeFilter={props.changeFilter}/>
                         </View>
                         <View>
                             <Text style={{fontSize: 24}}>Include</Text>
-                            <FilterBox attribute ={"Vegetarian"} checked={props.filters["Include"]["Vegetarian"]} changeFilter={props.changeFilter} image= {VegetarianImage}/>
-                            <FilterBox attribute ={"Halal"} checked={props.filters["Include"]["Halal"]} changeFilter={props.changeFilter} image= {HalalFriendlyImage}/>
-                            <FilterBox attribute ={"Vegan"} checked={props.filters["Include"]["Vegan"]} changeFilter={props.changeFilter} image= {VeganImage}/>
-                            <FilterBox attribute ={"Locally Grown"} checked={props.filters["Include"]["Locally Grown"]} changeFilter={props.changeFilter} image= {LocalImage}/>
+                            <FilterBox attribute ={"Vegetarian"} checked={props.filters["Include"]["Vegetarian"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Halal"} checked={props.filters["Include"]["Halal"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Vegan"} checked={props.filters["Include"]["Vegan"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"Locally Grown"} checked={props.filters["Include"]["Locally Grown"]} changeFilter={props.changeFilter}/>
                         </View>
                     </View>
                         
