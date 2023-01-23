@@ -1,21 +1,25 @@
-import cronJob from 'cron';
+import {CronJob} from 'cron';
 import * as dotenv from 'dotenv';
 dotenv.config()
 import webscrapeData from './webscrape.js';
 import mysql from 'mysql2/promise';
 
-let pool = mysql.createPool({
-    connectionLimit: 100, 
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
-
-
-
-dailyDataScript("1/23/2023")
-    
+let job = new CronJob(
+	'0 0 * * * *',
+	function() {
+        let pool = mysql.createPool({
+            connectionLimit: 100, 
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        dailyDataScript(new Date().toLocaleDateString())
+	},
+	null,
+	true,
+	'America/New_York'
+);
 
 async function dailyDataScript(date)
 {
@@ -27,19 +31,6 @@ async function dailyDataScript(date)
     console.log('FR FINISHED')
 }
 
-    
-// })
-// let job = new CronJob(
-// 	'0 * * * * *',
-// 	function() {
-        
-          
-// 		console.log('You will see this message every second');
-// 	},
-// 	null,
-// 	true,
-// 	'America/New_York'
-// );
 async function updateMenu(menu, pool, date)
 {
     let con = await pool.getConnection();

@@ -83,10 +83,13 @@ async function getItemArr(location, date, itemMap, URL)
             if(item.getElementsByClassName("col-md-4")[0] != undefined)
             {
                itemAllergyElements = item.getElementsByClassName("col-md-4")[0].getElementsByClassName("nutri-icon");
-               itemAllergyArr = new Array(itemAllergyElements.length);
+               itemAllergyArr = [];
                for(let l=0; l<itemAllergyElements.length; l++)
                {
-                  itemAllergyArr[l]  = itemAllergyElements[l].alt;
+                  if(itemAllergyElements[l].alt != "smartchoice")
+                  {
+                     itemAllergyArr.push(itemAllergyElements[l].alt);
+                  }
                }
             }
             
