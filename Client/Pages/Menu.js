@@ -93,6 +93,34 @@ export default function Menu(props)
         return true;
     }
     
+    function searchFilter(foodName)
+    {
+        let foodNameLower = foodName.toLowerCase();
+        let searchWordLower = search.toLowerCase();
+        if(searchWordLower.length === 1)
+        {
+            if(foodNameLower.indexOf(searchWordLower) === 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(foodNameLower.indexOf(searchWordLower) != -1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
     function createAllergyImages(allergyArr)
     {
         if(allergyArr === undefined)
@@ -166,25 +194,34 @@ export default function Menu(props)
     let scrollViewDivs = [];
     function generateDatabaseItems()
     {
-        for(let uniqueFoodIndex = 0; uniqueFoodIndex < props.database.length; uniqueFoodIndex++)
+        if(search.length != 0)
         {
-            let {foodname, foodallergies, fooddata, food_id} = props.database[uniqueFoodIndex];
-            if(processAllergyArr(foodallergies, exclusionArr, inclusionArr) === true && foodname.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
+            for(let uniqueFoodIndex = 0; uniqueFoodIndex < props.database.length; uniqueFoodIndex++)
             {
-                scrollViewDivs.push(
-                    <View key={uniqueFoodIndex} style={{borderWidth: 1, height: 40}}>
-                        <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick({food_id,...fooddata}, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
-                            <Text key={(uniqueFoodIndex+1)*10} style= {{marginLeft: '3%'}}>{foodname}</Text> 
-                            <View key={uniqueFoodIndex} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
-                                {createAllergyImages(foodallergies)}
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                let {foodname, foodallergies, fooddata, food_id} = props.database[uniqueFoodIndex];
+                if(processAllergyArr(foodallergies, exclusionArr, inclusionArr) === true && searchFilter(foodname) === true)
+                {
+                    scrollViewDivs.push(
+                        <View key={uniqueFoodIndex} style={{borderWidth: 1, height: 40}}>
+                            <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick({food_id,...fooddata}, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                                <Text key={(uniqueFoodIndex+1)*10} style= {{marginLeft: '3%'}}>{foodname}</Text> 
+                                <View key={uniqueFoodIndex} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
+                                    {createAllergyImages(foodallergies)}
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    
+                    )
+                }
                 
-                )
             }
-            
         }
+        if(scrollViewDivs.length === 0)
+        {
+            scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>SEARCH TO DISPLAY DATA</Text>)
+        }
+
+        
     }
     function generateMenuItems()
     {
@@ -209,7 +246,7 @@ export default function Menu(props)
                     {
                         let itemName = Object.keys(props.menu[diningHall][mealTime][sectionName])[j];
                         
-                        if(processAllergyArr(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr) === true && itemName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
+                        if(processAllergyArr(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr) === true && searchFilter(itemName) === true)
                         {
                                 arrOfItems.push(
                                     <View key={j} style={{borderWidth: 1, height: 40}}>
