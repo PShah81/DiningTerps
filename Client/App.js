@@ -32,23 +32,15 @@ export default function App() {
   }
   function fetchTodaysMenu()
   {
-    setTodaysMenu(data);
-    // fetch("http://ec2-3-134-205-216.us-east-2.compute.amazonaws.com:3000/menu")
-    // .then((response) => response.json())
-    // .then((data) => console.log(data))
-    // .catch((error)=>{
-    //   console.log(error)
-    // })
+
+    fetch("https://nutritionserver.link/menu")
+    .then((response) => response.json())
+    .then((data) => {setTodaysMenu(data)})
+    .catch((error)=>{
+      console.log(error)
+    })
   }
 
-  function getData()
-  {
-    if(Object.keys(todaysMenu).length == 0)
-    {
-      return {}
-    }
-    return todaysMenu;
-  }
 
   useEffect(()=>{
     fetchTodaysMenu();
@@ -56,7 +48,7 @@ export default function App() {
   console.log(notificationFoods)
   return (
     <View style={styles.container}>
-      {currentMode === "Menu" ? <Menu getData = {getData} changeMode= {changeMode} addFoodToNotifications={addFoodToNotifications}></Menu> : null}
+      {currentMode === "Menu" ? <Menu menu={todaysMenu} changeMode= {changeMode} addFoodToNotifications={addFoodToNotifications}></Menu> : null}
       {currentMode === "Notifications" ? <Notifications foods={notificationFoods} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null}
       {currentMode === "Home" ? <Home></Home> : null}
       {currentMode === "Menu" ? null: <NavBar changeMode={changeMode}></NavBar>}

@@ -8,7 +8,6 @@ import Nutrition from "./Nutrition";
 
 export default function Menu(props)
 {
-    const [menu, setMenu] = useState({});
     const [diningHall, setDiningHall] = useState("Yahentamitsi");
     const [mealTime, setMealTime] = useState("");
     const [filtering, setFiltering] = useState(false);
@@ -131,42 +130,45 @@ export default function Menu(props)
         return cardArr;
     }
     useEffect(()=>{
-        if(Object.keys(menu).length === 0)
+        if(Object.keys(props.menu).length != 0 && Object.keys(props.menu[diningHall]).length != 0 && (mealTime === ""  || props.menu[diningHall][mealTime] === undefined))
         {
-            setMenu({...props.getData()})
-        }
-        else if(Object.keys(menu[diningHall]).length !== 0 && (mealTime === ""  || menu[diningHall][mealTime] === undefined))
-        {
-            setMealTime(Object.keys(menu[diningHall])[0]);
+            setMealTime(Object.keys(props.menu[diningHall])[0]);
         }
     })
+    
+    function createInclusionAndExclusionArrays()
+    {
+        let exclusionArr = [];
+        let inclusionArr = [];
+        for(let i=0; i<Object.keys(filters["Exclude"]).length; i++)
+        {
+            if(filters["Exclude"][Object.keys(filters["Exclude"])[i]])
+            {
+                exclusionArr.push(Object.keys(filters["Exclude"])[i].toLowerCase());
+            }
+        }
+        for(let i=0; i<Object.keys(filters["Include"]).length; i++)
+        {
+            if(filters["Include"][Object.keys(filters["Include"])[i]])
+            {
+                inclusionArr.push(Object.keys(filters["Include"])[i].toLowerCase());
+            }
+        }
+        return [inclusionArr, exclusionArr];
+    }
 
-    let exclusionArr = [];
-    let inclusionArr = [];
-    for(let i=0; i<Object.keys(filters["Exclude"]).length; i++)
-    {
-        if(filters["Exclude"][Object.keys(filters["Exclude"])[i]])
-        {
-            exclusionArr.push(Object.keys(filters["Exclude"])[i].toLowerCase());
-        }
-    }
-    for(let i=0; i<Object.keys(filters["Include"]).length; i++)
-    {
-        if(filters["Include"][Object.keys(filters["Include"])[i]])
-        {
-            inclusionArr.push(Object.keys(filters["Include"])[i].toLowerCase());
-        }
-    }
+    let [inclusionArr, exclusionArr] = createInclusionAndExclusionArrays();
+    
     //Create Exclusion Inclusion Arrays
     //Wrap items in a div
     let arrOfItems = [];
     let mealTimeArrTabs = [];
     let scrollViewDivs = [];
-    if(Object.keys(menu).length != 0 && Object.keys(menu[diningHall]).length != 0)
+    if(Object.keys(props.menu).length != 0 && Object.keys(props.menu[diningHall]).length != 0)
     {
-        for(let i=0; i< Object.keys(menu[diningHall]).length; i++)
+        for(let i=0; i< Object.keys(props.menu[diningHall]).length; i++)
         {
-            let mealTimeTabName = Object.keys(menu[diningHall])[i];
+            let mealTimeTabName = Object.keys(props.menu[diningHall])[i];
             mealTimeArrTabs.push(
             <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, flexGrow: 1, borderBottomColor: "orange"}}>
                 <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>{mealTimeTabName}</Text>
@@ -174,25 +176,25 @@ export default function Menu(props)
             );
             
         }
-        if(mealTime != "" && menu[diningHall][mealTime] != undefined)
+        if(mealTime != "" && props.menu[diningHall][mealTime] != undefined)
         {
-            for(let i=0; i< Object.keys(menu[diningHall][mealTime]).length; i++)
+            for(let i=0; i< Object.keys(props.menu[diningHall][mealTime]).length; i++)
             {
-                let sectionName = Object.keys(menu[diningHall][mealTime])[i];
-                for(let j=0; j< Object.keys(menu[diningHall][mealTime][sectionName]).length; j++)
+                let sectionName = Object.keys(props.menu[diningHall][mealTime])[i];
+                for(let j=0; j< Object.keys(props.menu[diningHall][mealTime][sectionName]).length; j++)
                 {
-                    let itemName = Object.keys(menu[diningHall][mealTime][sectionName])[j];
+                    let itemName = Object.keys(props.menu[diningHall][mealTime][sectionName])[j];
                     
-                    if(processAllergyArr(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr))
+                    if(processAllergyArr(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr))
                     {
                         if(itemName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
                         {
                             arrOfItems.push(
                                 <View key={j} style={{borderWidth: 1, height: 40}}>
-                                    <TouchableOpacity key={j} onPress={() => {onItemClick(menu[diningHall][mealTime][sectionName][itemName], itemName)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                                    <TouchableOpacity key={j} onPress={() => {onItemClick(props.menu[diningHall][mealTime][sectionName][itemName], itemName)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
                                         <Text key={(j+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
                                         <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
-                                            {createAllergyImages(menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
+                                            {createAllergyImages(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
                                         </View>
                                     </TouchableOpacity>
                                 </View>
