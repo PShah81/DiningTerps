@@ -8,7 +8,7 @@ import Nutrition from "./Nutrition";
 
 export default function Menu(props)
 {
-    const [diningHall, setDiningHall] = useState("Yahentamitsi");
+    const [diningHall, setDiningHall] = useState("251 North");
     const [mealTime, setMealTime] = useState("");
     const [filtering, setFiltering] = useState(false);
     const [displayType, setDisplayType] = useState("Menu");
@@ -164,62 +164,95 @@ export default function Menu(props)
     let arrOfItems = [];
     let mealTimeArrTabs = [];
     let scrollViewDivs = [];
-    if(Object.keys(props.menu).length != 0 && Object.keys(props.menu[diningHall]).length != 0)
+    function generateDatabaseItems()
     {
-        for(let i=0; i< Object.keys(props.menu[diningHall]).length; i++)
+        for(let uniqueFoodIndex = 0; uniqueFoodIndex < props.database.length; uniqueFoodIndex++)
         {
-            let mealTimeTabName = Object.keys(props.menu[diningHall])[i];
-            mealTimeArrTabs.push(
-            <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, flexGrow: 1, borderBottomColor: "orange"}}>
-                <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>{mealTimeTabName}</Text>
-            </TouchableOpacity>
-            );
-            
-        }
-        if(mealTime != "" && props.menu[diningHall][mealTime] != undefined)
-        {
-            for(let i=0; i< Object.keys(props.menu[diningHall][mealTime]).length; i++)
+            let {foodname, foodallergies, fooddata, food_id} = props.database[uniqueFoodIndex];
+            if(processAllergyArr(foodallergies, exclusionArr, inclusionArr) === true && foodname.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
             {
-                let sectionName = Object.keys(props.menu[diningHall][mealTime])[i];
-                for(let j=0; j< Object.keys(props.menu[diningHall][mealTime][sectionName]).length; j++)
-                {
-                    let itemName = Object.keys(props.menu[diningHall][mealTime][sectionName])[j];
-                    
-                    if(processAllergyArr(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr))
-                    {
-                        if(itemName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
-                        {
-                            arrOfItems.push(
-                                <View key={j} style={{borderWidth: 1, height: 40}}>
-                                    <TouchableOpacity key={j} onPress={() => {onItemClick(props.menu[diningHall][mealTime][sectionName][itemName], itemName)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
-                                        <Text key={(j+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
-                                        <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
-                                            {createAllergyImages(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            )   
-                        }
-                        }
-                        
-                }
                 scrollViewDivs.push(
-                <View key={i} style={{margin: "3%", borderWidth: 1}}>
-                    <Text  key={i} style={{fontSize: '24px', textAlign: 'center', borderBottomWidth: 1, textDecorationLine: 'underline'}}>{sectionName}</Text>
-                    {arrOfItems}
-                </View>
-                );
-                arrOfItems = [];
+                    <View key={uniqueFoodIndex} style={{borderWidth: 1, height: 40}}>
+                        <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick({food_id,...fooddata}, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                            <Text key={(uniqueFoodIndex+1)*10} style= {{marginLeft: '3%'}}>{foodname}</Text> 
+                            <View key={uniqueFoodIndex} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
+                                {createAllergyImages(foodallergies)}
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                
+                )
             }
             
         }
-        
     }
-
-    if(scrollViewDivs.length === 0)
+    function generateMenuItems()
     {
-        scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NO DATA AVAILAVBLE</Text>)
+        if(Object.keys(props.menu).length != 0 && Object.keys(props.menu[diningHall]).length != 0)
+        {
+            for(let i=0; i< Object.keys(props.menu[diningHall]).length; i++)
+            {
+                let mealTimeTabName = Object.keys(props.menu[diningHall])[i];
+                mealTimeArrTabs.push(
+                <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, flexGrow: 1, borderBottomColor: "orange"}}>
+                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>{mealTimeTabName}</Text>
+                </TouchableOpacity>
+                );
+                
+            }
+            if(mealTime != "" && props.menu[diningHall][mealTime] != undefined)
+            {
+                for(let i=0; i< Object.keys(props.menu[diningHall][mealTime]).length; i++)
+                {
+                    let sectionName = Object.keys(props.menu[diningHall][mealTime])[i];
+                    for(let j=0; j< Object.keys(props.menu[diningHall][mealTime][sectionName]).length; j++)
+                    {
+                        let itemName = Object.keys(props.menu[diningHall][mealTime][sectionName])[j];
+                        
+                        if(processAllergyArr(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'], exclusionArr, inclusionArr) === true && itemName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) != -1)
+                        {
+                                arrOfItems.push(
+                                    <View key={j} style={{borderWidth: 1, height: 40}}>
+                                        <TouchableOpacity key={j} onPress={() => {onItemClick(props.menu[diningHall][mealTime][sectionName][itemName], itemName)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                                            <Text key={(j+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
+                                            <View key={j} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
+                                                {createAllergyImages(props.menu[diningHall][mealTime][sectionName][itemName]['itemAllergyArr'])}
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )   
+                        }
+                            
+                    }
+                    scrollViewDivs.push(
+                    <View key={i} style={{margin: "3%", borderWidth: 1}}>
+                        <Text  key={i} style={{fontSize: '24px', textAlign: 'center', borderBottomWidth: 1, textDecorationLine: 'underline'}}>{sectionName}</Text>
+                        {arrOfItems}
+                    </View>
+                    );
+                    arrOfItems = [];
+                }
+                
+            }
+            
+        }
+    
+        if(scrollViewDivs.length === 0)
+        {
+            scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NO DATA AVAILAVBLE</Text>)
+        }
     }
+    
+    console.log(displayType)
+    if(displayType === "Menu")
+    {
+        generateMenuItems();
+    }
+    else
+    {
+        generateDatabaseItems();
+    }
+    
 
     return(
         <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
@@ -232,7 +265,7 @@ export default function Menu(props)
             <View style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
                 {mealTimeArrTabs}
             </View>
-            <View style={{height: "83%"}}>
+            <View style={{height: displayType === "Menu"? "83%" : "86%"}}>
                 
                 <ScrollView>
                     {scrollViewDivs}
@@ -243,15 +276,15 @@ export default function Menu(props)
                     <Text>Home</Text>
                     <Icon size={30} name="home-outline" type='ionicon' color='orange'></Icon>
                 </TouchableOpacity>
-                <TouchableOpacity  onPress={()=>{setDiningHall('251 North')}}>
+                <TouchableOpacity style={{borderTopWidth: diningHall==="251 North"? 1 : 0}} onPress={()=>{setDiningHall('251 North')}}>
                     <Text>251 North</Text>
                     <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{setDiningHall('Yahentamitsi')}}>
+                <TouchableOpacity style={{borderTopWidth: diningHall==="Yahentamitsi"? 1 : 0}} onPress={()=>{setDiningHall('Yahentamitsi')}}>
                     <Text>Yahentamitsi</Text>
                     <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{setDiningHall('South')}}>
+                <TouchableOpacity style={{borderTopWidth: diningHall==="South"? 1 : 0}} onPress={()=>{setDiningHall('South')}}>
                     <Text>South</Text>
                     <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
                 </TouchableOpacity>

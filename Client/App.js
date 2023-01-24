@@ -8,6 +8,7 @@ import Home from './Pages/Home';
 
 export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
+  const [database, setDatabase] = useState({});
   const [currentMode, setCurrentMode] = useState("Menu");
   const [notificationFoods, setNotificationFoods] = useState({});
   
@@ -19,7 +20,6 @@ export default function App() {
   {
     let newNotificationFoods = {...notificationFoods};
     newNotificationFoods[itemName] = itemObject;
-    console.log(newNotificationFoods)
     setNotificationFoods(newNotificationFoods);
   }
 
@@ -27,12 +27,10 @@ export default function App() {
   {
     let newNotificationFoods = {...notificationFoods};
     delete newNotificationFoods[itemName];
-    console.log(newNotificationFoods)
     setNotificationFoods(newNotificationFoods);
   }
   function fetchTodaysMenu()
   {
-
     fetch("https://nutritionserver.link/menu")
     .then((response) => response.json())
     .then((data) => {setTodaysMenu(data)})
@@ -40,15 +38,24 @@ export default function App() {
       console.log(error)
     })
   }
-
+  function fetchDatabase()
+  {
+    fetch("https://nutritionserver.link/database")
+    .then((response) => response.json())
+    .then((data) => {setDatabase(data)})
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
 
   useEffect(()=>{
     fetchTodaysMenu();
+    fetchDatabase();
   },[])
   console.log(notificationFoods)
   return (
     <View style={styles.container}>
-      {currentMode === "Menu" ? <Menu menu={todaysMenu} changeMode= {changeMode} addFoodToNotifications={addFoodToNotifications}></Menu> : null}
+      {currentMode === "Menu" ? <Menu menu={todaysMenu} database={database} changeMode= {changeMode} addFoodToNotifications={addFoodToNotifications}></Menu> : null}
       {currentMode === "Notifications" ? <Notifications foods={notificationFoods} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null}
       {currentMode === "Home" ? <Home></Home> : null}
       {currentMode === "Menu" ? null: <NavBar changeMode={changeMode}></NavBar>}
