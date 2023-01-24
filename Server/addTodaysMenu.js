@@ -14,7 +14,8 @@ let job = new CronJob(
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME
         });
-        dailyDataScript(new Date().toLocaleDateString())
+        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'})
+        dailyDataScript(date);
 	},
 	null,
 	true,

@@ -80,10 +80,10 @@ async function getItemArr(location, date, itemMap, URL)
             itemName = item.getElementsByClassName("menu-item-name")[0].text;
             itemMap[location][breakfastLunchDinner][cardTitle][itemName] = {};
             itemLink = "https://nutrition.umd.edu/" + item.getElementsByClassName("menu-item-name")[0].href;
+            itemAllergyArr = [];
             if(item.getElementsByClassName("col-md-4")[0] != undefined)
             {
                itemAllergyElements = item.getElementsByClassName("col-md-4")[0].getElementsByClassName("nutri-icon");
-               itemAllergyArr = [];
                for(let l=0; l<itemAllergyElements.length; l++)
                {
                   if(itemAllergyElements[l].alt != "smartchoice")
@@ -92,8 +92,6 @@ async function getItemArr(location, date, itemMap, URL)
                   }
                }
             }
-            
-            itemMap[location][breakfastLunchDinner][cardTitle][itemName]["itemLink"] = itemLink;
             itemMap[location][breakfastLunchDinner][cardTitle][itemName]["nutritionFacts"] = await getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink);
             itemMap[location][breakfastLunchDinner][cardTitle][itemName]["itemAllergyArr"] = itemAllergyArr;
          }
