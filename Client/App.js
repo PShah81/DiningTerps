@@ -20,6 +20,7 @@ export default function App() {
   {
     let newNotificationFoods = {...notificationFoods};
     newNotificationFoods[itemName] = itemObject;
+    setCurrentMode("Notifications");
     setNotificationFoods(newNotificationFoods);
   }
 
@@ -56,9 +57,9 @@ export default function App() {
   return (
     <View style={styles.container}>
       {currentMode === "Menu" ? <Menu menu={todaysMenu} database={database} changeMode= {changeMode} addFoodToNotifications={addFoodToNotifications}></Menu> : null}
-      {currentMode === "Notifications" ? <Notifications foods={notificationFoods} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null}
+      {/* {currentMode === "Notifications" ? <Notifications foods={notificationFoods} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null} */}
       {currentMode === "Home" ? <Home></Home> : null}
-      {currentMode === "Menu" ? null: <NavBar changeMode={changeMode}></NavBar>}
+      {currentMode === "Home" ? <NavBar changeMode={changeMode}></NavBar>: null}
 
     </View>
   );

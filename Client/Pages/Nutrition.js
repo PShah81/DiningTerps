@@ -84,11 +84,11 @@ function Nutrition(props)
                     </View>
                     }
 
-                    <View style={{marginLeft: '10%', marginRight: '10%', marginTop: 'auto'}}>
+                    {/* <View style={{marginLeft: '10%', marginRight: '10%', marginTop: 'auto'}}>
                         <TouchableOpacity onPress={()=>{props.addFoodToNotifications(props.foodName, props.foodObject)}} style={{backgroundColor: "orange", display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 40}}>
                             <Text style={{color: 'white', textAlign:'center', fontSize: 20}}>Add To Notifications</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     
                 </View>
                 

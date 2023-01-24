@@ -12,14 +12,10 @@ export default function NavBar(props)
                 <Text>Menu</Text>
                 <Icon size={30} name="fast-food-outline" type='ionicon' color='orange'></Icon>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{props.changeMode("Notifications")}}>
+            {/* <TouchableOpacity onPress={()=>{props.changeMode("Notifications")}}>
                 <Text>Notifications</Text>
                 <Icon size={30} name="notifications-outline" type='ionicon' color='orange'></Icon>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{props.changeMode("Profile")}}>
-                <Text>Profile</Text>
-                <Icon size={30} name="person" type='ionicon' color='orange'></Icon>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 }
