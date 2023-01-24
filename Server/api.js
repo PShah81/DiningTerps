@@ -32,18 +32,33 @@ app.use(function(req, res, next){
     next();
 })
 app.get('/menu', (req, res) => {
-    console.log('hi');
     retrieveTodaysMenu(pool, res);
 });
+
+app.get('/database', (req, res) =>{
+    retrieveDatabase(pool, res);
+})
+
+
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
 
-
+async function retrieveDatabase(pool, res)
+{
+    let con = await pool.getConnection();
+    let sql = "SELECT * FROM food_database";
+    let results = await con.query(sql);
+    con.release();
+    let foodArr = results[0];
+    console.log(foodArr.length)
+    res.send(foodArr);
+}
 async function retrieveTodaysMenu(pool, res)
 {
     let con = await pool.getConnection();
     let sql = "SELECT menuJson FROM menus WHERE menuDate = ?";
     let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
     let results = await con.query(sql, [date]);
+    con.release();
     let menu = results[0][0].menuJson;
 
     for(let i=0; i< Object.keys(menu).length; i++)
