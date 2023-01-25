@@ -5,12 +5,16 @@ import Menu from './Pages/Menu';
 import data from './SampleData.json';
 import Notifications from './Pages/Notifications';
 import Home from './Pages/Home';
+import * as SecureStore from 'expo-secure-store';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
   const [database, setDatabase] = useState({});
   const [currentMode, setCurrentMode] = useState("Menu");
   const [notificationFoods, setNotificationFoods] = useState({});
+  const [UUID, setUUID] = useState('');
   
   function changeMode(newMode)
   {
@@ -39,6 +43,7 @@ export default function App() {
       console.log(error)
     })
   }
+
   function fetchDatabase()
   {
     fetch("https://nutritionserver.link/database")
@@ -49,10 +54,29 @@ export default function App() {
     })
   }
 
+  async function fetchUUID(){
+    let fetchUUID = await SecureStore.getItemAsync('secure_deviceid');
+    if (fetchUUID) 
+    {
+      setUUID(fetchUUID);
+
+    }
+    else
+    {
+      let uuid = uuidv4();
+      await SecureStore.setItemAsync('secure_deviceid', JSON.stringify(uuid));
+      setUUID(uuid);
+    }
+  }
   useEffect(()=>{
     fetchTodaysMenu();
     fetchDatabase();
+    fetchUUID();
   },[])
+
+  useEffect(()=>{
+    console.log(UUID)
+  },[UUID])
   console.log(notificationFoods)
   return (
     <View style={styles.container}>
