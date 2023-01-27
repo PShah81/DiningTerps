@@ -19,8 +19,8 @@ function Filter(props)
                 </TouchableOpacity>
                 <View style= {{marginLeft: '7%', marginRight: '5%'}}>
                     <SegmentedControl
-                        values={['Menu', 'Database']}
-                        selectedIndex = {['Menu', 'Database'].indexOf(props.displayType)}
+                        values={props.displayTypes}
+                        selectedIndex = {props.displayTypes.indexOf(props.displayType)}
                         onValueChange = {(value)=>{
                             props.changeDisplayType(value)
                         }}

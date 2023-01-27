@@ -15,13 +15,12 @@ export default function Menu(props)
     const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{ "Halal" : false, "Locally Grown" : false, "Vegetarian" : false, "Vegan" : false}})
     const [search, setSearch] = useState("");
     const [isItemClicked, setIsItemClicked] = useState(false);
-    const [itemClicked, setItemClicked] = useState({"Object": {}, "Name": {}})
+    const [itemClicked, setItemClicked] = useState({})
 
     function onItemClick(clickedItem, clickedItemName)
     {
-        let itemClickedObject = {};
-        itemClickedObject["Object"] = clickedItem;
-        itemClickedObject["Name"] = clickedItemName;
+        let itemClickedObject = {...clickedItem};
+        itemClickedObject["foodname"] = clickedItemName;
         setItemClicked(itemClickedObject);
         setIsItemClicked(true);
     }
@@ -263,7 +262,7 @@ export default function Menu(props)
                     }
                     scrollViewDivs.push(
                     <View key={i} style={{margin: "3%", borderWidth: 1}}>
-                        <Text  key={i} style={{fontSize: '24px', textAlign: 'center', borderBottomWidth: 1, textDecorationLine: 'underline'}}>{sectionName}</Text>
+                        <Text key={i} style={{fontSize: '24px', textAlign: 'center', borderBottomWidth: 1, textDecorationLine: 'underline'}}>{sectionName}</Text>
                         {arrOfItems}
                     </View>
                     );
@@ -280,7 +279,6 @@ export default function Menu(props)
         }
     }
     
-    console.log(displayType)
     if(displayType === "Menu")
     {
         generateMenuItems();
@@ -290,11 +288,12 @@ export default function Menu(props)
         generateDatabaseItems();
     }
     
-
     return(
         <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Filter filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
-            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} foodName={itemClicked["Name"]} foodObject = {itemClicked["Object"]}/>
+            <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
+            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
+            removeFoodFromNotifications={props.removeFoodFromNotifications} foodObject = {itemClicked}
+            alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['id']) != -1? true: false}/>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
                 <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                 <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
@@ -309,9 +308,9 @@ export default function Menu(props)
                 </ScrollView>
             </View>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%', position: 'absolute', bottom: 0}}>
-                <TouchableOpacity onPress={()=>{props.changeMode("Home")}}>
-                    <Text>Home</Text>
-                    <Icon size={30} name="home-outline" type='ionicon' color='orange'></Icon>
+                <TouchableOpacity onPress={()=>{props.changeMode("Notifications")}}>
+                    <Text>Notifications</Text>
+                    <Icon size={30} name="notifications-outline" type='ionicon' color='orange'></Icon>
                 </TouchableOpacity>
                 <TouchableOpacity style={{borderTopWidth: diningHall==="251 North"? 1 : 0}} onPress={()=>{setDiningHall('251 North')}}>
                     <Text>251 North</Text>
