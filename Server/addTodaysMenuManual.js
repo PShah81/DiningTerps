@@ -4,23 +4,17 @@ dotenv.config()
 import webscrapeData from './webscrape.js';
 import mysql from 'mysql2/promise';
 
-let job = new CronJob(
-	'0 0 * * * *',
-	function() {
-        let pool = mysql.createPool({
-            connectionLimit: 100, 
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME
-        });
-        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'})
-        dailyDataScript(date, pool);
-	},
-	null,
-	true,
-	'America/New_York'
-);
+
+let pool = mysql.createPool({
+    connectionLimit: 100, 
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'})
+dailyDataScript(date, pool);
+
 
 async function dailyDataScript(date, pool)
 {
@@ -31,6 +25,7 @@ async function dailyDataScript(date, pool)
     await updateMenu(data, pool, date);
     pool.end();
     console.log('FR FINISHED')
+    
 }
 
 async function updateMenu(menu, pool, date)
@@ -192,3 +187,64 @@ async function getIdForFood(menu, diningHall, mealTime, sectionName, pool)
     con.release();
 }
 
+async function getAvailableFoods(menu, pool)
+{
+    let diningHall;
+    let mealTime;
+    let sectionName;
+    for(let i=0; i< Object.keys(menu).length; i++)
+    {
+        diningHall = Object.keys(menu)[i];
+        console.log(diningHall)
+        for(let j=0; j< Object.keys(menu[diningHall]).length; j++)
+        {
+            mealTime = Object.keys(menu[diningHall])[j];
+            console.log(mealTime)
+            for(let k=0; k< Object.keys(menu[diningHall][mealTime]).length; k++)
+            {
+                sectionName = Object.keys(menu[diningHall][mealTime])[k];
+                await updateAvailableFoodJSON(menu, diningHall, mealTime, sectionName, pool)
+            }
+        }
+    }  
+}
+
+async function updateAvailableFoodJSON(menu, diningHall, mealTime, sectionName, pool)
+{
+    const con = await pool.getConnection();
+    for(let l=0; l< Object.keys(menu[diningHall][mealTime][sectionName]).length; l++)
+    {
+        let itemName = Object.keys(menu[diningHall][mealTime][sectionName])[l];
+        let itemData = menu[diningHall][mealTime][sectionName][itemName];
+        let itemId = itemData["id"];
+        let sql = "SELECT foodJson FROM availableFoods WHERE food_id = ?";
+        let result = await con.query(sql, [itemId]);
+        let foodJson;
+        if(result[0].length === 0)
+        {
+            foodJson = {};
+            foodJson[diningHall] = {};
+            foodJson[diningHall][mealTime] = {};
+            foodJson[diningHall][mealTime][itemName] = itemData;
+            let newSql = "INSERT INTO availableFoods (food_id, foodJson) VALUES (?, ?) ";
+            await con.query(newSql, [itemId, JSON.stringify(foodJson)]);
+        }
+        else
+        {
+            let foodJson = result[0][0].foodJson;
+            if(foodJson[diningHall] === undefined)
+            {
+                foodJson[diningHall] = {};
+            }
+            if(foodJson[diningHall][mealTime] === undefined)
+            {
+                foodJson[diningHall][mealTime] = {};
+            }
+            foodJson[diningHall][mealTime][itemName] = itemData;
+            let updateSql = "UPDATE availableFoods SET foodJSON= ? WHERE food_id= ? "
+            await con.query(updateSql, [JSON.stringify(foodJson), itemId]);
+        }
+        
+    }
+    con.release();
+}
