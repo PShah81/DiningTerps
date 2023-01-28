@@ -113,7 +113,7 @@ async function getNotificationsAvailable(uuid, res)
                 for(let l=0; l< Object.keys(menu[diningHall][mealTime][sectionName]).length; l++)
                 {
                     itemName = Object.keys(menu[diningHall][mealTime][sectionName])[l];
-                    if(notificationFoodIds.indexOf(menu[diningHall][mealTime][sectionName][itemName]["id"]) != -1)
+                    if(notificationFoodIds.indexOf(menu[diningHall][mealTime][sectionName][itemName]["food_id"]) != -1)
                     {
                         notificationsAvailable[diningHall][mealTime][itemName] = menu[diningHall][mealTime][sectionName][itemName];
                     };

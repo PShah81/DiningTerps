@@ -171,7 +171,7 @@ async function getIdForFood(menu, diningHall, mealTime, sectionName, pool)
                 }
                 if(sameFood === true)
                 {
-                    itemData["id"] = result[0][i].food_id;
+                    itemData["food_id"] = result[0][i].food_id;
                     break;
                 }
             }
@@ -179,7 +179,7 @@ async function getIdForFood(menu, diningHall, mealTime, sectionName, pool)
         }
         else
         {
-            itemData["id"] = result[0][0].food_id;
+            itemData["food_id"] = result[0][0].food_id;
         }
         
     }
