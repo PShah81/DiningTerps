@@ -198,11 +198,13 @@ export default function Menu(props)
             for(let uniqueFoodIndex = 0; uniqueFoodIndex < props.database.length; uniqueFoodIndex++)
             {
                 let {foodname, foodallergies, fooddata, food_id} = props.database[uniqueFoodIndex];
+                let clickedItem = {...fooddata};
+                clickedItem['food_id'] = food_id;
                 if(processAllergyArr(foodallergies, exclusionArr, inclusionArr) === true && searchFilter(foodname) === true)
                 {
                     scrollViewDivs.push(
                         <View key={uniqueFoodIndex} style={{borderWidth: 1, height: 40}}>
-                            <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick({food_id,...fooddata}, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                            <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick(clickedItem, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
                                 <Text key={(uniqueFoodIndex+1)*10} style= {{marginLeft: '3%'}}>{foodname}</Text> 
                                 <View key={uniqueFoodIndex} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
                                     {createAllergyImages(foodallergies)}
@@ -287,13 +289,13 @@ export default function Menu(props)
     {
         generateDatabaseItems();
     }
-    
+
     return(
         <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
             <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
             <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
             removeFoodFromNotifications={props.removeFoodFromNotifications} foodObject = {itemClicked}
-            alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['id']) != -1? true: false}/>
+            alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
                 <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                 <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>

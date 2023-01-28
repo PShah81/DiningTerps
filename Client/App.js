@@ -21,50 +21,73 @@ export default function App() {
   }
   function addFoodToNotifications(itemObject)
   {
-    let foodid = itemObject["id"];
-    setNotificationFoodIds([...notificationFoodIds, foodid])
-    setNotificationFoods([...notificationFoods, itemObject]);
-    let url = "https://nutritionserver.link/notifications/add";
-    let bodyJson = {};
-    bodyJson["uuid"] = UUID;
-    bodyJson["food_id"] = foodid;
-    console.log(url)
-    fetch(url,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyJson)
-    })
-    .catch((error)=>{console.log(error)});
+    let food_id = itemObject["food_id"];
+
+    let modifiedItemObject = {};
+    modifiedItemObject["food_id"] = food_id;
+    modifiedItemObject["foodname"] = itemObject["foodname"];
+    modifiedItemObject["foodallergies"] = itemObject["itemAllergyArr"];
+    modifiedItemObject["fooddata"] = {};
+    modifiedItemObject["fooddata"]["itemAllergyArr"] = itemObject["itemAllergyArr"];
+    modifiedItemObject["fooddata"]["nutritionFacts"] = itemObject["nutritionFacts"];
+
+    if(notificationFoodIds.indexOf(food_id) === -1)
+    {
+      setNotificationFoodIds([...notificationFoodIds, food_id])
+      setNotificationFoods([...notificationFoods, modifiedItemObject])
+      let url = "https://nutritionserver.link/notifications/add";
+      let bodyJson = {};
+      bodyJson["uuid"] = UUID;
+      bodyJson["food_id"] = food_id;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .then(()=>{ 
+        fetchNotificationsAvailable(UUID);
+      })
+      .catch((error)=>{console.log(error)});
+    }
+    
   }
 
   function removeFoodFromNotifications(itemObject)
   {
-    let foodid = itemObject["id"];
-    setNotificationFoodIds([...notificationFoodIds.splice(notificationFoodIds.indexOf(foodid), 1)]);
-    for(let foodIndex = 0; foodIndex< notificationFoods.length; foodIndex++)
+    let food_id = itemObject["food_id"];
+    if(notificationFoodIds.indexOf(food_id) != -1)
     {
-      if(notificationFoods[foodIndex]["id"] === foodid)
+      let newNotificationFoodIds = [...notificationFoodIds];
+      newNotificationFoodIds.splice(newNotificationFoodIds.indexOf(food_id), 1);
+      setNotificationFoodIds(newNotificationFoodIds);
+      for(let foodIndex = 0; foodIndex< notificationFoods.length; foodIndex++)
       {
-        setNotificationFoods([...notificationFoods.splice(foodIndex, 1)]);
-        break;
+        if(notificationFoods[foodIndex]["food_id"] === food_id)
+        {
+          let newNotificationFoods = [...notificationFoods];
+          newNotificationFoods.splice(foodIndex, 1);
+          setNotificationFoods(newNotificationFoods);
+          break;
+        }
       }
+      let url = "https://nutritionserver.link/notifications/delete";
+      let bodyJson = {};
+      bodyJson["uuid"] = UUID;
+      bodyJson["food_id"] = food_id;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .then(()=>{
+        fetchNotificationsAvailable(UUID);
+      })
+      .catch((error)=>{console.log(error)});
     }
-    let url = "https://nutritionserver.link/notifications/delete";
-    let bodyJson = {};
-    bodyJson["uuid"] = UUID;
-    console.log(UUID.length)
-    bodyJson["food_id"] = foodid;
-    console.log(url)
-    fetch(url,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyJson)
-    })
-    .catch((error)=>{console.log(error)});
   }
   function fetchTodaysMenu()
   {
@@ -91,8 +114,6 @@ export default function App() {
     if (fetchUUID) 
     {
       fetchUUID = fetchUUID.replaceAll("\"", "");
-      console.log(fetchUUID);
-      console.log(fetchUUID.length);
       setUUID(fetchUUID);
     }
     else
@@ -137,12 +158,10 @@ export default function App() {
   useEffect(()=>{
     runFetches();
   },[])
-
   return (
     <View style={styles.container}>
       {currentMode === "Menu" ? <Menu menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
       {currentMode === "Notifications" ? <Notifications changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoods={notificationFoods} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null}
-
     </View>
   );
 }
