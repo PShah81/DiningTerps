@@ -13,7 +13,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.pranav120.nutritionApp",
+      "buildNumber" : "2"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,6 +25,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra":{
+      "eas": {
+        "projectId": "a6bc8c39-a650-4acc-9bbc-7e130473d0b4"
+      }
     }
   }
 }
