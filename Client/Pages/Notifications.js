@@ -1,19 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Modal, Image} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
-import MenuSearchBar from "../HelperComponents/MenuSearchBar";
-import Filter from "./Filter";
 import Nutrition from "./Nutrition";
 
-export default function Menu(props)
+export default function Notifications(props)
 {
     const [diningHall, setDiningHall] = useState("251 North");
-    const [mealTime, setMealTime] = useState("");
-    const [filtering, setFiltering] = useState(false);
-    const [displayType, setDisplayType] = useState("Foods Available");
-    const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{ "Halal" : false, "Locally Grown" : false, "Vegetarian" : false, "Vegan" : false}})
-    const [search, setSearch] = useState("");
     const [isItemClicked, setIsItemClicked] = useState(false);
     const [itemClicked, setItemClicked] = useState({})
 
@@ -27,31 +20,6 @@ export default function Menu(props)
     function unclickItem()
     {
         setIsItemClicked(false);
-    }
-    function onSearch(updatedSearch)
-    {
-        setSearch(updatedSearch)
-    }
-    function stopFiltering()
-    {
-        setFiltering(false);
-    }
-    function changeDisplayType(newDisplayType)
-    {
-        setDisplayType(newDisplayType);
-    }
-    function changeFilter(filter)
-    {
-        let newFilters = {...filters};
-        if(newFilters["Exclude"][filter] != undefined)
-        {
-            newFilters["Exclude"][filter] = !newFilters["Exclude"][filter];
-        }
-        else
-        {
-            newFilters["Include"][filter] = !newFilters["Include"][filter]
-        }
-        setFilters(newFilters);
     }
     
     function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
@@ -91,34 +59,6 @@ export default function Menu(props)
         }
         return true;
     }
-    
-    function searchFilter(foodName)
-    {
-        let foodNameLower = foodName.toLowerCase();
-        let searchWordLower = search.toLowerCase();
-        if(searchWordLower.length === 1)
-        {
-            if(foodNameLower.indexOf(searchWordLower) === 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            if(foodNameLower.indexOf(searchWordLower) != -1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
 
     function createAllergyImages(allergyArr)
     {
@@ -156,61 +96,79 @@ export default function Menu(props)
         }
         return cardArr;
     }
-    useEffect(()=>{
-        if(Object.keys(props.foodsAvailable).length != 0 && Object.keys(props.foodsAvailable[diningHall]).length != 0 && (mealTime === ""  || props.foodsAvailable[diningHall][mealTime] === undefined))
-        {
-            setMealTime(Object.keys(props.foodsAvailable[diningHall])[0]);
-        }
-    })
-    
-    function createInclusionAndExclusionArrays()
-    {
-        let exclusionArr = [];
-        let inclusionArr = [];
-        for(let i=0; i<Object.keys(filters["Exclude"]).length; i++)
-        {
-            if(filters["Exclude"][Object.keys(filters["Exclude"])[i]])
-            {
-                exclusionArr.push(Object.keys(filters["Exclude"])[i].toLowerCase());
-            }
-        }
-        for(let i=0; i<Object.keys(filters["Include"]).length; i++)
-        {
-            if(filters["Include"][Object.keys(filters["Include"])[i]])
-            {
-                inclusionArr.push(Object.keys(filters["Include"])[i].toLowerCase());
-            }
-        }
-        return [inclusionArr, exclusionArr];
-    }
 
-    let [inclusionArr, exclusionArr] = createInclusionAndExclusionArrays();
     
-    let mealTimeArrTabs = [];
     let scrollViewDivs = [];
-    function generateFoodsList()
+    let mealTimeArr = [];
+    function generateFoodsAvailable()
     {
-        for(let uniqueFoodIndex = 0; uniqueFoodIndex < props.notificationFoods.length; uniqueFoodIndex++)
+        if(Object.keys(props.foodsAvailable).length != 0 && Object.keys(props.foodsAvailable[diningHall]).length != 0)
         {
-            let {foodname, foodallergies, fooddata, food_id} = props.notificationFoods[uniqueFoodIndex];
-            
-            let clickedItem = {...fooddata};
-            clickedItem['food_id'] = food_id;
-            if(processAllergyArr(foodallergies, exclusionArr, inclusionArr) === true && searchFilter(foodname) === true)
+            if(props.foodsAvailable[diningHall]["mealTimeLength"] === 2)
             {
+                mealTimeArr.push(
+                    <Text key={'B'} style={{marginTop: 'auto', marginBottom: 'auto'}}>B</Text>
+                );
+                mealTimeArr.push(
+                    <Text key={'D'} style={{marginTop: 'auto', marginBottom: 'auto'}}>D</Text>
+                );
+            }
+            else
+            {
+                mealTimeArr.push(
+                    <Text key={'B'} style={{marginTop: 'auto', marginBottom: 'auto'}}>B</Text>
+                );
+                mealTimeArr.push(
+                    <Text key={'L'} style={{marginTop: 'auto', marginBottom: 'auto'}}>L</Text>
+                );
+                mealTimeArr.push(
+                    <Text key={'D'} style={{marginTop: 'auto', marginBottom: 'auto'}}>D</Text>
+                );
+            }
+            for(let uniqueFoodIndex = 0; uniqueFoodIndex < Object.keys(props.foodsAvailable[diningHall]).length; uniqueFoodIndex++)
+            {
+                let foodname = Object.keys(props.foodsAvailable[diningHall])[uniqueFoodIndex];
+                if(foodname === "mealTimeLength")
+                {
+                    foodname = Object.keys(props.foodsAvailable[diningHall])[++uniqueFoodIndex];
+                }
+                let foodallergies = props.foodsAvailable[diningHall][foodname]["itemAllergyArr"];
+                let fooddata = props.foodsAvailable[diningHall][foodname];
+                let food_id = props.foodsAvailable[diningHall][foodname]["food_id"];
+                console.log(foodname);
+                console.log(foodallergies);
+                console.log(fooddata);
+                console.log(food_id);
+                
+                let clickedItem = {...fooddata};
+                clickedItem['food_id'] = food_id;
+
+                let inDiningHallArr = [];
+                for(let mealTimeIndex = 0; mealTimeIndex < Object.keys(fooddata["mealTimeObject"]).length; mealTimeIndex++)
+                {
+                    let mealTime = Object.keys(fooddata["mealTimeObject"])[mealTimeIndex];
+                    inDiningHallArr.push(
+                        <View key={mealTime} style={{backgroundColor: fooddata["mealTimeObject"][mealTime]? "green" : "red", height: 25, width: 25}}>
+                        </View>
+                    )
+                }
                 scrollViewDivs.push(
-                    <View key={uniqueFoodIndex} style={{borderWidth: 1, height: 40}}>
-                        <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick(clickedItem, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
+                    <View key={uniqueFoodIndex} style={{height: 40, display: 'flex', flexDirection: 'row'}}>
+                        <TouchableOpacity key={uniqueFoodIndex} onPress={() => {onItemClick(clickedItem, foodname)}} style={{height: '100%', display: 'flex', flexDirection:'row', borderWidth: 1, width: '80%'}}>
                             <Text key={(uniqueFoodIndex+1)*10} style= {{marginLeft: '3%'}}>{foodname}</Text> 
                             <View key={uniqueFoodIndex} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
                                 {createAllergyImages(foodallergies)}
                             </View>
                         </TouchableOpacity>
+                        <View style={{display: 'flex', flexDirection: 'row', width: '20%', justifyContent: 'space-around', alignItems: 'center'}}>
+                            {inDiningHallArr}
+                        </View>
                     </View>
                 
                 )
             }
         }
+        
         if(scrollViewDivs.length === 0)
         {
             scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NO NOTIFICATIONS</Text>)
@@ -218,77 +176,36 @@ export default function Menu(props)
 
         
     }
-    function generateFoodsAvailable()
-    {
-        if(Object.keys(props.foodsAvailable).length != 0 && Object.keys(props.foodsAvailable[diningHall]).length != 0)
-        {
-            for(let i=0; i< Object.keys(props.foodsAvailable[diningHall]).length; i++)
-            {
-                let mealTimeTabName = Object.keys(props.foodsAvailable[diningHall])[i];
-                mealTimeArrTabs.push(
-                <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, flexGrow: 1, borderBottomColor: "orange"}}>
-                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>{mealTimeTabName}</Text>
-                </TouchableOpacity>
-                );
-                
-            }
-            if(mealTime != "" && props.foodsAvailable[diningHall][mealTime] != undefined)
-            {
-                for(let i=0; i< Object.keys(props.foodsAvailable[diningHall][mealTime]).length; i++)
-                {
-                    let itemName = Object.keys(props.foodsAvailable[diningHall][mealTime])[i];
-                    if(processAllergyArr(props.foodsAvailable[diningHall][mealTime][itemName]['itemAllergyArr'], exclusionArr, inclusionArr) === true && searchFilter(itemName) === true)
-                    {
-                            scrollViewDivs.push(
-                                <View key={i} style={{borderWidth: 1, height: 40}}>
-                                    <TouchableOpacity key={i} onPress={() => {onItemClick(props.foodsAvailable[diningHall][mealTime][itemName], itemName)}} style={{height: '100%', display: 'flex', flexDirection:'row'}}>
-                                        <Text key={(i+1)*10} style= {{marginLeft: '3%'}}>{itemName}</Text> 
-                                        <View key={i} style={{display: 'flex', flexDirection:'row', marginLeft: 'auto', marginRight: '4%'}}>
-                                            {createAllergyImages(props.foodsAvailable[diningHall][mealTime][itemName]['itemAllergyArr'])}
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            )           
-                    }
-                }
-                
-            }
-            
-        }
-    
-        if(scrollViewDivs.length === 0)
-        {
-            scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NOTHING AVAILAVBLE</Text>)
-        }
-    }
-    
-    if(displayType === "Foods Available")
-    {
-        generateFoodsAvailable();
-    }
-    else
-    {
-        generateFoodsList();
-    }
-    
 
-
+    generateFoodsAvailable();
     return(
         <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Filter displayTypes={['Foods Available', 'Foods List']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} 
-            displayType={displayType} filters={filters} changeFilter={changeFilter}/>
             <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
             removeFoodFromNotifications={props.removeFoodFromNotifications}  foodObject = {itemClicked}
             alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
-            <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
-                <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
-                <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
+            <View style= {{marginBottom: '3%'}}>
+                <Text style={{fontSize: '40px', textAlign: 'center'}}>Favorites</Text>
             </View>
             <View style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
-                {mealTimeArrTabs}
+                <TouchableOpacity key={"251 North"} onPress={()=>{setDiningHall('251 North')}} style={{borderBottomWidth: (diningHall==="251 North") ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
+                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>251 North</Text>
+                </TouchableOpacity>
+                <TouchableOpacity key={"Yahentamitsi"} onPress={()=>{setDiningHall('Yahentamitsi')}} style={{borderBottomWidth: (diningHall==="Yahentamitsi") ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
+                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>Yahentamitsi</Text>
+                </TouchableOpacity>
+                <TouchableOpacity key={"South"} onPress={()=>{setDiningHall('South')}} style={{borderBottomWidth: (diningHall==="South") ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
+                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>South</Text>
+                </TouchableOpacity>
             </View>
-            <View style={{height: displayType === "foodsAvailable"? "83%" : "86%"}}>
-                
+            <View style={{display: 'flex', flexDirection: 'row', height: '5%'}}>
+                <View style={{marginLeft: '4%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'start', width: '80%'}}>
+                    <Text style={{fontSize: 18, textAlign: 'center'}}>Foods</Text>
+                </View>
+                <View style={{display: 'flex', flexDirection: 'row', marginLeft: 'auto', width: '20%', justifyContent: 'space-around'}}>
+                    {mealTimeArr}
+                </View>  
+            </View>
+            <View style={{height: "83%"}}>
                 <ScrollView>
                     {scrollViewDivs}
                 </ScrollView>
@@ -297,18 +214,6 @@ export default function Menu(props)
                 <TouchableOpacity onPress={()=>{props.changeMode("Menu")}}>
                     <Text>Menu</Text>
                     <Icon size={30} name="fast-food-outline" type='ionicon' color='orange'></Icon>
-                </TouchableOpacity>
-                <TouchableOpacity style={{borderTopWidth: diningHall==="251 North"? 1 : 0}} onPress={()=>{setDiningHall('251 North')}}>
-                    <Text>251 North</Text>
-                    <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
-                </TouchableOpacity>
-                <TouchableOpacity style={{borderTopWidth: diningHall==="Yahentamitsi"? 1 : 0}} onPress={()=>{setDiningHall('Yahentamitsi')}}>
-                    <Text>Yahentamitsi</Text>
-                    <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
-                </TouchableOpacity>
-                <TouchableOpacity style={{borderTopWidth: diningHall==="South"? 1 : 0}} onPress={()=>{setDiningHall('South')}}>
-                    <Text>South</Text>
-                    <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
                 </TouchableOpacity>
             </View>  
         </View>

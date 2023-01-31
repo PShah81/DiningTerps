@@ -135,15 +135,21 @@ export default function App() {
       setNotificationFoods(data['notificationsList']);
       setNotificationFoodIds(data['notificationFoodIds']);
     })
+    .catch((error)=>{
+      console.log(error)
+    })
   }
 
   function fetchNotificationsAvailable(uuid)
   {
-    let url = "https://nutritionserver.link/notificationsavailable/" + uuid;
+    let url = "https://nutritionserver.link/notificationsavailable/test/" + uuid;
     fetch(url)
     .then((response) => response.json())
     .then((data) => {
       setNotificationsAvailable(data);
+    })
+    .catch((error)=>{
+      console.log(error)
     })
   }
 

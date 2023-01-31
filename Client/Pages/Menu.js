@@ -311,7 +311,7 @@ export default function Menu(props)
             </View>
             <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%', position: 'absolute', bottom: 0}}>
                 <TouchableOpacity onPress={()=>{props.changeMode("Notifications")}}>
-                    <Text>Notifications</Text>
+                    <Text>Favorites</Text>
                     <Icon size={30} name="notifications-outline" type='ionicon' color='orange'></Icon>
                 </TouchableOpacity>
                 <TouchableOpacity style={{borderTopWidth: diningHall==="251 North"? 1 : 0}} onPress={()=>{setDiningHall('251 North')}}>
