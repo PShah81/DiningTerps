@@ -142,7 +142,7 @@ export default function App() {
 
   function fetchNotificationsAvailable(uuid)
   {
-    let url = "https://nutritionserver.link/notificationsavailable/test/" + uuid;
+    let url = "https://nutritionserver.link/notificationsavailable/" + uuid;
     fetch(url)
     .then((response) => response.json())
     .then((data) => {
