@@ -1,7 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import { useEffect, useState } from "react";
+import {Icon} from 'react-native-elements';
 import Menu from './Pages/Menu';
-import Notifications from './Pages/Notifications';
+import Favorites from './Pages/Favorites';
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,12 +10,12 @@ import { v4 as uuidv4 } from 'uuid';
 export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
   const [database, setDatabase] = useState({});
-  const [currentMode, setCurrentMode] = useState("Menu");
+  const [mode, setCurrentMode] = useState("Menu");
   const [notificationFoodIds, setNotificationFoodIds] = useState([]);
   const [notificationFoods, setNotificationFoods] = useState([]);
   const [UUID, setUUID] = useState('');
   const [notificationsAvailable, setNotificationsAvailable] = useState({});
-  
+  const [diningHall, setDiningHall] = useState('251 North');
   function changeMode(newMode)
   {
     setCurrentMode(newMode);
@@ -166,8 +167,26 @@ export default function App() {
   },[])
   return (
     <View style={styles.container}>
-      {currentMode === "Menu" ? <Menu menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
-      {currentMode === "Notifications" ? <Notifications changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoods={notificationFoods} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Notifications> : null}
+      {mode === "Menu" ? <Menu diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
+      {mode === "Favorites" ? <Favorites changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Favorites> : null}
+      <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%', position: 'absolute', bottom: 0, backgroundColor: 'white', paddingBottom: '5%'}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), borderColor: 'orange', width: '25%'}} onPress={()=>{changeMode("Menu"); setDiningHall('251 North')}}>
+              <Text style={{textAlign: 'center', color: 'green'}}>251 North</Text>
+              <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
+          </TouchableOpacity>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? 2 : 0), borderColor: 'orange', width: '25%'}} onPress={()=>{changeMode("Menu"); setDiningHall('Yahentamitsi')}}>
+              <Text style={{textAlign: 'center', color: 'green'}}>Yahentamitsi</Text>
+              <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
+          </TouchableOpacity>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? 2 : 0), borderColor: 'orange', width: '25%'}} onPress={()=>{changeMode("Menu"); setDiningHall('South')}}>
+              <Text style={{textAlign: 'center', color: 'green'}}>South</Text>
+              <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? 2 : 0), borderColor: 'orange', width: '25%'}}>
+              <Text style={{textAlign: 'center', color: 'green'}} >Favorites</Text>
+              <Icon size={30} name="star-outline" type='ionicon' color='orange'></Icon>
+          </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -176,7 +195,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingBottom: '5%',
     paddingTop: '10%'
   },
 });
