@@ -6,6 +6,7 @@ import MenuSearchBar from "../HelperComponents/MenuSearchBar";
 import Filter from "./Filter";
 import Nutrition from "./Nutrition";
 import Food from "../HelperComponents/Food";
+import {processAllergyArr, createAllergyImages} from "../HelperComponents/HelperFunctions.js";
 
 export default function Menu(props)
 {
@@ -54,43 +55,6 @@ export default function Menu(props)
         setFilters(newFilters);
     }
     
-    function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
-    {
-        if(allergyArr === undefined)
-        {
-            if(inclusionArr.length > 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        let includedAllergiesCount = 0;
-        for(let i=0; i<allergyArr.length; i++)
-        {
-            if(allergyArr[i].split(" ")[0].toLowerCase() == "contains")
-            {
-                if(exclusionArr.indexOf(allergyArr[i].split(" ")[1].toLowerCase()) != -1)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if(inclusionArr.indexOf(allergyArr[i].split(" ")[0].toLowerCase()) != -1)
-                {
-                    includedAllergiesCount++;
-                }
-            }
-        }
-        if(includedAllergiesCount != inclusionArr.length)
-        {
-            return false;
-        }
-        return true;
-    }
     
     function searchFilter(foodName)
     {
@@ -120,42 +84,6 @@ export default function Menu(props)
         }
     }
 
-    function createAllergyImages(allergyArr)
-    {
-        if(allergyArr === undefined)
-        {
-            return [];
-        }
-        let allergyMap = {
-            "Contains dairy": {"D": '#1826de'},
-            "Contains egg": {"E": '#d4c822'},
-            "Contains nuts": {"N":'#de0b24'},
-            "Contains fish": {"F": '#dd37f0'},
-            "Contains sesame": {"SS": '#ed8a11'},
-            "Contains soy": {"S": '#b5e016'},
-            "Contains gluten": {"G": '#ed7802'},
-            "Contains Shellfish": {"SF": '#02ede1'},
-            "vegetarian": {"V": '#1f4a04'},
-            "vegan": {"VG": '#7604b0'},
-            "Halal Friendly": {"HF": '#3ac2c2'},
-            "Locally Grown": {"L": '#767a7a'}
-        }
-        let cardArr = [];
-        for(let i=0; i<allergyArr.length; i++)
-        {
-            if(allergyMap[allergyArr[i]] != undefined)
-            {
-                let infoObject = allergyMap[allergyArr[i]];
-                let infoObjectKey = Object.keys(infoObject)[0];
-                cardArr.push(
-                    <View key={i} style={{borderWidth: 1, borderRadius: 25, width: 20, height: 20, backgroundColor: infoObject[infoObjectKey]}}>
-                        <Text style={{textAlign: 'center', color: 'white'}}>{infoObjectKey}</Text>
-                    </View>
-                )
-            }
-        }
-        return cardArr;
-    }
     useEffect(()=>{
         if(Object.keys(props.menu).length != 0 && Object.keys(props.menu[props.diningHall]).length != 0 && (mealTime === ""  || props.menu[props.diningHall][mealTime] === undefined))
         {
@@ -194,23 +122,31 @@ export default function Menu(props)
     {
         if(search.length != 0)
         {
+            let lastItemObject = {};
             let firstItem = true;
             for(let uniqueFoodIndex = 0; uniqueFoodIndex < props.database.length; uniqueFoodIndex++)
             {
                 let {foodname, foodallergies, fooddata, food_id} = props.database[uniqueFoodIndex];
-                let clickedItem = {...fooddata};
-                clickedItem['food_id'] = food_id;
+                fooddata = {...fooddata, food_id};
                 if(processAllergyArr(foodallergies, exclusionArr, inclusionArr) === true && searchFilter(foodname) === true)
                 {
-                    scrollViewDivs.push(
-                        <Food key={uniqueFoodIndex} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
-                        foodName={foodname} foodData={clickedItem} foodAllergies={foodallergies}
-                        firstItem= {firstItem} lastItem={false}/>
-                    )
+                    if(firstItem === false)
+                    {
+                        scrollViewDivs.push(
+                            <Food key={uniqueFoodIndex} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
+                            foodName={lastItemObject.foodname} foodData={lastItemObject.fooddata} foodAllergies={lastItemObject.foodallergies}
+                            lastItem={false}/>
+                        )
+                    }
                     firstItem = false;
+                    lastItemObject = {foodname, foodallergies, fooddata};
                 }
-                
             }
+            scrollViewDivs.push(
+                <Food key={scrollViewDivs.length} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
+                foodName={lastItemObject.foodname} foodData={lastItemObject.fooddata} foodAllergies={lastItemObject.foodallergies}
+                lastItem={true}/>
+            )
         }
         if(scrollViewDivs.length === 0)
         {
@@ -248,25 +184,14 @@ export default function Menu(props)
                         let foodAllergies = props.menu[props.diningHall][mealTime][sectionName][foodName]['itemAllergyArr'];
                         if(processAllergyArr(foodAllergies, exclusionArr, inclusionArr) === true && searchFilter(foodName) === true)
                         {
-                                arrOfItems.push(
-                                    <Food key={j} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
-                                    foodName={foodName} foodData={foodData}
-                                    foodAllergies={foodAllergies}
-                                    firstItem={firstItem} lastItem={false}/>
-                                )
-                                lastItemObject = {foodName, foodData, foodAllergies};
-                                firstItem = false;
+                            arrOfItems.push(
+                                <Food key={j} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
+                                foodName={foodName} foodData={foodData}
+                                foodAllergies={foodAllergies} lastItem={false}/>
+                            )
                         }
                             
                     }
-                    if(arrOfItems.length === 1)
-                    {
-                        firstItem = true;
-                    }
-                    arrOfItems[arrOfItems.length-1] = 
-                    <Food key={arrOfItems.length-1} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
-                    foodName={lastItemObject["foodName"]} foodData={lastItemObject["foodData"]} foodAllergies={lastItemObject["foodAllergies"]} 
-                    firstItem={firstItem} lastItem={true}/>;
                     scrollViewDivs.push(
                     <View key={i} style={{margin: "3%", shadowColor: 'black', shadowOffset: {width: 0, height: 1}, shadowOpacity: 0.5, backgroundColor: 'white',  borderRadius: 10}}>
                         <Text key={i} style={{fontSize: '24px', textAlign: 'center'}}>{sectionName}</Text>
