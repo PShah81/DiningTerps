@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity} from 'react-native';
+import styles from './HelperComponentStyles/helperFunctionStyles.js';
 export function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
 {
     if(allergyArr === undefined)
@@ -65,8 +66,8 @@ export function createAllergyImages(allergyArr)
             let infoObject = allergyMap[allergyArr[i]];
             let infoObjectKey = Object.keys(infoObject)[0];
             cardArr.push(
-                <View key={i} style={{borderWidth: 1, borderRadius: 25, width: 20, height: 20, backgroundColor: infoObject[infoObjectKey]}}>
-                    <Text style={{textAlign: 'center', color: 'white'}}>{infoObjectKey}</Text>
+                <View key={i} style={{...styles.allergyCircle, backgroundColor: infoObject[infoObjectKey]}}>
+                    <Text style={styles.allergyCircleText}>{infoObjectKey}</Text>
                 </View>
             )
         }

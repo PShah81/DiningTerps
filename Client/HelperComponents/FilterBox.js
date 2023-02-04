@@ -1,5 +1,6 @@
 import {View, Text} from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import styles from './HelperComponentStyles/filterBoxStyles.js';
 function FilterBox(props)
 {
     let allergyMap = {
@@ -19,15 +20,15 @@ function FilterBox(props)
     let infoObject = allergyMap[props.attribute];
     let infoObjectKey = Object.keys(infoObject)[0];
     return(
-        <View style={{display: 'flex', flexDirection: "row", alignItems: 'center'}}>
+        <View style={styles.filterBoxContainer}>
             <CheckBox
                 title= {props.attribute}
                 checked={props.checked}
                 onPress={()=>{props.changeFilter(props.attribute)}}
-                containerStyle= {{backgroundColor: 'white', borderWidth: 0, marginLeft: 0, marginRight: 0, padding: 0}}
+                containerStyle= {styles.checkBox}
             />
-            <View style={{borderWidth: 1, borderRadius: 25, width: 20, height: 20, backgroundColor: infoObject[infoObjectKey]}}>
-                <Text style={{textAlign: 'center', color: 'white'}}>{infoObjectKey}</Text>
+            <View style={{...styles.allergyCircle, backgroundColor: infoObject[infoObjectKey]}}>
+                <Text style={styles.allergyCircleText}>{infoObjectKey}</Text>
             </View>
         </View>
     )

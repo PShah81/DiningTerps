@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Modal} from 'react-native';
 import {Icon} from 'react-native-elements';
 import FilterBox from "../HelperComponents/FilterBox";
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import styles from './PageStyles/filterStyles.js';
 function Filter(props)
 {
     return(
@@ -13,8 +14,8 @@ function Filter(props)
                 props.stopFiltering(false)
             }}
         >
-            <View style={{paddingTop: '10%'}}>
-                <TouchableOpacity onPress={()=>{props.stopFiltering(false)}} style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', marginBottom: '2%'}}>
+            <View style={styles.modalContainer}>
+                <TouchableOpacity onPress={()=>{props.stopFiltering(false)}} style={styles.closeButton}>
                         <Icon size={30} name="close" type='ionicon' color='orange'></Icon>
                 </TouchableOpacity>
                 <View style= {{marginLeft: '7%', marginRight: '5%'}}>

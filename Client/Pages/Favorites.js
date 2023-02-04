@@ -4,7 +4,8 @@ import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
 import Nutrition from "./Nutrition";
 import Food from "../HelperComponents/Food";
-import {createAllergyImages} from '../HelperComponents/HelperFunctions.js'
+import {createAllergyImages} from '../HelperComponents/HelperFunctions.js';
+import styles from './PageStyles/favoritesStyles.js';
 
 export default function Favorites(props)
 {
@@ -23,8 +24,6 @@ export default function Favorites(props)
     {
         setIsItemClicked(false);
     }
-    
-
     
     let scrollViewDivs = [];
 
@@ -49,8 +48,8 @@ export default function Favorites(props)
                     )  
                 }
                 scrollViewDivs.push(
-                    <View key={i} style={{margin: "3%", shadowColor: 'black', shadowOffset: {width: 0, height: 1}, shadowOpacity: 0.5, backgroundColor: 'white',  borderRadius: 10}}>
-                        <Text key={i} style={{fontSize: '24px', textAlign: 'center'}}>{mealTimeName}</Text>
+                    <View key={i} style={styles.scrollViewDivs}>
+                        <Text key={i} style={styles.sectionTitle}>{mealTimeName}</Text>
                         {arrOfItems}
                     </View>
                 );
@@ -59,7 +58,7 @@ export default function Favorites(props)
         }
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NO FAVORITES AVAILAVBLE</Text>)
+            scrollViewDivs.push(<Text key={1} style={styles.emptyDataSet}>NO FAVORITES AVAILAVBLE</Text>)
         }
     }
 
@@ -77,25 +76,25 @@ export default function Favorites(props)
 
     generateFoodsAvailable();
     return(
-        <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+        <View style={styles.favoritePageContainer}>
             <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
             removeFoodFromNotifications={props.removeFoodFromNotifications}  foodObject = {itemClicked}
             alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
-            <View style= {{marginBottom: '3%'}}>
-                <Text style={{fontSize: '30px', textAlign: 'center'}}>Favorites</Text>
+            <View style= {styles.titleContainer}>
+                <Text style={styles.title}>Favorites</Text>
             </View>
-            <View style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
-                <TouchableOpacity key={"251 North"} onPress={()=>{setDiningHall('251 North')}} style={{borderBottomWidth: (diningHall==="251 North") ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
-                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>251 North</Text>
+            <View style={styles.navBarContainer}>
+                <TouchableOpacity key={"251 North"} onPress={()=>{setDiningHall('251 North')}} style={{borderBottomWidth: (diningHall==="251 North") ? 2 : 0, ...styles.navButton}}>
+                    <Text style={styles.navName}>251 North</Text>
                 </TouchableOpacity>
-                <TouchableOpacity key={"Yahentamitsi"} onPress={()=>{setDiningHall('Yahentamitsi')}} style={{borderBottomWidth: (diningHall==="Yahentamitsi") ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
-                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>Yahentamitsi</Text>
+                <TouchableOpacity key={"Yahentamitsi"} onPress={()=>{setDiningHall('Yahentamitsi')}} style={{borderBottomWidth: (diningHall==="Yahentamitsi") ? 2 : 0, ...styles.navButton}}>
+                    <Text style={styles.navName}>Yahentamitsi</Text>
                 </TouchableOpacity>
-                <TouchableOpacity key={"South"} onPress={()=>{setDiningHall('South')}} style={{borderBottomWidth: (diningHall==="South") ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
-                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>South</Text>
+                <TouchableOpacity key={"South"} onPress={()=>{setDiningHall('South')}} style={{borderBottomWidth: (diningHall==="South") ? 2 : 0, ...styles.navButton}}>
+                    <Text style={styles.navName}>South</Text>
                 </TouchableOpacity>
             </View>
-            <View style={{height: "83%"}}>
+            <View style={styles.scrollViewContainer}>
                 <ScrollView>
                     {scrollViewDivs}
                 </ScrollView>

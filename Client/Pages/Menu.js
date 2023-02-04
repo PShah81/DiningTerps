@@ -7,6 +7,7 @@ import Filter from "./Filter";
 import Nutrition from "./Nutrition";
 import Food from "../HelperComponents/Food";
 import {processAllergyArr, createAllergyImages} from "../HelperComponents/HelperFunctions.js";
+import styles from './PageStyles/menuStyles.js';
 
 export default function Menu(props)
 {
@@ -150,7 +151,7 @@ export default function Menu(props)
         }
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>SEARCH TO DISPLAY DATA</Text>)
+            scrollViewDivs.push(<Text key={1} style={styles.databaseSearch}>SEARCH TO DISPLAY DATA</Text>)
         }
 
         
@@ -163,8 +164,8 @@ export default function Menu(props)
             {
                 let mealTimeTabName = Object.keys(props.menu[props.diningHall])[i];
                 mealTimeArrTabs.push(
-                <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, flexGrow: 1, borderBottomColor: "orange", width: '33%'}}>
-                    <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>{mealTimeTabName}</Text>
+                <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, ...styles.mealTimeTab}}>
+                    <Text style={styles.tabTitle}>{mealTimeTabName}</Text>
                 </TouchableOpacity>
                 );
                 
@@ -193,10 +194,10 @@ export default function Menu(props)
                             
                     }
                     scrollViewDivs.push(
-                    <View key={i} style={{margin: "3%", shadowColor: 'black', shadowOffset: {width: 0, height: 1}, shadowOpacity: 0.5, backgroundColor: 'white',  borderRadius: 10}}>
-                        <Text key={i} style={{fontSize: '24px', textAlign: 'center'}}>{sectionName}</Text>
-                        {arrOfItems}
-                    </View>
+                        <View key={i} style={styles.scrollViewDivs}>
+                            <Text key={i} style={styles.sectionTitle}>{sectionName}</Text>
+                            {arrOfItems}
+                        </View>
                     );
                 }
                 
@@ -206,7 +207,7 @@ export default function Menu(props)
     
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={{fontSize: 30, textAlign: 'center', marginTop: '5%'}}>NO DATA AVAILAVBLE</Text>)
+            scrollViewDivs.push(<Text key={1} style={styles.emptyDataSet}>NO DATA AVAILAVBLE</Text>)
         }
     }
     
@@ -220,16 +221,16 @@ export default function Menu(props)
     }
 
     return(
-        <View style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+        <View style={styles.menuPageContainer}>
             <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
             <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
             removeFoodFromNotifications={props.removeFoodFromNotifications} foodObject = {itemClicked}
             alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
-            <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
+            <View style= {styles.menuFilters}>
                 <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
-                <TouchableOpacity onPress={()=>{setFiltering(true)}}style={{backgroundColor: "white", width: '15%', justifyContent: 'center'}}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
+                <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
             </View>
-            <View style={{width: '100%', display: 'flex', flexDirection: 'row', paddingTop: '1%'}}>
+            <View style={styles.mealTimeTabContainer}>
                 {mealTimeArrTabs}
             </View>
             <View>

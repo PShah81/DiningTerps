@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, Modal, Button} from 'react-native';
 import {Icon} from 'react-native-elements';
+import styles from './PageStyles/nutritionStyles.js';
 function Nutrition(props)
 {
     let statsArr = [];
@@ -26,10 +27,10 @@ function Nutrition(props)
                 fontWeightForName = "bold";
             }
             statsArr.push(
-                <View key={i} style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1}}>
-                    <View style={{display: 'flex', flexDirection: 'row'}}>
+                <View key={i} style={styles.nutritionMetric}>
+                    <View style={styles.gramAmountContainer}>
                         <Text style={{marginLeft: marginLeftForName, fontWeight: fontWeightForName}}>{modifiedName}</Text>
-                        <View style={{marginLeft: 10}}>
+                        <View style={styles.gramAmount}>
                             <Text>{stats[statName]["gram amount"]}</Text>
                         </View>
                         
@@ -51,56 +52,51 @@ function Nutrition(props)
                     props.unclickItem()
                 }}
             >
-                <View style={{marginTop: '10%', height: '80%'}}>
-                    <TouchableOpacity onPress={()=>{props.unclickItem()}} style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', marginBottom: '2%', marginLeft: '2%'}}>
+                <View style={styles.modalContainer}>
+                    <TouchableOpacity onPress={()=>{props.unclickItem()}} style={styles.closeButton}>
                             <Icon size={30} name="arrow-back-outline" type='ionicon' color='orange'></Icon>
                     </TouchableOpacity>
                     {props.foodObject.nutritionFacts === undefined ? 
-                    <Text style={{textAlign: 'center', fontSize: 24}}>NO NUTRITION DATA AVAILABLE</Text> :
-                    <View style={{marginLeft: '10%', marginRight: '10%', borderWidth: 1}}>
-                        <View style={{marginLeft: '3%', marginRight: '3%', marginBottom: '10%'}}>
-                            <Text style={{fontSize: 36, borderBottomWidth: 2}}>Nutrition Facts</Text>
-                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 7}}>
+                    <Text style={styles.emptyDataSet}>NO NUTRITION DATA AVAILABLE</Text> :
+                    <View style={styles.nutritionFactsContainer}>
+                        <View style={styles.nutritionFacts}>
+                            <Text style={styles.nutritionFactsTitle}>Nutrition Facts</Text>
+                            <View style={styles.servingSize}>
                                 <Text>Serving Size</Text>
                                 <Text>{props.foodObject.nutritionFacts["serving size"]}</Text>
                             </View>
-                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 4}}>
+                            <View style={styles.servingAndCalorieContainer}>
                                 <View>
-                                    <Text style={{fontSize: 12}}>Amount per serving </Text>
-                                    <Text style={{fontSize: 28}}>Calories</Text>
+                                    <Text style={styles.amountPerServing}>Amount per serving </Text>
+                                    <Text style={styles.calories}>Calories</Text>
                                 </View>
                                 <View>
-                                    <Text style={{fontSize: 36}}>{props.foodObject.nutritionFacts["calories"]}</Text>
+                                    <Text style={styles.calorieAmount}>{props.foodObject.nutritionFacts["calories"]}</Text>
                                 </View>
                             </View>
                             <View>
-                                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', borderBottomWidth: 1}}>
+                                <View style={styles.dailyValue}>
                                     <Text>% Daily Value</Text>
                                 </View>
                                 {statsArr}
-                                
                             </View>
                         </View>
                     </View>
                     }
                     {
                         props.alreadyAddedNotification? 
-                        <View style={{marginLeft: '10%', marginRight: '10%', marginTop: 'auto'}}>
-                            <TouchableOpacity onPress={()=>{props.removeFoodFromNotifications(props.foodObject)}} style={{backgroundColor: "orange", display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 40}}>
-                                <Text style={{color: 'white', textAlign:'center', fontSize: 20}}>Delete From Notifications</Text>
+                        <View style={styles.favoriteButtonContainer}>
+                            <TouchableOpacity onPress={()=>{props.removeFoodFromNotifications(props.foodObject)}} style={styles.favoriteButton}>
+                                <Text style={styles.favoriteButtonText}>Delete From Favorites</Text>
                             </TouchableOpacity>
                         </View>
-                        
-                        
                         :
-                        <View style={{marginLeft: '10%', marginRight: '10%', marginTop: 'auto'}}>
-                            <TouchableOpacity onPress={()=>{props.addFoodToNotifications(props.foodObject)}} style={{backgroundColor: "orange", display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 40}}>
-                                <Text style={{color: 'white', textAlign:'center', fontSize: 20}}>Add To Notifications</Text>
+                        <View style={styles.favoriteButtonContainer}>
+                            <TouchableOpacity onPress={()=>{props.addFoodToNotifications(props.foodObject)}} style={styles.favoriteButton}>
+                                <Text style={styles.favoriteButtonText}>Add To Favorites</Text>
                             </TouchableOpacity>
                         </View>
                     }
-                    
-                    
                 </View>
                 
             </Modal>

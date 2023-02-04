@@ -6,6 +6,7 @@ import Favorites from './Pages/Favorites';
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import styles from './appStyles.js';
 
 export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
@@ -169,21 +170,21 @@ export default function App() {
     <View style={styles.container}>
       {mode === "Menu" ? <Menu diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
       {mode === "Favorites" ? <Favorites changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Favorites> : null}
-      <View style= {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%', position: 'absolute', bottom: 0, backgroundColor: 'white', paddingBottom: '5%'}}>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), borderColor: 'orange', width: '25%'}} onPress={()=>{changeMode("Menu"); setDiningHall('251 North')}}>
-              <Text style={{textAlign: 'center', color: 'green'}}>251 North</Text>
+      <View style= {styles.navBar}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); setDiningHall('251 North')}}>
+              <Text style={styles.navText}>251 North</Text>
               <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? 2 : 0), borderColor: 'orange', width: '25%'}} onPress={()=>{changeMode("Menu"); setDiningHall('Yahentamitsi')}}>
-              <Text style={{textAlign: 'center', color: 'green'}}>Yahentamitsi</Text>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); setDiningHall('Yahentamitsi')}}>
+              <Text style={styles.navText}>Yahentamitsi</Text>
               <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? 2 : 0), borderColor: 'orange', width: '25%'}} onPress={()=>{changeMode("Menu"); setDiningHall('South')}}>
-              <Text style={{textAlign: 'center', color: 'green'}}>South</Text>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); setDiningHall('South')}}>
+              <Text style={styles.navText}>South</Text>
               <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? 2 : 0), borderColor: 'orange', width: '25%'}}>
-              <Text style={{textAlign: 'center', color: 'green'}} >Favorites</Text>
+          <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? 2 : 0), ...styles.navButton}}>
+              <Text style={styles.navText} >Favorites</Text>
               <Icon size={30} name="star-outline" type='ionicon' color='orange'></Icon>
           </TouchableOpacity>
       </View>
@@ -191,10 +192,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: '10%'
-  },
-});
