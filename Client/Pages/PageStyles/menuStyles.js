@@ -54,5 +54,8 @@ export default StyleSheet.create({
         display: 'flex', 
         flexDirection: 'row', 
         paddingTop: '1%'
+    },
+    scrollDivHeight:{
+        height: '87%'
     }
 });

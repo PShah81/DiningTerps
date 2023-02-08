@@ -43,9 +43,9 @@ function Filter(props)
                         <View>
                             <Text style={{fontSize: 24}}>Include</Text>
                             <FilterBox attribute ={"Vegetarian"} checked={props.filters["Include"]["Vegetarian"]} changeFilter={props.changeFilter}/>
-                            <FilterBox attribute ={"Halal"} checked={props.filters["Include"]["Halal"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"HalalFriendly"} checked={props.filters["Include"]["HalalFriendly"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Vegan"} checked={props.filters["Include"]["Vegan"]} changeFilter={props.changeFilter}/>
-                            <FilterBox attribute ={"Locally Grown"} checked={props.filters["Include"]["Locally Grown"]} changeFilter={props.changeFilter}/>
+                            <FilterBox attribute ={"LocallyGrown"} checked={props.filters["Include"]["LocallyGrown"]} changeFilter={props.changeFilter}/>
                         </View>
                     </View>
                         

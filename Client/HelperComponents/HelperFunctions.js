@@ -16,6 +16,12 @@ export function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
     let includedAllergiesCount = 0;
     for(let i=0; i<allergyArr.length; i++)
     {
+        if(allergyArr[i] === "HalalFriendly")
+        {
+            console.log(allergyArr[i].split(" ")[0].toLowerCase());
+            console.log(inclusionArr)
+            console.log(inclusionArr.indexOf(allergyArr[i].split(" ")[0].toLowerCase()))
+        }
         if(allergyArr[i].split(" ")[0].toLowerCase() == "contains")
         {
             if(exclusionArr.indexOf(allergyArr[i].split(" ")[1].toLowerCase()) != -1)
@@ -55,8 +61,8 @@ export function createAllergyImages(allergyArr)
         "Contains Shellfish": {"SF": '#02ede1'},
         "vegetarian": {"V": '#1f4a04'},
         "vegan": {"VG": '#7604b0'},
-        "Halal Friendly": {"HF": '#3ac2c2'},
-        "Locally Grown": {"L": '#767a7a'}
+        "HalalFriendly": {"HF": '#3ac2c2'},
+        "LocallyGrown": {"L": '#767a7a'}
     }
     let cardArr = [];
     for(let i=0; i<allergyArr.length; i++)

@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Text} from 'react-native';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect} from "react";
 import {Icon} from 'react-native-elements';
 import Menu from './Pages/Menu';
 import Favorites from './Pages/Favorites';
@@ -7,6 +7,9 @@ import * as SecureStore from 'expo-secure-store';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './appStyles.js';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
@@ -17,14 +20,34 @@ export default function App() {
   const [UUID, setUUID] = useState('');
   const [notificationsAvailable, setNotificationsAvailable] = useState({});
   const [diningHall, setDiningHall] = useState('251 North');
+  const [mealTime, setMealTime] = useState('');
+  const [loadingMenu, setLoadingMenu] = useState(true);
+  useEffect(()=>{
+    if(loadingMenu === false)
+    {
+      setTimeout(async () => {
+        await SplashScreen.hideAsync();
+      }, 2000);
+    }
+  },[loadingMenu])
+  function changeDiningHall(diningHall)
+  {
+      setDiningHall(diningHall);
+      if(Object.keys(todaysMenu[diningHall]).length != 0)
+      {
+        setMealTime(Object.keys(todaysMenu[diningHall])[0]);
+      }
+  }
   function changeMode(newMode)
   {
-    setCurrentMode(newMode);
+    if(mode != newMode)
+    {
+      setCurrentMode(newMode);
+    }
   }
   function addFoodToNotifications(itemObject)
   {
     let food_id = itemObject["food_id"];
-
     let modifiedItemObject = {};
     modifiedItemObject["food_id"] = food_id;
     modifiedItemObject["foodname"] = itemObject["foodname"];
@@ -95,7 +118,11 @@ export default function App() {
   {
     fetch("https://nutritionserver.link/menu")
     .then((response) => response.json())
-    .then((data) => {setTodaysMenu(data)})
+    .then((data) => {
+      setTodaysMenu(data);
+      setMealTime(Object.keys(data[diningHall])[0]);
+      setLoadingMenu(false);
+    })
     .catch((error)=>{
       console.log(error)
     })
@@ -166,20 +193,22 @@ export default function App() {
   useEffect(()=>{
     runFetches();
   },[])
+
+
   return (
     <View style={styles.container}>
-      {mode === "Menu" ? <Menu diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
-      {mode === "Favorites" ? <Favorites changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Favorites> : null}
+      {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
+      {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Favorites> : null}
       <View style= {styles.navBar}>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); setDiningHall('251 North')}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
               <Text style={styles.navText}>251 North</Text>
               <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); setDiningHall('Yahentamitsi')}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('Yahentamitsi')}}>
               <Text style={styles.navText}>Yahentamitsi</Text>
               <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); setDiningHall('South')}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('South')}}>
               <Text style={styles.navText}>South</Text>
               <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>

@@ -11,10 +11,9 @@ import styles from './PageStyles/menuStyles.js';
 
 export default function Menu(props)
 {
-    const [mealTime, setMealTime] = useState("");
     const [filtering, setFiltering] = useState(false);
     const [displayType, setDisplayType] = useState("Menu");
-    const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{ "Halal" : false, "Locally Grown" : false, "Vegetarian" : false, "Vegan" : false}})
+    const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{"HalalFriendly" : false, "LocallyGrown" : false, "Vegetarian" : false, "Vegan" : false}})
     const [search, setSearch] = useState("");
     const [isItemClicked, setIsItemClicked] = useState(false);
     const [itemClicked, setItemClicked] = useState({})
@@ -85,12 +84,6 @@ export default function Menu(props)
         }
     }
 
-    useEffect(()=>{
-        if(Object.keys(props.menu).length != 0 && Object.keys(props.menu[props.diningHall]).length != 0 && (mealTime === ""  || props.menu[props.diningHall][mealTime] === undefined))
-        {
-            setMealTime(Object.keys(props.menu[props.diningHall])[0]);
-        }
-    })
     
     function createInclusionAndExclusionArrays()
     {
@@ -143,15 +136,27 @@ export default function Menu(props)
                     lastItemObject = {foodname, foodallergies, fooddata};
                 }
             }
-            scrollViewDivs.push(
-                <Food key={scrollViewDivs.length} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
-                foodName={lastItemObject.foodname} foodData={lastItemObject.fooddata} foodAllergies={lastItemObject.foodallergies}
-                lastItem={true}/>
-            )
+            if(Object.keys(lastItemObject).length != 0)
+            {
+                scrollViewDivs.push(
+                    <Food key={scrollViewDivs.length} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
+                    foodName={lastItemObject.foodname} foodData={lastItemObject.fooddata} foodAllergies={lastItemObject.foodallergies}
+                    lastItem={true}/>
+                )
+            }
+            
         }
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={styles.databaseSearch}>SEARCH TO DISPLAY DATA</Text>)
+            if(search.length > 0)
+            {
+                scrollViewDivs.push(<Text key={1} style={styles.databaseSearch}>NO DATA AVAILABLE</Text>)
+            }
+            else
+            {
+                scrollViewDivs.push(<Text key={1} style={styles.databaseSearch}>SEARCH TO DISPLAY DATA</Text>)
+            }
+           
         }
 
         
@@ -164,25 +169,25 @@ export default function Menu(props)
             {
                 let mealTimeTabName = Object.keys(props.menu[props.diningHall])[i];
                 mealTimeArrTabs.push(
-                <TouchableOpacity key={i} onPress={()=>{setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === mealTime) ? 2 : 0, ...styles.mealTimeTab}}>
+                <TouchableOpacity key={i} onPress={()=>{props.setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === props.mealTime) ? 2 : 0, ...styles.mealTimeTab}}>
                     <Text style={styles.tabTitle}>{mealTimeTabName}</Text>
                 </TouchableOpacity>
                 );
                 
             }
-            if(mealTime != "" && props.menu[props.diningHall][mealTime] != undefined)
+            if(props.mealTime != "" && props.menu[props.diningHall][props.mealTime] != undefined)
             {
-                for(let i=0; i< Object.keys(props.menu[props.diningHall][mealTime]).length; i++)
+                for(let i=0; i< Object.keys(props.menu[props.diningHall][props.mealTime]).length; i++)
                 {
-                    let sectionName = Object.keys(props.menu[props.diningHall][mealTime])[i];
+                    let sectionName = Object.keys(props.menu[props.diningHall][props.mealTime])[i];
                     let firstItem = true;
                     let lastItemObject = {};
                     let arrOfItems = [];
-                    for(let j=0; j< Object.keys(props.menu[props.diningHall][mealTime][sectionName]).length; j++)
+                    for(let j=0; j< Object.keys(props.menu[props.diningHall][props.mealTime][sectionName]).length; j++)
                     {
-                        let foodName = Object.keys(props.menu[props.diningHall][mealTime][sectionName])[j];
-                        let foodData = props.menu[props.diningHall][mealTime][sectionName][foodName];
-                        let foodAllergies = props.menu[props.diningHall][mealTime][sectionName][foodName]['itemAllergyArr'];
+                        let foodName = Object.keys(props.menu[props.diningHall][props.mealTime][sectionName])[j];
+                        let foodData = props.menu[props.diningHall][props.mealTime][sectionName][foodName];
+                        let foodAllergies = props.menu[props.diningHall][props.mealTime][sectionName][foodName]['itemAllergyArr'];
                         if(processAllergyArr(foodAllergies, exclusionArr, inclusionArr) === true && searchFilter(foodName) === true)
                         {
                             arrOfItems.push(
@@ -207,7 +212,7 @@ export default function Menu(props)
     
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={styles.emptyDataSet}>NO DATA AVAILAVBLE</Text>)
+            scrollViewDivs.push(<Text key={1} style={styles.emptyDataSet}>NO DATA AVAILABLE</Text>)
         }
     }
     
@@ -219,25 +224,25 @@ export default function Menu(props)
     {
         generateDatabaseItems();
     }
-
+    
     return(
         <View style={styles.menuPageContainer}>
-            <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
-            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
-            removeFoodFromNotifications={props.removeFoodFromNotifications} foodObject = {itemClicked}
-            alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
-            <View style= {styles.menuFilters}>
-                <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
-                <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
-            </View>
-            <View style={styles.mealTimeTabContainer}>
-                {mealTimeArrTabs}
-            </View>
-            <View>
-                <ScrollView>
-                    {scrollViewDivs}
-                </ScrollView>
-            </View>
+                <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
+                <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
+                removeFoodFromNotifications={props.removeFoodFromNotifications} foodObject = {itemClicked}
+                alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
+                <View style= {styles.menuFilters}>
+                    <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
+                    <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
+                </View>
+                <View style={styles.mealTimeTabContainer}>
+                    {mealTimeArrTabs}
+                </View>
+                <View style={styles.scrollDivHeight}>
+                    <ScrollView>
+                        {scrollViewDivs}
+                    </ScrollView>
+                </View>
         </View>
     );
 }

@@ -13,7 +13,8 @@ export default StyleSheet.create({
         position: 'absolute', 
         bottom: 0, 
         backgroundColor: 'white', 
-        paddingBottom: '5%'
+        paddingBottom: '5%',
+        height: '8%'
     },
     navButton: {
         borderColor: 'orange', 

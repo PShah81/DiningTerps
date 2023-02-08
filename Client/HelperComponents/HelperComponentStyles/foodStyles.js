@@ -18,7 +18,8 @@ export default StyleSheet.create({
     },
     foodName: {
         marginLeft: '3%',
-        fontWeight: '550'
+        fontWeight: '550',
+        width: '60%'
     }
 });
 

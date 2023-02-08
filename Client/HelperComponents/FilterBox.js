@@ -14,15 +14,24 @@ function FilterBox(props)
         "Shellfish": {"SF": '#02ede1'},
         "Vegetarian": {"V": '#1f4a04'},
         "Vegan": {"VG": '#7604b0'},
-        "Halal": {"HF": '#3ac2c2'},
-        "Locally Grown": {"L": '#767a7a'}
+        "HalalFriendly": {"HF": '#3ac2c2'},
+        "LocallyGrown": {"L": '#767a7a'}
     }
     let infoObject = allergyMap[props.attribute];
     let infoObjectKey = Object.keys(infoObject)[0];
+    let name = props.attribute;
+    if(name === "HalalFriendly")
+    {
+        name = "Halal Friendly";
+    }
+    else if(name === "LocallyGrown")
+    {
+        name = "Locally Grown";
+    }
     return(
         <View style={styles.filterBoxContainer}>
             <CheckBox
-                title= {props.attribute}
+                title= {name}
                 checked={props.checked}
                 onPress={()=>{props.changeFilter(props.attribute)}}
                 containerStyle= {styles.checkBox}
