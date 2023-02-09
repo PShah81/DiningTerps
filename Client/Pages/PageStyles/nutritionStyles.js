@@ -85,5 +85,11 @@ export default StyleSheet.create({
         color: 'white', 
         textAlign:'center', 
         fontSize: 20
+    },
+    ingredientsContainer: {
+        marginTop: '2%'
+    },
+    boldTitle: {
+        fontWeight: '700'
     }
 });

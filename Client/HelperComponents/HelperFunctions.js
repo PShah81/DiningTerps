@@ -16,12 +16,6 @@ export function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
     let includedAllergiesCount = 0;
     for(let i=0; i<allergyArr.length; i++)
     {
-        if(allergyArr[i] === "HalalFriendly")
-        {
-            console.log(allergyArr[i].split(" ")[0].toLowerCase());
-            console.log(inclusionArr)
-            console.log(inclusionArr.indexOf(allergyArr[i].split(" ")[0].toLowerCase()))
-        }
         if(allergyArr[i].split(" ")[0].toLowerCase() == "contains")
         {
             if(exclusionArr.indexOf(allergyArr[i].split(" ")[1].toLowerCase()) != -1)
