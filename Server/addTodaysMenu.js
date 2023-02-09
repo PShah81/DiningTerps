@@ -5,7 +5,7 @@ import webscrapeData from './webscrape.js';
 import mysql from 'mysql2/promise';
 
 let job = new CronJob(
-	'0 0 * * * *',
+	'0 0 0 * * *',
 	function() {
         let pool = mysql.createPool({
             connectionLimit: 100, 
@@ -15,6 +15,7 @@ let job = new CronJob(
             database: process.env.DB_NAME
         });
         let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'})
+        console.log(date);
         dailyDataScript(date, pool);
 	},
 	null,
@@ -25,7 +26,6 @@ let job = new CronJob(
 async function dailyDataScript(date, pool)
 {
     let data = await webscrapeData(date);
-    console.log(data);
     await addToDatabase(data, pool);
     data = await getIds(data, pool);
     await updateMenu(data, pool, date);
@@ -54,11 +54,9 @@ async function addToDatabase(menu, pool)
     for(let i=0; i< Object.keys(menu).length; i++)
     {
         diningHall = Object.keys(menu)[i];
-        console.log(diningHall)
         for(let j=0; j< Object.keys(menu[diningHall]).length; j++)
         {
             mealTime = Object.keys(menu[diningHall])[j];
-            console.log(mealTime)
             for(let k=0; k< Object.keys(menu[diningHall][mealTime]).length; k++)
             {
                 sectionName = Object.keys(menu[diningHall][mealTime])[k];
@@ -113,14 +111,12 @@ async function processSection(menu, diningHall, mealTime, sectionName, pool)
         let itemName = Object.keys(menu[diningHall][mealTime][sectionName])[l];
         let itemAllergyArr = menu[diningHall][mealTime][sectionName][itemName]["itemAllergyArr"];
         let itemData =  menu[diningHall][mealTime][sectionName][itemName];
-        console.log(itemName)
         if(itemAllergyArr === undefined)
         {
             itemAllergyArr = [];
         }
         await addNewEntries(con, itemName, itemAllergyArr, itemData);
     }
-    console.log("Section Finished")
     con.release();
 }
 
@@ -188,7 +184,6 @@ async function getIdForFood(menu, diningHall, mealTime, sectionName, pool)
         }
         
     }
-    console.log('finished');
     con.release();
 }
 
