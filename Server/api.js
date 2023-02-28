@@ -56,6 +56,13 @@ app.get('/notificationsavailable/:uuid', (req, res)=>{
     getNotificationsAvailable(uuid, res);
 })
 
+app.get('/', (req, res)=>{
+    res.send("Support Website")
+})
+
+app.get('/privacypolicy', (req,res)=>{
+    res.send("Privacy Policy");
+})
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
 
 async function getNotificationsAvailable(uuid, res)
@@ -73,6 +80,11 @@ async function getNotificationsAvailable(uuid, res)
     let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
     let getMenuSql = "SELECT menuJson FROM menus WHERE menuDate = ?";
     let menuResults = await con.query(getMenuSql, [date]);
+    if(menuResults[0][0] === undefined)
+    {
+        res.send({})
+        return;
+    }
     let menu = menuResults[0][0].menuJson;
     con.release();
     for(let i=0; i< Object.keys(menu).length; i++)
@@ -187,9 +199,13 @@ async function retrieveTodaysMenu(pool, res)
     let sql = "SELECT menuJson FROM menus WHERE menuDate = ?";
     let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
     let results = await con.query(sql, [date]);
+    if(results[0][0] === undefined)
+    {
+        res.send({})
+        return;
+    }
     con.release();
     let menu = results[0][0].menuJson;
-
     for(let i=0; i< Object.keys(menu).length; i++)
     {
         let diningHall = Object.keys(menu)[i];

@@ -34,11 +34,15 @@ const getDocument = (URL) => {
          .then((data) => {
             return new JSDOM(data).window.document;
          })
+         .catch((err)=>{
+            console.log(err)
+         })
       });
 };
 
 async function getItemArr(location, date, itemMap, URL)
 {
+   let promiseArr = [];
    let document = await getDocument(URL);
    itemMap[location] = {};
    let infoContainer = document.getElementsByClassName("container")[0].getElementsByClassName("row")[0].getElementsByClassName("section")[1];
@@ -92,29 +96,28 @@ async function getItemArr(location, date, itemMap, URL)
                   }
                }
             }
-            itemMap[location][breakfastLunchDinner][cardTitle][itemName]["nutritionFacts"] = await getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink);
+
+            promiseArr.push(getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink, itemMap));
+            // itemMap[location][breakfastLunchDinner][cardTitle][itemName]["nutritionFacts"] = await getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink);
             itemMap[location][breakfastLunchDinner][cardTitle][itemName]["itemAllergyArr"] = itemAllergyArr;
          }
       }
    }
+   await Promise.all(promiseArr);
 }
 
-async function getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink)
+async function getNutritionFacts(location, date, breakfastLunchDinner, cardTitle, itemName, itemLink, itemMap)
 {
    let nutritionFactsMap  = {};
-   let start = Date.now();
-   
    let document = await getDocument(itemLink);
 
-   let end = Date.now();
-   let elapsed = end - start;   
-   if(elapsed/1000 > 3 )
-   {
-      console.log(itemLink)
-   }
    if(document.getElementsByClassName("facts_table")[0] == undefined)
    {
       return undefined;
+   }
+   if(document.getElementsByClassName("labelingredientsvalue")[0] != undefined)
+   {
+      nutritionFactsMap["ingredients"] = document.getElementsByClassName("labelingredientsvalue")[0].textContent
    }
    nutritionFactsMap["serving size"] = document.getElementsByClassName("facts_table")[0].getElementsByTagName("tbody")[0].children[0].children[0].getElementsByClassName("nutfactsservsize")[1].textContent;
    nutritionFactsMap["calories"] = document.getElementsByClassName("facts_table")[0].getElementsByTagName("tbody")[0].children[0].children[0].getElementsByTagName("p")[1].textContent;
@@ -141,7 +144,7 @@ async function getNutritionFacts(location, date, breakfastLunchDinner, cardTitle
          nutritionFactsMap["Nutrition Metrics"][nutritionMetric]["daily value"] = dailyValue;
       }
    }
-   return nutritionFactsMap;
+   itemMap[location][breakfastLunchDinner][cardTitle][itemName]["nutritionFacts"] = nutritionFactsMap;
 }
 
 export default webscrapeData;
