@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Modal, Button} from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Button, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
 import styles from './PageStyles/nutritionStyles.js';
 function Nutrition(props)
@@ -8,11 +8,11 @@ function Nutrition(props)
     if(props.foodObject.nutritionFacts !== undefined)
     { 
         ingredients = props.foodObject.nutritionFacts.ingredients;
-        if(ingredients.length > 1000)
-        {
-            ingredients.length = 1000;
-            ingredients += ", etc...";
-        }
+        // if(ingredients.length > 1000)
+        // {
+        //     ingredients.length = 1000;
+        //     ingredients += ", etc...";
+        // }
         let stats = props.foodObject.nutritionFacts["Nutrition Metrics"];
         let modifiedStats = {"Total Fat": 0, "Saturated Fat": 1, "Trans Fat": 1, "Cholesterol": 0, "Sodium": 0, "Total Carbohydrate": 0, "Dietary Fiber":1, "Total Sugars":1, "Added Sugars":2, "Protein": 0};
         
@@ -88,22 +88,27 @@ function Nutrition(props)
                                 {statsArr}
                             </View>
                             <View style={styles.ingredientsContainer}>
-                                <Text style={{fontSize: 10}}><Text style={styles.boldTitle}>INGREDIENTS:</Text> {ingredients}</Text>
+                                <ScrollView>
+                                    <Text style={{fontSize: 10}}>
+                                        <Text style={styles.boldTitle}>INGREDIENTS:</Text> 
+                                        {ingredients}
+                                    </Text>
+                                </ScrollView>
                             </View>
                         </View>
                         
                     </View>
                     }
                     {
-                        props.alreadyAddedNotification? 
+                        props.alreadyAddedFavorite? 
                         <View style={styles.favoriteButtonContainer}>
-                            <TouchableOpacity onPress={()=>{props.removeFoodFromNotifications(props.foodObject)}} style={styles.favoriteButton}>
+                            <TouchableOpacity onPress={()=>{props.removeFoodFromFavorites(props.foodObject)}} style={styles.favoriteButton}>
                                 <Text style={styles.favoriteButtonText}>Delete From Favorites</Text>
                             </TouchableOpacity>
                         </View>
                         :
                         <View style={styles.favoriteButtonContainer}>
-                            <TouchableOpacity onPress={()=>{props.addFoodToNotifications(props.foodObject)}} style={styles.favoriteButton}>
+                            <TouchableOpacity onPress={()=>{props.addFoodToFavorites(props.foodObject)}} style={styles.favoriteButton}>
                                 <Text style={styles.favoriteButtonText}>Add To Favorites</Text>
                             </TouchableOpacity>
                         </View>

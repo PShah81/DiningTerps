@@ -26,20 +26,20 @@ export default function Favorites(props)
     
     let scrollViewDivs = [];
 
-    function generateFoodsAvailable()
+    function generateFavoritesAvailable()
     {
-        if(Object.keys(props.foodsAvailable).length != 0 && Object.keys(props.foodsAvailable[props.diningHall]).length != 0)
+        if(Object.keys(props.favoritesAvailable).length != 0 && Object.keys(props.favoritesAvailable[props.diningHall]).length != 0)
         {
             let lastItemObject = {};
-            for(let i=0; i<Object.keys(props.foodsAvailable[props.diningHall]).length; i++)
+            for(let i=0; i<Object.keys(props.favoritesAvailable[props.diningHall]).length; i++)
             {
-                let mealTimeName = Object.keys(props.foodsAvailable[props.diningHall])[i];
+                let mealTimeName = Object.keys(props.favoritesAvailable[props.diningHall])[i];
                 let arrOfItems = [];
-                for(let j=0; j< Object.keys(props.foodsAvailable[props.diningHall][mealTimeName]).length; j++)
+                for(let j=0; j< Object.keys(props.favoritesAvailable[props.diningHall][mealTimeName]).length; j++)
                 {
-                    let foodName = Object.keys(props.foodsAvailable[props.diningHall][mealTimeName])[j];
-                    let foodData = props.foodsAvailable[props.diningHall][mealTimeName][foodName];
-                    let foodAllergies = props.foodsAvailable[props.diningHall][mealTimeName][foodName]["itemAllergyArr"];
+                    let foodName = Object.keys(props.favoritesAvailable[props.diningHall][mealTimeName])[j];
+                    let foodData = props.favoritesAvailable[props.diningHall][mealTimeName][foodName];
+                    let foodAllergies = props.favoritesAvailable[props.diningHall][mealTimeName][foodName]["itemAllergyArr"];
                     arrOfItems.push(
                         <Food key={j} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
                         foodName={foodName} foodData={foodData}
@@ -73,12 +73,12 @@ export default function Favorites(props)
 
 
 
-    generateFoodsAvailable();
+    generateFavoritesAvailable();
     return(
         <View style={styles.favoritePageContainer}>
-            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
-            removeFoodFromNotifications={props.removeFoodFromNotifications}  foodObject = {itemClicked}
-            alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
+            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToFavorites={props.addFoodToFavorites} 
+            removeFoodFromFavorites={props.removeFoodFromFavorites}  foodObject = {itemClicked}
+            alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
             <View style= {styles.titleContainer}>
                 <Text style={styles.title}>Favorites</Text>
             </View>

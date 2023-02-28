@@ -15,10 +15,9 @@ export default function App() {
   const [todaysMenu, setTodaysMenu] = useState({});
   const [database, setDatabase] = useState({});
   const [mode, setCurrentMode] = useState("Menu");
-  const [notificationFoodIds, setNotificationFoodIds] = useState([]);
-  const [notificationFoods, setNotificationFoods] = useState([]);
+  const [favoriteFoodIds, setFavoriteFoodIds] = useState([]);
   const [UUID, setUUID] = useState('');
-  const [notificationsAvailable, setNotificationsAvailable] = useState({});
+  const [favoritesAvailable, setFavoritesAvailable] = useState({});
   const [diningHall, setDiningHall] = useState('251 North');
   const [mealTime, setMealTime] = useState('');
   const [loadingMenu, setLoadingMenu] = useState(true);
@@ -45,7 +44,7 @@ export default function App() {
       setCurrentMode(newMode);
     }
   }
-  function addFoodToNotifications(itemObject)
+  function addFoodToFavorites(itemObject)
   {
     let food_id = itemObject["food_id"];
     let modifiedItemObject = {};
@@ -56,11 +55,10 @@ export default function App() {
     modifiedItemObject["fooddata"]["itemAllergyArr"] = itemObject["itemAllergyArr"];
     modifiedItemObject["fooddata"]["nutritionFacts"] = itemObject["nutritionFacts"];
 
-    if(notificationFoodIds.indexOf(food_id) === -1)
+    if(favoriteFoodIds.indexOf(food_id) === -1)
     {
-      setNotificationFoodIds([...notificationFoodIds, food_id])
-      setNotificationFoods([...notificationFoods, modifiedItemObject])
-      let url = "https://nutritionserver.link/notifications/add";
+      setFavoriteFoodIds([...favoriteFoodIds, food_id])
+      let url = "https://nutritionserver.link/favorites/add";
       let bodyJson = {};
       bodyJson["uuid"] = UUID;
       bodyJson["food_id"] = food_id;
@@ -72,32 +70,22 @@ export default function App() {
         body: JSON.stringify(bodyJson)
       })
       .then(()=>{ 
-        fetchNotificationsAvailable(UUID);
+        fetchFavoritesAvailable(UUID);
       })
       .catch((error)=>{console.log(error)});
     }
     
   }
 
-  function removeFoodFromNotifications(itemObject)
+  function removeFoodFromFavorites(itemObject)
   {
     let food_id = itemObject["food_id"];
-    if(notificationFoodIds.indexOf(food_id) != -1)
+    if(favoriteFoodIds.indexOf(food_id) != -1)
     {
-      let newNotificationFoodIds = [...notificationFoodIds];
-      newNotificationFoodIds.splice(newNotificationFoodIds.indexOf(food_id), 1);
-      setNotificationFoodIds(newNotificationFoodIds);
-      for(let foodIndex = 0; foodIndex< notificationFoods.length; foodIndex++)
-      {
-        if(notificationFoods[foodIndex]["food_id"] === food_id)
-        {
-          let newNotificationFoods = [...notificationFoods];
-          newNotificationFoods.splice(foodIndex, 1);
-          setNotificationFoods(newNotificationFoods);
-          break;
-        }
-      }
-      let url = "https://nutritionserver.link/notifications/delete";
+      let newFavoriteFoodIds = [...favoriteFoodIds];
+      favoriteFoodIds.splice(favoriteFoodIds.indexOf(food_id), 1);
+      setFavoriteFoodIds(favoriteFoodIds);
+      let url = "https://nutritionserver.link/favorites/delete";
       let bodyJson = {};
       bodyJson["uuid"] = UUID;
       bodyJson["food_id"] = food_id;
@@ -109,7 +97,7 @@ export default function App() {
         body: JSON.stringify(bodyJson)
       })
       .then(()=>{
-        fetchNotificationsAvailable(UUID);
+        fetchFavoritesAvailable(UUID);
       })
       .catch((error)=>{console.log(error)});
     }
@@ -155,27 +143,14 @@ export default function App() {
     return fetchUUID;
   }
 
-  function fetchNotificationFoodsAndIds(uuid)
+  function fetchFavoritesAvailable(uuid)
   {
-    let url = "https://nutritionserver.link/notificationslist/" + uuid;
+    let url = "https://nutritionserver.link/favoritesavailable/" + uuid;
     fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      setNotificationFoods(data['notificationsList']);
-      setNotificationFoodIds(data['notificationFoodIds']);
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
-  }
-
-  function fetchNotificationsAvailable(uuid)
-  {
-    let url = "https://nutritionserver.link/notificationsavailable/" + uuid;
-    fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      setNotificationsAvailable(data);
+      setFavoriteFoodIds(data['favoriteFoodIds']);
+      setFavoritesAvailable(data['favoritesAvailable']);
     })
     .catch((error)=>{
       console.log(error)
@@ -187,8 +162,7 @@ export default function App() {
     fetchTodaysMenu();
     fetchDatabase();
     let uuid = await fetchUUID();
-    fetchNotificationFoodsAndIds(uuid);
-    fetchNotificationsAvailable(uuid);
+    fetchFavoritesAvailable(uuid);
   }
   useEffect(()=>{
     runFetches();
@@ -197,8 +171,8 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Menu> : null}
-      {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} foodsAvailable={notificationsAvailable} notificationFoodIds={notificationFoodIds} addFoodToNotifications={addFoodToNotifications} removeFoodFromNotifications={removeFoodFromNotifications}></Favorites> : null}
+      {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} favoriteFoodIds={favoriteFoodIds} addFoodToFavorites={addFoodToFavorites} removeFoodFromFavorites={removeFoodFromFavorites}></Menu> : null}
+      {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} favoritesAvailable={favoritesAvailable} favoriteFoodIds={favoriteFoodIds} addFoodToFavorites={addFoodToFavorites} removeFoodFromFavorites={removeFoodFromFavorites}></Favorites> : null}
       <View style= {styles.navBar}>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
               <Text style={styles.navText}>251 North</Text>

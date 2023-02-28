@@ -31,12 +31,14 @@ export default StyleSheet.create({
     nutritionFactsContainer: {
         marginLeft: '10%', 
         marginRight: '10%', 
-        borderWidth: 1
+        borderWidth: 1,
+        height: '65%'
     },
     nutritionFacts: {
         marginLeft: '3%', 
         marginRight: '3%', 
-        marginBottom: '10%'
+        marginBottom: '5%',
+        flex: 1
     },
     nutritionFactsTitle: {
         fontSize: 36, 
@@ -87,7 +89,8 @@ export default StyleSheet.create({
         fontSize: 20
     },
     ingredientsContainer: {
-        marginTop: '2%'
+        marginTop: '2%',
+        flex: 1
     },
     boldTitle: {
         fontWeight: '700'

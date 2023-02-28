@@ -228,9 +228,9 @@ export default function Menu(props)
     return(
         <View style={styles.menuPageContainer}>
                 <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
-                <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToNotifications={props.addFoodToNotifications} 
-                removeFoodFromNotifications={props.removeFoodFromNotifications} foodObject = {itemClicked}
-                alreadyAddedNotification={props.notificationFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
+                <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToFavorites={props.addFoodToFavorites} 
+                removeFoodFromFavorites={props.removeFoodFromFavorites} foodObject = {itemClicked}
+                alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
                 <View style= {styles.menuFilters}>
                     <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                     <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
