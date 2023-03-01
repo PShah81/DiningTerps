@@ -39,21 +39,15 @@ app.get('/database', (req, res) =>{
     retrieveDatabase(pool, res);
 })
 
-app.post('/notifications/:operation', (req, res)=>{
+app.post('/favorites/:operation', (req, res)=>{
     let {operation} = req.params;
     let {uuid, food_id} = req.body;
-    addOrDeleteNotifications(operation, uuid, food_id, res)
-
+    addOrDeleteFavorites(operation, uuid, food_id, res)
 })
 
-app.get('/notificationslist/:uuid', (req, res)=>{
+app.get('/favoritesavailable/:uuid', (req, res)=>{
     let uuid = req.params.uuid;
-    getNotificationsList(uuid, res);
-})
-
-app.get('/notificationsavailable/:uuid', (req, res)=>{
-    let uuid = req.params.uuid;
-    getNotificationsAvailable(uuid, res);
+    getFavoritesAvailable(uuid, res);
 })
 
 app.get('/', (req, res)=>{
@@ -65,16 +59,16 @@ app.get('/privacypolicy', (req,res)=>{
 })
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
 
-async function getNotificationsAvailable(uuid, res)
+async function getFavoritesAvailable(uuid, res)
 {
     let con = await pool.getConnection();
-    let getNotificationsSql = "SELECT food_id FROM notifications WHERE uuid = ?";
-    let result = await con.query(getNotificationsSql, [uuid]);
+    let getFavoritesSql = "SELECT food_id FROM notifications WHERE uuid = ?";
+    let result = await con.query(getFavoritesSql, [uuid]);
     let arrOfIdObjects = result[0];
-    let notificationFoodIds = [];
+    let favoriteFoodIds = [];
     for(let i=0; i<arrOfIdObjects.length; i++)
     {
-        notificationFoodIds.push(arrOfIdObjects[i]['food_id']);
+        favoriteFoodIds.push(arrOfIdObjects[i]['food_id']);
     }
     
     let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
@@ -104,20 +98,20 @@ async function getNotificationsAvailable(uuid, res)
     let mealTime;
     let sectionName;
     let itemName;
-    let notificationsAvailable = {};
+    let favoritesAvailable = {};
     for(let i=0; i< Object.keys(menu).length; i++)
     {
         diningHall = Object.keys(menu)[i];
-        if(notificationsAvailable[diningHall] === undefined)
+        if(favoritesAvailable[diningHall] === undefined)
         {
-            notificationsAvailable[diningHall] = {};
+            favoritesAvailable[diningHall] = {};
         }
         for(let j=0; j< Object.keys(menu[diningHall]).length; j++)
         {
             mealTime = Object.keys(menu[diningHall])[j];
-            if(notificationsAvailable[diningHall][mealTime] === undefined)
+            if(favoritesAvailable[diningHall][mealTime] === undefined)
             {
-                notificationsAvailable[diningHall][mealTime] = {};
+                favoritesAvailable[diningHall][mealTime] = {};
             }
             for(let k=0; k< Object.keys(menu[diningHall][mealTime]).length; k++)
             {
@@ -125,40 +119,21 @@ async function getNotificationsAvailable(uuid, res)
                 for(let l=0; l< Object.keys(menu[diningHall][mealTime][sectionName]).length; l++)
                 {
                     itemName = Object.keys(menu[diningHall][mealTime][sectionName])[l];
-                    if(notificationFoodIds.indexOf(menu[diningHall][mealTime][sectionName][itemName]["food_id"]) != -1)
+                    if(favoriteFoodIds.indexOf(menu[diningHall][mealTime][sectionName][itemName]["food_id"]) != -1)
                     {
-                        notificationsAvailable[diningHall][mealTime][itemName] = menu[diningHall][mealTime][sectionName][itemName];
+                        favoritesAvailable[diningHall][mealTime][itemName] = menu[diningHall][mealTime][sectionName][itemName];
                     };
                 }
             }
         }
     }  
-    res.send(notificationsAvailable);
-}
-async function getNotificationsList(uuid, res)
-{
-    let con = await pool.getConnection();
-    let sql = "SELECT * FROM food_database INNER JOIN notifications ON food_database.food_id = notifications.food_id WHERE notifications.uuid = ?";
-    let results = await con.query(sql, [uuid]);
-    let notificationList = results[0];
-    
-    let getNotificationIdsSql = "SELECT food_id FROM notifications WHERE uuid = ?";
-    let result = await con.query(getNotificationIdsSql, [uuid]);
-    let arrOfIdObjects = result[0];
-    let notificationFoodIds = [];
-    for(let i=0; i<arrOfIdObjects.length; i++)
-    {
-        notificationFoodIds.push(arrOfIdObjects[i]['food_id']);
-    }
-
     let responseObject = {};
-    responseObject["notificationsList"] = notificationList;
-    responseObject["notificationFoodIds"]  = notificationFoodIds;
-    con.release();
+    responseObject["favoritesAvailable"] = favoritesAvailable;
+    responseObject["favoriteFoodIds"]  = favoriteFoodIds;
     res.send(responseObject);
 }
 
-async function addOrDeleteNotifications(operation, uuid, food_id, res)
+async function addOrDeleteFavorites(operation, uuid, food_id, res)
 {
     let con = await pool.getConnection();
     if(operation === "add")
