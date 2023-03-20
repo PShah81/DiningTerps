@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import {moderateScale, verticalScale, horizontalScale} from  './HelperComponents/Scale.js';
 export default StyleSheet.create({
     container: {
         flex: 1,
@@ -22,6 +23,7 @@ export default StyleSheet.create({
     },
     navText: {
         textAlign: 'center', 
+        fontSize: moderateScale(14),
         color: 'green'
     }
 });

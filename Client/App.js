@@ -8,6 +8,7 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './appStyles.js';
 import * as SplashScreen from 'expo-splash-screen';
+import {moderateScale, verticalScale, horizontalScale} from  './HelperComponents/Scale.js';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -130,7 +131,7 @@ export default function App() {
     let fetchUUID = await SecureStore.getItemAsync('secure_deviceid');
     if (fetchUUID) 
     {
-      fetchUUID = fetchUUID.replaceAll("\"", "");
+      fetchUUID = fetchUUID.replace("\"", "").replace("\"", "");
       setUUID(fetchUUID);
     }
     else
@@ -174,21 +175,21 @@ export default function App() {
       {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} favoriteFoodIds={favoriteFoodIds} addFoodToFavorites={addFoodToFavorites} removeFoodFromFavorites={removeFoodFromFavorites}></Menu> : null}
       {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} favoritesAvailable={favoritesAvailable} favoriteFoodIds={favoriteFoodIds} addFoodToFavorites={addFoodToFavorites} removeFoodFromFavorites={removeFoodFromFavorites}></Favorites> : null}
       <View style= {styles.navBar}>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
               <Text style={styles.navText}>251 North</Text>
-              <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('Yahentamitsi')}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('Yahentamitsi')}}>
               <Text style={styles.navText}>Yahentamitsi</Text>
-              <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? 2 : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('South')}}>
+          <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('South')}}>
               <Text style={styles.navText}>South</Text>
-              <Icon size={30} name="restaurant" type='material' color='orange'></Icon>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color='orange'></Icon>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? 2 : 0), ...styles.navButton}}>
-              <Text style={styles.navText} >Favorites</Text>
-              <Icon size={30} name="star-outline" type='ionicon' color='orange'></Icon>
+          <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? moderateScale(2) : 0), ...styles.navButton}}>
+              <Text style={styles.navText}>Favorites</Text>
+              <Icon size={moderateScale(30)} name="star-outline" type='ionicon' color='orange'></Icon>
           </TouchableOpacity>
       </View>
     </View>

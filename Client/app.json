@@ -7,7 +7,7 @@
     "icon": "./assets/app_logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image" : "./assets/forkAndKnife.png"
+      "image": "./assets/forkAndKnife.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,18 +18,20 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.pranav120.nutritionApp",
-      "buildNumber" : "2"
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "softwareKeyboardLayoutMode":"pan",
+      "package": "com.pranav120.nutritionApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra":{
+    "extra": {
       "eas": {
         "projectId": "a6bc8c39-a650-4acc-9bbc-7e130473d0b4"
       }

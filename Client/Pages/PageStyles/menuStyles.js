@@ -1,7 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+import {verticalScale, moderateScale, horizontalScale} from '../../HelperComponents/Scale.js';
 export default StyleSheet.create({
     databaseSearch: {
-        fontSize: 30, 
+        fontSize: moderateScale(30), 
         textAlign: 'center', 
         marginTop: '5%'
     },
@@ -11,7 +12,7 @@ export default StyleSheet.create({
         width: '33%'
     },
     tabTitle: {
-        fontSize: 18, 
+        fontSize: moderateScale(18), 
         color: 'green', 
         textAlign: 'center'
     },
@@ -19,17 +20,19 @@ export default StyleSheet.create({
         margin: "3%", 
         shadowColor: 'black', 
         shadowOffset: {width: 0, height: 1}, 
-        shadowOpacity: 0.5, 
+        shadowOpacity: 0.3, 
+        shadowRadius: 13,
+        elevation: 30,
         backgroundColor: 'white',  
-        borderRadius: 10
+        borderRadius: moderateScale(10)
     }, 
     sectionTitle: {
-        fontSize: '24px', 
+        fontSize: moderateScale(24), 
         textAlign: 'center', 
         fontWeight: '300'
     },
     emptyDataSet: {
-        fontSize: 30, 
+        fontSize: moderateScale(30), 
         textAlign: 'center', 
         marginTop: '5%'
     },

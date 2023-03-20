@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
+import {verticalScale, moderateScale, horizontalScale} from '../Scale.js';
 export default StyleSheet.create({
     foodBorder: {
-        borderTopWidth: 0.8,
+        borderTopWidth: verticalScale(0.8),
         borderColor: "#cacccf"
     },
     foodButton: {
-        height: 40,
+        height: moderateScale(40),
         display: "flex",
         flexDirection: "row"
     },

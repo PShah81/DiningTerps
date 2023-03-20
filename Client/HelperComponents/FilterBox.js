@@ -1,6 +1,7 @@
 import {View, Text} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import styles from './HelperComponentStyles/filterBoxStyles.js';
+import {moderateScale} from './Scale.js';
 function FilterBox(props)
 {
     let allergyMap = {
@@ -37,7 +38,8 @@ function FilterBox(props)
                 containerStyle= {styles.checkBox}
             />
             <View style={{...styles.allergyCircle, backgroundColor: infoObject[infoObjectKey]}}>
-                <Text style={styles.allergyCircleText}>{infoObjectKey}</Text>
+                <Text style={{...styles.allergyCircleText, 
+                    fontSize: infoObjectKey.length > 1 ? moderateScale(12) : moderateScale(14)}}>{infoObjectKey}</Text>
             </View>
         </View>
     )

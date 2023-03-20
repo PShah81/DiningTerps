@@ -3,6 +3,7 @@ import {Icon} from 'react-native-elements';
 import FilterBox from "../HelperComponents/FilterBox";
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import styles from './PageStyles/filterStyles.js';
+import {moderateScale} from '../HelperComponents/Scale.js';
 function Filter(props)
 {
     return(
@@ -16,21 +17,21 @@ function Filter(props)
         >
             <View style={styles.modalContainer}>
                 <TouchableOpacity onPress={()=>{props.stopFiltering(false)}} style={styles.closeButton}>
-                        <Icon size={30} name="close" type='ionicon' color='orange'></Icon>
+                        <Icon size={moderateScale(30)} name="close" type='ionicon' color='orange'></Icon>
                 </TouchableOpacity>
-                <View style= {{marginLeft: '7%', marginRight: '5%'}}>
+                <View style= {styles.filterContainer}>
                     <SegmentedControl
                         values={props.displayTypes}
                         selectedIndex = {props.displayTypes.indexOf(props.displayType)}
                         onValueChange = {(value)=>{
                             props.changeDisplayType(value)
                         }}
-                        style = {{width: '100%'}}
+                        style = {styles.segmentedControl}
                     />
                     
-                    <View style={{display: 'flex', flexDirection: "row", justifyContent: 'space-around', marginTop: '3%'}}>
+                    <View style={styles.filters}>
                         <View>
-                            <Text style={{fontSize: 24}}>Exclude</Text>
+                            <Text style={styles.excludeOrInclude}>Exclude</Text>
                             <FilterBox attribute ={"Dairy"} checked={props.filters["Exclude"]["Dairy"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Egg"} checked={props.filters["Exclude"]["Egg"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Fish"} checked={props.filters["Exclude"]["Fish"]} changeFilter={props.changeFilter}/>
@@ -41,7 +42,7 @@ function Filter(props)
                             <FilterBox attribute ={"Sesame"} checked={props.filters["Exclude"]["Sesame"]} changeFilter={props.changeFilter}/>
                         </View>
                         <View>
-                            <Text style={{fontSize: 24}}>Include</Text>
+                            <Text style={styles.excludeOrInclude}>Include</Text>
                             <FilterBox attribute ={"Vegetarian"} checked={props.filters["Include"]["Vegetarian"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"HalalFriendly"} checked={props.filters["Include"]["HalalFriendly"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Vegan"} checked={props.filters["Include"]["Vegan"]} changeFilter={props.changeFilter}/>

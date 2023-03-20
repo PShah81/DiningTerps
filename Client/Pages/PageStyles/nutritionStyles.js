@@ -1,17 +1,21 @@
 import { StyleSheet } from 'react-native';
+import {verticalScale, moderateScale, horizontalScale} from '../../HelperComponents/Scale.js';
 export default StyleSheet.create({
     nutritionMetric: {
         display: 'flex', 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
-        borderBottomWidth: 1
+        borderBottomWidth: verticalScale(1)
     },
-    gramAmountContainer:{
+    metricContainer:{
         display: 'flex', 
         flexDirection: 'row'
     },
+    gramAmountContainer: {
+        marginLeft: horizontalScale(10)
+    },
     gramAmount:{
-        marginLeft: 10
+        fontSize: moderateScale(12)
     },
     modalContainer: {
         marginTop: '10%', 
@@ -19,7 +23,7 @@ export default StyleSheet.create({
     },
     emptyDataSet: {
         textAlign: 'center', 
-        fontSize: 24
+        fontSize: moderateScale(24)
     },
     closeButton: {
         display: 'flex', 
@@ -31,7 +35,7 @@ export default StyleSheet.create({
     nutritionFactsContainer: {
         marginLeft: '10%', 
         marginRight: '10%', 
-        borderWidth: 1,
+        borderWidth: verticalScale(1),
         height: '65%'
     },
     nutritionFacts: {
@@ -40,36 +44,41 @@ export default StyleSheet.create({
         marginBottom: '5%',
         flex: 1
     },
-    nutritionFactsTitle: {
-        fontSize: 36, 
-        borderBottomWidth: 2
+    nutritionFactsTitleContainer: {
+        borderBottomWidth: verticalScale(2)
+    },
+    nutritionFactsTitle:{
+        fontSize: moderateScale(36)
     },
     servingSize: {
         display: 'flex', 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
-        borderBottomWidth: 7
+        borderBottomWidth: verticalScale(7)
     },
     servingAndCalorieContainer: {
         display: 'flex', 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
-        borderBottomWidth: 4
+        borderBottomWidth: verticalScale(4)
     },
     amountPerServing: {
-        fontSize: 12
+        fontSize: moderateScale(12)
     },
     calories: {
-        fontSize: 28
+        fontSize: moderateScale(28)
     },
     calorieAmount: {
-        fontSize: 36
+        fontSize: moderateScale(36)
     },
     dailyValue: {
         display: 'flex', 
         flexDirection: 'row', 
-        justifyContent: 'flex-end', 
-        borderBottomWidth: 1
+        justifyContent: 'flex-end',
+        borderBottomWidth: verticalScale(1)
+    },
+    dailyValueTitle:{
+        fontSize: moderateScale(16)
     },
     favoriteButtonContainer: {
         marginLeft: '10%', 
@@ -81,18 +90,33 @@ export default StyleSheet.create({
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center', 
-        height: 40
+        height: verticalScale(40)
     },
     favoriteButtonText: {
         color: 'white', 
         textAlign:'center', 
-        fontSize: 20
+        fontSize: moderateScale(20)
     },
     ingredientsContainer: {
         marginTop: '2%',
         flex: 1
     },
-    boldTitle: {
+    ingredientsTitle: {
         fontWeight: '700'
+    },
+    metrics: {
+        fontSize: moderateScale(12)
+    },
+    metricDV: {
+        fontSize: moderateScale(12)
+    },
+    servingSizeText:{
+        fontSize: moderateScale(16)
+    },
+    servingSizeAmount:{
+        fontSize: moderateScale(16)
+    },
+    ingredients: {
+        fontSize: moderateScale(10)
     }
 });

@@ -8,6 +8,7 @@ import Nutrition from "./Nutrition";
 import Food from "../HelperComponents/Food";
 import {processAllergyArr, createAllergyImages} from "../HelperComponents/HelperFunctions.js";
 import styles from './PageStyles/menuStyles.js';
+import {moderateScale, verticalScale, horizontalScale} from  '../HelperComponents/Scale.js';
 
 export default function Menu(props)
 {
@@ -169,7 +170,7 @@ export default function Menu(props)
             {
                 let mealTimeTabName = Object.keys(props.menu[props.diningHall])[i];
                 mealTimeArrTabs.push(
-                <TouchableOpacity key={i} onPress={()=>{props.setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === props.mealTime) ? 2 : 0, ...styles.mealTimeTab}}>
+                <TouchableOpacity key={i} onPress={()=>{props.setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === props.mealTime) ? moderateScale(2) : 0, ...styles.mealTimeTab}}>
                     <Text style={styles.tabTitle}>{mealTimeTabName}</Text>
                 </TouchableOpacity>
                 );

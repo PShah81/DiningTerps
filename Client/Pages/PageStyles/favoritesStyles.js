@@ -1,20 +1,23 @@
 import { StyleSheet } from 'react-native';
+import {verticalScale, moderateScale, horizontalScale} from '../../HelperComponents/Scale.js';
 export default StyleSheet.create({
     scrollViewDivs: {
         margin: "3%", 
         shadowColor: 'black', 
         shadowOffset: {width: 0, height: 1}, 
-        shadowOpacity: 0.5, 
+        shadowOpacity: 0.3, 
+        shadowRadius: 13, 
+        elevation: 30,
         backgroundColor: 'white',  
-        borderRadius: 10
+        borderRadius: moderateScale(10)
     }, 
     sectionTitle: {
-        fontSize: '24px', 
+        fontSize: moderateScale(24), 
         textAlign: 'center',
         fontWeight: '300'
     },
     emptyDataSet: {
-        fontSize: 30, 
+        fontSize: moderateScale(30), 
         textAlign: 'center', 
         marginTop: '5%'
     },
@@ -30,7 +33,7 @@ export default StyleSheet.create({
         marginBottom: '3%'
     },
     title:{
-        fontSize: '30px', 
+        fontSize: moderateScale(30), 
         textAlign: 'center'
     },
     navBarContainer:{
@@ -44,7 +47,7 @@ export default StyleSheet.create({
         width: '33%'
     },
     navName:{
-        fontSize: 18, 
+        fontSize: moderateScale(18), 
         color: 'green', 
         textAlign: 'center'
     }

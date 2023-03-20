@@ -6,6 +6,7 @@ import Nutrition from "./Nutrition";
 import Food from "../HelperComponents/Food";
 import {createAllergyImages} from '../HelperComponents/HelperFunctions.js';
 import styles from './PageStyles/favoritesStyles.js';
+import {moderateScale, verticalScale, horizontalScale} from  '../HelperComponents/Scale.js';
 
 export default function Favorites(props)
 {
@@ -83,13 +84,13 @@ export default function Favorites(props)
                 <Text style={styles.title}>Favorites</Text>
             </View>
             <View style={styles.navBarContainer}>
-                <TouchableOpacity key={"251 North"} onPress={()=>{props.changeDiningHall('251 North')}} style={{borderBottomWidth: (props.diningHall==="251 North") ? 2 : 0, ...styles.navButton}}>
+                <TouchableOpacity key={"251 North"} onPress={()=>{props.changeDiningHall('251 North')}} style={{borderBottomWidth: (props.diningHall==="251 North") ? moderateScale(2) : 0, ...styles.navButton}}>
                     <Text style={styles.navName}>251 North</Text>
                 </TouchableOpacity>
-                <TouchableOpacity key={"Yahentamitsi"} onPress={()=>{props.changeDiningHall('Yahentamitsi')}} style={{borderBottomWidth: (props.diningHall==="Yahentamitsi") ? 2 : 0, ...styles.navButton}}>
+                <TouchableOpacity key={"Yahentamitsi"} onPress={()=>{props.changeDiningHall('Yahentamitsi')}} style={{borderBottomWidth: (props.diningHall==="Yahentamitsi") ? moderateScale(2) : 0, ...styles.navButton}}>
                     <Text style={styles.navName}>Yahentamitsi</Text>
                 </TouchableOpacity>
-                <TouchableOpacity key={"South"} onPress={()=>{props.changeDiningHall('South')}} style={{borderBottomWidth: (props.diningHall==="South") ? 2 : 0, ...styles.navButton}}>
+                <TouchableOpacity key={"South"} onPress={()=>{props.changeDiningHall('South')}} style={{borderBottomWidth: (props.diningHall==="South") ? moderateScale(2) : 0, ...styles.navButton}}>
                     <Text style={styles.navName}>South</Text>
                 </TouchableOpacity>
             </View>
