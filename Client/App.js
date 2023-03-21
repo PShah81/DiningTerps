@@ -30,12 +30,49 @@ export default function App() {
       }, 2000);
     }
   },[loadingMenu])
+  useEffect(()=>{
+    if(Object.keys(todaysMenu).length != 0)
+    {
+      defaultMealTime();
+      setLoadingMenu(false);
+    }
+  },[todaysMenu])
+  function defaultMealTime()
+  {
+    let localHours = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/New_York'})).getHours();
+    if(Object.keys(todaysMenu[diningHall]).length === 3)
+    {
+      if(localHours < 11)
+      {
+        setMealTime(Object.keys(todaysMenu[diningHall])[0]);
+      }
+      else if(localHours < 17)
+      {
+        setMealTime(Object.keys(todaysMenu[diningHall])[1]);
+      }
+      else
+      {
+        setMealTime(Object.keys(todaysMenu[diningHall])[2]);
+      }
+    }
+    else
+    {
+      if(localHours < 17)
+      {
+        setMealTime(Object.keys(todaysMenu[diningHall])[0]);
+      }
+      else 
+      {
+        setMealTime(Object.keys(todaysMenu[diningHall])[1]);
+      }
+    }
+  }
   function changeDiningHall(diningHall)
   {
       setDiningHall(diningHall);
       if(Object.keys(todaysMenu[diningHall]).length != 0)
       {
-        setMealTime(Object.keys(todaysMenu[diningHall])[0]);
+        defaultMealTime();  
       }
   }
   function changeMode(newMode)
@@ -109,14 +146,11 @@ export default function App() {
     .then((response) => response.json())
     .then((data) => {
       setTodaysMenu(data);
-      setMealTime(Object.keys(data[diningHall])[0]);
-      setLoadingMenu(false);
     })
     .catch((error)=>{
       console.log(error)
     })
   }
-
   function fetchDatabase()
   {
     fetch("https://nutritionserver.link/database")
