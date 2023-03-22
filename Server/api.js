@@ -50,6 +50,17 @@ app.get('/favoritesavailable/:uuid', (req, res)=>{
     getFavoritesAvailable(uuid, res);
 })
 
+app.post('/settings/:setting/:operation', (req, res)=>{
+    let {setting, operation} = req.params;
+    let {uuid, modification} = req.body;
+    modifySettings(uuid, setting, operation, modification, res);
+
+})
+
+app.get('/settings/:uuid', (req,res)=>{
+    let uuid = req.params.uuid;
+    getSettings(uuid, res);
+})
 app.get('/', (req, res)=>{
     res.send("Support Website")
 })
@@ -59,6 +70,95 @@ app.get('/privacypolicy', (req,res)=>{
 })
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
 
+
+async function modifySettings(uuid, setting, operation, modification, res)
+{
+    let oldSetting;
+    let newSetting;
+    let newEntry = false;
+    let result = await returnSettings(uuid);
+    if(result != null)
+    {
+        oldSetting = result[setting];
+    } 
+    else
+    {
+        newEntry = true;
+        oldSetting = [];
+    }
+    if(operation === "delete")
+    {
+        if(oldSetting.indexOf(modification) != -1)
+        {
+            oldSetting.splice(oldSetting.indexOf(modification), 1);
+            newSetting = oldSetting;
+        }
+    }
+    else if(operation === "add")
+    {
+        if(oldSetting.indexOf(modification) === -1)
+        {
+            newSetting = [...oldSetting, modification];
+        }
+    }
+    let con = await pool.getConnection();
+    let postSql;
+    if(setting === "collapsedSections")
+    {
+        if(newEntry)
+        {
+            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections) VALUES (?,?,?)";
+            await con.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([])]);
+        }
+        else
+        {
+            postSql = "UPDATE settings SET collapsedSections = ? WHERE uuid = ?";
+            await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+        }
+        
+    }
+    else if(setting === "favoriteSections")
+    {
+        if(newEntry)
+        {
+            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections) VALUES (?,?,?)";
+            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting)]);
+        }
+        else
+        {
+            postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
+            await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+        }
+    }
+    res.send("Success");
+}
+async function getSettings(uuid, res)
+{
+    let result = await returnSettings(uuid);
+    if(result === null)
+    {
+        res.send({});
+    }
+    else
+    {
+        res.send(result);
+    }
+    
+}
+async function returnSettings(uuid)
+{
+    let con = await pool.getConnection();
+    let getSettingsSql = "SELECT * FROM settings WHERE uuid = ?";
+    let result = await con.query(getSettingsSql, [uuid]);
+    if(result[0].length === 0)
+    {
+        return null;
+    }
+    else
+    {
+        return result[0][0];
+    }
+}
 async function getFavoritesAvailable(uuid, res)
 {
     let con = await pool.getConnection();
@@ -88,7 +188,7 @@ async function getFavoritesAvailable(uuid, res)
         {
             menu[diningHall] = Object.assign({Breakfast: null, Lunch: null, Dinner: null}, menu[diningHall])
         }
-        else
+        else if(Object.keys(menu[diningHall]).length === 2)
         {
             menu[diningHall] = Object.assign({Brunch: null, Dinner: null}, menu[diningHall])
         }   
@@ -165,7 +265,6 @@ async function retrieveDatabase(pool, res)
     let results = await con.query(sql);
     con.release();
     let foodArr = results[0];
-    console.log(foodArr.length)
     res.send(foodArr);
 }
 async function retrieveTodaysMenu(pool, res)
@@ -176,7 +275,7 @@ async function retrieveTodaysMenu(pool, res)
     let results = await con.query(sql, [date]);
     if(results[0][0] === undefined)
     {
-        res.send({})
+        res.send({});
         return;
     }
     con.release();
@@ -188,11 +287,11 @@ async function retrieveTodaysMenu(pool, res)
         {
             menu[diningHall] = Object.assign({Breakfast: null, Lunch: null, Dinner: null}, menu[diningHall])
         }
-        else
+        else if(Object.keys(menu[diningHall]).length === 2)
         {
             menu[diningHall] = Object.assign({Brunch: null, Dinner: null}, menu[diningHall])
         }   
-    }   
-    console.log('sending')
-    res.json(menu)
+    }
+    console.log('sending');
+    res.json(menu);
 }
