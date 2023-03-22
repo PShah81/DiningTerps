@@ -9,6 +9,69 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './appStyles.js';
 import * as SplashScreen from 'expo-splash-screen';
 import {moderateScale, verticalScale, horizontalScale} from  './HelperComponents/Scale.js';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+async function registerForPushNotificationsAsync(uuid)
+{
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      let url = "https://nutritionserver.link/settings/pushToken/remove";
+      let bodyJson = {};
+      bodyJson["uuid"] = uuid;
+      bodyJson["modification"] = null;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .catch((error)=>{console.log(error)});
+      return;
+    }
+    else
+    {
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      let url = "https://nutritionserver.link/settings/pushToken/create";
+      let bodyJson = {};
+      bodyJson["uuid"] = uuid;
+      bodyJson["modification"] = token;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .catch((error)=>{console.log(error)});
+    }
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,6 +87,7 @@ export default function App() {
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [favoriteSectionNames, setFavoriteSectionNames] = useState([]);
   const [collapsedSectionNames, setCollapsedSectionNames] = useState([]);
+
   useEffect(()=>{
     if(loadingMenu === false)
     {
@@ -288,6 +352,7 @@ export default function App() {
     let uuid = await fetchUUID();
     fetchFavoritesAvailable(uuid);
     fetchSettings(uuid);
+    registerForPushNotificationsAsync(uuid);
   }
   useEffect(()=>{
     runFetches();
