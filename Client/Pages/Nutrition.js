@@ -94,23 +94,15 @@ function Nutrition(props)
                                 </ScrollView>
                             </View>
                         </View>
-                        
                     </View>
                     }
-                    {
-                        props.alreadyAddedFavorite? 
-                        <View style={styles.favoriteButtonContainer}>
-                            <TouchableOpacity onPress={()=>{props.removeFoodFromFavorites(props.foodObject)}} style={styles.favoriteButton}>
-                                <Text style={styles.favoriteButtonText}>Delete From Favorites</Text>
-                            </TouchableOpacity>
-                        </View>
-                        :
-                        <View style={styles.favoriteButtonContainer}>
-                            <TouchableOpacity onPress={()=>{props.addFoodToFavorites(props.foodObject)}} style={styles.favoriteButton}>
-                                <Text style={styles.favoriteButtonText}>Add To Favorites</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
+                    <View style={styles.favoriteButtonContainer}>
+                        <TouchableOpacity onPress={()=>{props.toggleFavoriteFoods(props.foodObject["food_id"])}} style={styles.favoriteButton}>
+                            <Text style={styles.favoriteButtonText}>
+                                {props.alreadyAddedFavorite? "Delete From Favorites": "Add to Favorites"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 
             </Modal>

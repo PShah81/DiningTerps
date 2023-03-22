@@ -113,6 +113,7 @@ export default function Menu(props)
     //Wrap items in a div
     let mealTimeArrTabs = [];
     let scrollViewDivs = [];
+    let nonFavoriteDivs = [];
     function generateDatabaseItems()
     {
         if(search.length != 0)
@@ -199,14 +200,39 @@ export default function Menu(props)
                         }
                             
                     }
-                    scrollViewDivs.push(
+                    let section = 
                         <View key={i} style={styles.scrollViewDivs}>
-                            <Text key={i} style={styles.sectionTitle}>{sectionName}</Text>
-                            {arrOfItems}
-                        </View>
-                    );
+                            <View style={styles.sectionContainer}>
+                                <View style={{position: 'absolute'}}>
+                                    <Text key={i} style={{...styles.sectionTitle, fontSize: sectionName.length > 20 ? moderateScale(18) : moderateScale(24)}}>{sectionName}</Text>
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity onPress={()=>{props.toggleFavoriteSection(sectionName)}}>
+                                        <Icon size= {moderateScale(30)} 
+                                        name={props.favoriteSectionNames.indexOf(sectionName) === -1 ? 'star-outline' : 'star'} 
+                                        type='material' color='orange'></Icon>
+                                    </TouchableOpacity>
+                                    
+                                    <TouchableOpacity onPress={()=>{props.toggleCollapsable(sectionName)}}>
+                                        <Icon size= {moderateScale(30)} 
+                                        name={props.collapsedSectionNames.indexOf(sectionName) === -1 ? 'remove-outline' : 'add-outline'} 
+                                        type='ionicon' color='orange'></Icon>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            {props.collapsedSectionNames.indexOf(sectionName) === -1 ? arrOfItems : ""}
+                        </View>;
+                    
+                    if(props.favoriteSectionNames.indexOf(sectionName) === -1)
+                    {
+                        nonFavoriteDivs.push(section);
+                    }
+                    else
+                    {
+                        scrollViewDivs.push(section);
+                    }
                 }
-                
+                scrollViewDivs = scrollViewDivs.concat(nonFavoriteDivs);
             }
             
         }
@@ -229,12 +255,11 @@ export default function Menu(props)
     return(
         <View style={styles.menuPageContainer}>
                 <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
-                <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToFavorites={props.addFoodToFavorites} 
-                removeFoodFromFavorites={props.removeFoodFromFavorites} foodObject = {itemClicked}
-                alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
+                <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} toggleFavoriteFoods={props.toggleFavoriteFoods} 
+                foodObject = {itemClicked} alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
                 <View style= {styles.menuFilters}>
                     <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
-                    <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {30} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {moderateScale(30)} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
                 </View>
                 <View style={styles.mealTimeTabContainer}>
                     {mealTimeArrTabs}

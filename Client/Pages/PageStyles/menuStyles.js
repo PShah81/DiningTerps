@@ -26,8 +26,7 @@ export default StyleSheet.create({
         backgroundColor: 'white',  
         borderRadius: moderateScale(10)
     }, 
-    sectionTitle: {
-        fontSize: moderateScale(24), 
+    sectionTitle: { 
         textAlign: 'center', 
         fontWeight: '300'
     },
@@ -60,5 +59,15 @@ export default StyleSheet.create({
     },
     scrollDivHeight:{
         height: '87%'
+    },
+    sectionContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    buttonContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginLeft: 'auto'
     }
 });

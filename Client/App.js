@@ -22,6 +22,8 @@ export default function App() {
   const [diningHall, setDiningHall] = useState('251 North');
   const [mealTime, setMealTime] = useState('');
   const [loadingMenu, setLoadingMenu] = useState(true);
+  const [favoriteSectionNames, setFavoriteSectionNames] = useState([]);
+  const [collapsedSectionNames, setCollapsedSectionNames] = useState([]);
   useEffect(()=>{
     if(loadingMenu === false)
     {
@@ -82,17 +84,8 @@ export default function App() {
       setCurrentMode(newMode);
     }
   }
-  function addFoodToFavorites(itemObject)
+  function toggleFavoriteFoods(food_id)
   {
-    let food_id = itemObject["food_id"];
-    let modifiedItemObject = {};
-    modifiedItemObject["food_id"] = food_id;
-    modifiedItemObject["foodname"] = itemObject["foodname"];
-    modifiedItemObject["foodallergies"] = itemObject["itemAllergyArr"];
-    modifiedItemObject["fooddata"] = {};
-    modifiedItemObject["fooddata"]["itemAllergyArr"] = itemObject["itemAllergyArr"];
-    modifiedItemObject["fooddata"]["nutritionFacts"] = itemObject["nutritionFacts"];
-
     if(favoriteFoodIds.indexOf(food_id) === -1)
     {
       setFavoriteFoodIds([...favoriteFoodIds, food_id])
@@ -112,17 +105,11 @@ export default function App() {
       })
       .catch((error)=>{console.log(error)});
     }
-    
-  }
-
-  function removeFoodFromFavorites(itemObject)
-  {
-    let food_id = itemObject["food_id"];
-    if(favoriteFoodIds.indexOf(food_id) != -1)
+    else
     {
       let newFavoriteFoodIds = [...favoriteFoodIds];
-      favoriteFoodIds.splice(favoriteFoodIds.indexOf(food_id), 1);
-      setFavoriteFoodIds(favoriteFoodIds);
+      newFavoriteFoodIds.splice(newFavoriteFoodIds.indexOf(food_id), 1);
+      setFavoriteFoodIds(newFavoriteFoodIds);
       let url = "https://nutritionserver.link/favorites/delete";
       let bodyJson = {};
       bodyJson["uuid"] = UUID;
@@ -136,6 +123,92 @@ export default function App() {
       })
       .then(()=>{
         fetchFavoritesAvailable(UUID);
+      })
+      .catch((error)=>{console.log(error)});
+    }   
+  }
+  function toggleFavoriteSection(sectionName)
+  {
+    if(favoriteSectionNames.indexOf(sectionName) === -1)
+    {
+      setFavoriteSectionNames([...favoriteSectionNames, sectionName]);
+      let url = "https://nutritionserver.link/settings/favoriteSections/add";
+      let bodyJson = {};
+      bodyJson["uuid"] = UUID;
+      bodyJson["modification"] = sectionName;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .then(()=>{
+        fetchSettings(UUID);
+      })
+      .catch((error)=>{console.log(error)});
+    }
+    else
+    {
+      let newFavoriteSectionNames = [...favoriteSectionNames];
+      newFavoriteSectionNames.splice(newFavoriteSectionNames.indexOf(sectionName), 1);
+      setFavoriteSectionNames(newFavoriteSectionNames);
+      let url = "https://nutritionserver.link/settings/favoriteSections/delete";
+      let bodyJson = {};
+      bodyJson["uuid"] = UUID;
+      bodyJson["modification"] = sectionName;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .then(()=>{
+        fetchSettings(UUID);
+      })
+      .catch((error)=>{console.log(error)});
+    }
+  }
+  function toggleCollapsable(sectionName)
+  {
+    if(collapsedSectionNames.indexOf(sectionName) === -1)
+    {
+      setCollapsedSectionNames([...collapsedSectionNames, sectionName]);
+      let url = "https://nutritionserver.link/settings/collapsedSections/add";
+      let bodyJson = {};
+      bodyJson["uuid"] = UUID;
+      bodyJson["modification"] = sectionName;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .then(()=>{
+        fetchSettings(UUID);
+      })
+      .catch((error)=>{console.log(error)});
+    }
+    else
+    {
+      let newCollapsedSectionNames = [...collapsedSectionNames];
+      newCollapsedSectionNames.splice(newCollapsedSectionNames.indexOf(sectionName), 1);
+      setCollapsedSectionNames(newCollapsedSectionNames);
+      let url = "https://nutritionserver.link/settings/collapsedSections/delete";
+      let bodyJson = {};
+      bodyJson["uuid"] = UUID;
+      bodyJson["modification"] = sectionName;
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyJson)
+      })
+      .then(()=>{
+        fetchSettings(UUID);
       })
       .catch((error)=>{console.log(error)});
     }
@@ -192,12 +265,29 @@ export default function App() {
     })
   }
 
+  function fetchSettings(uuid)
+  {
+    let url = "https://nutritionserver.link/settings/" + uuid;
+    fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      if(Object.keys(data).length != 0)
+      {
+        setFavoriteSectionNames(data['favoriteSections']);
+        setCollapsedSectionNames(data['collapsedSections']);
+      }
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
   async function runFetches()
   {
     fetchTodaysMenu();
     fetchDatabase();
     let uuid = await fetchUUID();
     fetchFavoritesAvailable(uuid);
+    fetchSettings(uuid);
   }
   useEffect(()=>{
     runFetches();
@@ -206,8 +296,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} menu={todaysMenu} database={database} changeMode= {changeMode} favoriteFoodIds={favoriteFoodIds} addFoodToFavorites={addFoodToFavorites} removeFoodFromFavorites={removeFoodFromFavorites}></Menu> : null}
-      {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} favoritesAvailable={favoritesAvailable} favoriteFoodIds={favoriteFoodIds} addFoodToFavorites={addFoodToFavorites} removeFoodFromFavorites={removeFoodFromFavorites}></Favorites> : null}
+      {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} 
+      menu={todaysMenu} database={database} changeMode= {changeMode} favoriteFoodIds={favoriteFoodIds} 
+      toggleFavoriteFoods={toggleFavoriteFoods} favoriteSectionNames={favoriteSectionNames} 
+      toggleFavoriteSection={toggleFavoriteSection} collapsedSectionNames={collapsedSectionNames} 
+      toggleCollapsable={toggleCollapsable}></Menu> : null}
+      {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} favoritesAvailable={favoritesAvailable} favoriteFoodIds={favoriteFoodIds} toggleFavoriteFoods={toggleFavoriteFoods}></Favorites> : null}
       <View style= {styles.navBar}>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
               <Text style={styles.navText}>251 North</Text>

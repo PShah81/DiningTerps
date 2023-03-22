@@ -77,9 +77,8 @@ export default function Favorites(props)
     generateFavoritesAvailable();
     return(
         <View style={styles.favoritePageContainer}>
-            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} addFoodToFavorites={props.addFoodToFavorites} 
-            removeFoodFromFavorites={props.removeFoodFromFavorites}  foodObject = {itemClicked}
-            alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
+            <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} toggleFavoriteFoods={props.toggleFavoriteFoods}  
+            foodObject = {itemClicked} alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
             <View style= {styles.titleContainer}>
                 <Text style={styles.title}>Favorites</Text>
             </View>
