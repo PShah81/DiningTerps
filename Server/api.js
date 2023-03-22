@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mysql from 'mysql2/promise';
+import returnFavoritesAvailable from './helperFunctions.js';
 
 let pool = mysql.createPool({
     connectionLimit: 100, 
@@ -54,13 +55,13 @@ app.post('/settings/:setting/:operation', (req, res)=>{
     let {setting, operation} = req.params;
     let {uuid, modification} = req.body;
     modifySettings(uuid, setting, operation, modification, res);
-
 })
 
 app.get('/settings/:uuid', (req,res)=>{
     let uuid = req.params.uuid;
     getSettings(uuid, res);
 })
+
 app.get('/', (req, res)=>{
     res.send("Support Website")
 })
@@ -69,7 +70,6 @@ app.get('/privacypolicy', (req,res)=>{
     res.send("Privacy Policy");
 })
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
-
 
 async function modifySettings(uuid, setting, operation, modification, res)
 {
@@ -107,8 +107,8 @@ async function modifySettings(uuid, setting, operation, modification, res)
     {
         if(newEntry)
         {
-            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections) VALUES (?,?,?)";
-            await con.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([])]);
+            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+            await con.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([]), NULL]);
         }
         else
         {
@@ -121,8 +121,8 @@ async function modifySettings(uuid, setting, operation, modification, res)
     {
         if(newEntry)
         {
-            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections) VALUES (?,?,?)";
-            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting)]);
+            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting), NULL]);
         }
         else
         {
@@ -130,6 +130,23 @@ async function modifySettings(uuid, setting, operation, modification, res)
             await con.query(postSql, [JSON.stringify(newSetting), uuid]);
         }
     }
+    else if(setting === "pushToken")
+    {
+        if(newEntry)
+        {
+            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify([], modification)]);
+        }
+        else
+        {
+            if(modification != oldSetting)
+            {
+                postSql = "UPDATE settings SET pushToken = ? WHERE uuid = ?";
+                await con.query(postSql, [modification, uuid]);
+            }
+        }
+    }
+    con.release();
     res.send("Success");
 }
 async function getSettings(uuid, res)
@@ -150,6 +167,7 @@ async function returnSettings(uuid)
     let con = await pool.getConnection();
     let getSettingsSql = "SELECT * FROM settings WHERE uuid = ?";
     let result = await con.query(getSettingsSql, [uuid]);
+    con.release();
     if(result[0].length === 0)
     {
         return null;
@@ -161,75 +179,7 @@ async function returnSettings(uuid)
 }
 async function getFavoritesAvailable(uuid, res)
 {
-    let con = await pool.getConnection();
-    let getFavoritesSql = "SELECT food_id FROM notifications WHERE uuid = ?";
-    let result = await con.query(getFavoritesSql, [uuid]);
-    let arrOfIdObjects = result[0];
-    let favoriteFoodIds = [];
-    for(let i=0; i<arrOfIdObjects.length; i++)
-    {
-        favoriteFoodIds.push(arrOfIdObjects[i]['food_id']);
-    }
-    
-    let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
-    let getMenuSql = "SELECT menuJson FROM menus WHERE menuDate = ?";
-    let menuResults = await con.query(getMenuSql, [date]);
-    if(menuResults[0][0] === undefined)
-    {
-        res.send({})
-        return;
-    }
-    let menu = menuResults[0][0].menuJson;
-    con.release();
-    for(let i=0; i< Object.keys(menu).length; i++)
-    {
-        let diningHall = Object.keys(menu)[i];
-        if(Object.keys(menu[diningHall]).length === 3)
-        {
-            menu[diningHall] = Object.assign({Breakfast: null, Lunch: null, Dinner: null}, menu[diningHall])
-        }
-        else if(Object.keys(menu[diningHall]).length === 2)
-        {
-            menu[diningHall] = Object.assign({Brunch: null, Dinner: null}, menu[diningHall])
-        }   
-    }   
-
-    let diningHall;
-    let mealTime;
-    let sectionName;
-    let itemName;
-    let favoritesAvailable = {};
-    for(let i=0; i< Object.keys(menu).length; i++)
-    {
-        diningHall = Object.keys(menu)[i];
-        if(favoritesAvailable[diningHall] === undefined)
-        {
-            favoritesAvailable[diningHall] = {};
-        }
-        for(let j=0; j< Object.keys(menu[diningHall]).length; j++)
-        {
-            mealTime = Object.keys(menu[diningHall])[j];
-            if(favoritesAvailable[diningHall][mealTime] === undefined)
-            {
-                favoritesAvailable[diningHall][mealTime] = {};
-            }
-            for(let k=0; k< Object.keys(menu[diningHall][mealTime]).length; k++)
-            {
-                sectionName = Object.keys(menu[diningHall][mealTime])[k];
-                for(let l=0; l< Object.keys(menu[diningHall][mealTime][sectionName]).length; l++)
-                {
-                    itemName = Object.keys(menu[diningHall][mealTime][sectionName])[l];
-                    if(favoriteFoodIds.indexOf(menu[diningHall][mealTime][sectionName][itemName]["food_id"]) != -1)
-                    {
-                        favoritesAvailable[diningHall][mealTime][itemName] = menu[diningHall][mealTime][sectionName][itemName];
-                    };
-                }
-            }
-        }
-    }  
-    let responseObject = {};
-    responseObject["favoritesAvailable"] = favoritesAvailable;
-    responseObject["favoriteFoodIds"]  = favoriteFoodIds;
+    let responseObject = await returnFavoritesAvailable(uuid, pool);
     res.send(responseObject);
 }
 
