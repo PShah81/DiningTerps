@@ -69,6 +69,10 @@ app.get('/', (req, res)=>{
 app.get('/privacypolicy', (req,res)=>{
     res.send("Privacy Policy");
 })
+
+app.get('/termsofservics', (req, res)=>{
+    res.send("TOS");
+})
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
 
 async function modifySettings(uuid, setting, operation, modification, res)
@@ -135,7 +139,7 @@ async function modifySettings(uuid, setting, operation, modification, res)
         if(newEntry)
         {
             postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify([], modification)]);
+            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify([]), modification]);
         }
         else
         {

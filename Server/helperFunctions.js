@@ -10,8 +10,7 @@ async function returnFavoritesAvailable(uuid, pool)
         favoriteFoodIds.push(arrOfIdObjects[i]['food_id']);
     }
     
-    // let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
-    let date = "3/15/2023";
+    let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
     let getMenuSql = "SELECT menuJson FROM menus WHERE menuDate = ?";
     let menuResults = await con.query(getMenuSql, [date]);
     if(menuResults[0][0] === undefined)

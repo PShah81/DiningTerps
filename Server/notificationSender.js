@@ -1,16 +1,54 @@
 import { Expo } from 'expo-server-sdk';
+import {CronJob} from 'cron';
 import mysql from 'mysql2/promise';
 import * as dotenv from 'dotenv';
 dotenv.config()
 import returnFavoritesAvailable from './helperFunctions.js';
 let expo = new Expo();
-let pool = mysql.createPool({
-    connectionLimit: 100, 
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+
+let job = new CronJob(
+	'0 0 7 * * *',
+    function()
+    {
+        let pool = mysql.createPool({
+            connectionLimit: 100, 
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        processAllUUIDs(pool);
+    },
+    null,
+	true,
+	'America/New_York'
+);
+
+async function processAllUUIDs(pool)
+{
+    let con = await pool.getConnection();
+    let getFavoritesSql = "SELECT * FROM settings WHERE pushToken IS NOT NULL";
+    let result = await con.query(getFavoritesSql);
+    let arrayOfUUIDs = result[0];
+    let messages = [];
+    con.release();
+    for(let i=0; i<arrayOfUUIDs.length;i++)
+    {
+        let message = await processFavoritesAvailable(arrayOfUUIDs[i].uuid);
+        if(message != null)
+        {
+            messages.push({
+                to: arrayOfUUIDs[i].pushToken,
+                sound: 'default',
+                body: message,
+                data: { withSome: 'data' }
+            });
+        }
+    }
+    expo.sendPushNotificationsAsync(messages);
+    pool.end();
+}
+
 async function processFavoritesAvailable(uuid)
 {
     let responseObject = await returnFavoritesAvailable(uuid, pool);
@@ -79,28 +117,6 @@ async function processFavoritesAvailable(uuid)
     message += " in the dining halls today!";
     return message;
 }
-async function processAllUUIDs()
-{
-    let con = await pool.getConnection();
-    let getFavoritesSql = "SELECT * FROM settings WHERE pushToken IS NOT NULL";
-    let result = await con.query(getFavoritesSql);
-    let arrayOfUUIDs = result[0];
-    let messages = [];
-    con.release();
-    for(let i=0; i<arrayOfUUIDs.length;i++)
-    {
-        let message = await processFavoritesAvailable(arrayOfUUIDs[i].uuid);
-        if(message != null)
-        {
-            messages.push({
-                to: arrayOfUUIDs[i].pushToken,
-                sound: 'default',
-                body: message,
-                data: { withSome: 'data' }
-            });
-        }
-    }
-    expo.sendPushNotificationsAsync(messages);
-    //USE CRON TO SCHEDULE SO THAT THEY ARE SENT AT 8AM EVERY DAY
-}
-processAllUUIDs();
+
+
+
