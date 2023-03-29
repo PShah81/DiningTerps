@@ -356,6 +356,7 @@ export default function App() {
   }
   useEffect(()=>{
     runFetches();
+    Notifications.dismissAllNotificationsAsync();
   },[])
 
 
