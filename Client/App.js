@@ -105,7 +105,7 @@ export default function App() {
   },[todaysMenu])
   function defaultMealTime(newDiningHall)
   {
-    let localHours = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/New_York'})).getHours() - 4;
+    let localHours = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/New_York'})).getHours();
     if(Object.keys(todaysMenu[newDiningHall]).length === 3)
     {
       if(localHours < 11)
