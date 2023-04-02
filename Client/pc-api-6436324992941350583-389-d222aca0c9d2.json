@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pc-api-6436324992941350583-389",
+  "private_key_id": "d222aca0c9d26c2e4fa74f5c98140a7726e5afbe",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCrwLVXhkgVs0vw\nQ26x4d9N4QTjj1vXtpTXxiLENKRoPd7ehmy2TbaqWpBSPXFR71SRjrxoP8j/U6mT\nDizQXqf4DKb8i+Az6TepuDtcxFiJm0hmjAt0Elfc/9QTmtVJL6rJSa2zwm0FrrEG\nMXp/D0HR/8d0yAqXQGzSnxizBYhhrFSL1AAwuXstwXJZBXey2GePxiSyHnS+qcBt\nqu0UBJP944trqoc4Yrwq4lS8t5HMGPTExEXEPka/K+NeJokVvPxUDfHKi1jfkWZ4\nWXasfgr+nvq1BvCgzjUNW637sqEfrOzNTopIJ0CHiNhyhS0B5nT83h1WYnYvtOzP\nrUiLOxZ9AgMBAAECggEAF/2+tv+kYRefA2w/8awV97h3aNwVHbA84VklcRfTYVZH\nI/lOBTcczXYCE+LOSf4u53gzPDKwvm2u0cJYozCdsOn/h2Z4hnfM1THNZPtuTKZ6\nugxU6z1GtbGsq6Jkqaj1Z9GZaHM/rFwHEVDnBgmZDZ73ewoYZKFUsiUUG6mpr87a\nmCWU9s/BB3hOIojbeeGFAy9wpiWpqcy508vGGVjPCm3rDtbXQEf/V1VxiWgGfnyM\n9tS+nCzbwuyT/8Q9hXFzw5Ox4bdrajehCoo6ABx9gS6TQ0rlcyh2b4hq0ASwcUrI\nX0gtxNCnHTMFHsamBTVewsRQph2wp3vvmmbzk6rbZwKBgQDUy6+Oy48dqI2ahY/b\nqiWde8zK8wwNR9bmH0fsHW/0/I06ef/4GJXMN0FgSNZccNGo6xm88htjDbNi+sjo\nBhqWKqu0YbJySoMQt6nueFeBmJAPWMgydD4L6j/qLhEZW/MGGFrtNzrhhj55RbEA\nE/9IOdKYz6zBj46Okv+/2wvMawKBgQDOn8TGD3LTU/nQZFfXU2fHItMO12DSVMQg\nPpkW/uqg9MEcz6oUxs+XK2G7JNKZjXksEnEnNqCQK3Ee/hYErdf5GYdyma27556f\nveG6HFbQYabSz7EN9HgRFoApTUKpiDYvMFCp41DLEEaS2+gFnYlTxLTtpXJ4vCdY\nLFvvN2FitwKBgH/V+ZqUSV7s4lzA/iJdvgk01Vva1ROpY72Nbzy2loqbqhBGOHMH\n+f3b+Adq2nRgRmPvEOBEphVEps7AkC9rc09hRROxWW11u/UwEQM1AoTVbT36/RHq\naVfpGwqJMDaG2aGAwicd9d6EMkXSiznbyZHPQugQYt1Ja7/VKZVNd3IPAoGASlol\ntdvTRwZ966ZgEaT6wCbg6gNI3QcRuESuVB8RETBh2VtE6csM4moC9hPvEMBe7SQJ\nwcGfj6GCSFPIWpCwGfw8yFlSsj5Lz1HFy3HtL3kkTdHc9ZeWKRf+sF4T8euJC/wH\n2spoxVmq+6fUW0jwJMuxC58wjQ+v3MPBpVg5XAsCgYEAmsM2wdYzn4TitiooOfxn\nJZIXakiKcrhhe6MtpHbP3Kg39aBE9QEPlz71HQG3U2VYRWKbWC8C/W4bBVPuDwkB\nBahDiWk093aMb/VcpNVJFjE/8na3sH7fCIaMa6p6/QPxXy9XCryTcCFfb/ZREpAW\ndJAsoQpeKhPRX9KfcW6S8BI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dining-terps@pc-api-6436324992941350583-389.iam.gserviceaccount.com",
+  "client_id": "101476686381225588066",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dining-terps%40pc-api-6436324992941350583-389.iam.gserviceaccount.com"
+}

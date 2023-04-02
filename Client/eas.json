@@ -14,9 +14,6 @@
       "distribution": "internal",
       "ios": {
         "resourceClass": "m1-medium"
-      },
-      "android": {
-        "buildType": "apk"
       }
     },
     "preview2": {
@@ -31,6 +28,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "pc-api-6436324992941350583-389-d222aca0c9d2.json"
+      }
+    }
   }
 }

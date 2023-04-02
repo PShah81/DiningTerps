@@ -58,7 +58,7 @@ export default StyleSheet.create({
         paddingTop: '1%'
     },
     scrollDivHeight:{
-        height: '87%'
+        height: Platform.OS === 'ios' ? '87%' : '82%'
     },
     sectionContainer: {
         display: 'flex',

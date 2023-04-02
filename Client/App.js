@@ -99,46 +99,46 @@ export default function App() {
   useEffect(()=>{
     if(Object.keys(todaysMenu).length != 0)
     {
-      defaultMealTime();
+      defaultMealTime(diningHall);
       setLoadingMenu(false);
     }
   },[todaysMenu])
-  function defaultMealTime()
+  function defaultMealTime(newDiningHall)
   {
-    let localHours = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/New_York'})).getHours();
-    if(Object.keys(todaysMenu[diningHall]).length === 3)
+    let localHours = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/New_York'})).getHours() - 4;
+    if(Object.keys(todaysMenu[newDiningHall]).length === 3)
     {
       if(localHours < 11)
       {
-        setMealTime(Object.keys(todaysMenu[diningHall])[0]);
+        setMealTime(Object.keys(todaysMenu[newDiningHall])[0]);
       }
       else if(localHours < 17)
       {
-        setMealTime(Object.keys(todaysMenu[diningHall])[1]);
+        setMealTime(Object.keys(todaysMenu[newDiningHall])[1]);
       }
       else
       {
-        setMealTime(Object.keys(todaysMenu[diningHall])[2]);
+        setMealTime(Object.keys(todaysMenu[newDiningHall])[2]);
       }
     }
     else
     {
       if(localHours < 17)
       {
-        setMealTime(Object.keys(todaysMenu[diningHall])[0]);
+        setMealTime(Object.keys(todaysMenu[newDiningHall])[0]);
       }
       else 
       {
-        setMealTime(Object.keys(todaysMenu[diningHall])[1]);
+        setMealTime(Object.keys(todaysMenu[newDiningHall])[1]);
       }
     }
   }
-  function changeDiningHall(diningHall)
+  function changeDiningHall(newDiningHall)
   {
-      setDiningHall(diningHall);
-      if(Object.keys(todaysMenu[diningHall]).length != 0)
+      setDiningHall(newDiningHall);
+      if(Object.keys(todaysMenu[newDiningHall]).length != 0)
       {
-        defaultMealTime();  
+        defaultMealTime(newDiningHall);  
       }
   }
   function changeMode(newMode)
@@ -356,7 +356,7 @@ export default function App() {
   }
   useEffect(()=>{
     runFetches();
-    Notifications.dismissAllNotificationsAsync();
+    Notifications.setBadgeCountAsync(0);
   },[])
 
 
@@ -383,7 +383,7 @@ export default function App() {
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? moderateScale(2) : 0), ...styles.navButton}}>
               <Text style={styles.navText}>Favorites</Text>
-              <Icon size={moderateScale(30)} name="star-outline" type='ionicon' color='orange'></Icon>
+              <Icon size={moderateScale(30)} name="heart-outline" type='ionicon' color='orange'></Icon>
           </TouchableOpacity>
       </View>
     </View>

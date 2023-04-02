@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dining Terps",
     "slug": "nutritionApp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/app_logo.png",
     "userInterfaceStyle": "light",
@@ -21,10 +21,7 @@
       "buildNumber": "2"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
+      "versionCode": "3",
       "softwareKeyboardLayoutMode":"pan",
       "package": "com.pranav120.nutritionApp"
     },
