@@ -15,8 +15,10 @@ async function returnFavoritesAvailable(uuid, pool)
     let menuResults = await con.query(getMenuSql, [date]);
     if(menuResults[0][0] === undefined)
     {
-        res.send({})
-        return;
+        let responseObject = {};
+        responseObject["favoritesAvailable"] = {};
+        responseObject["favoriteFoodIds"]  = [];
+        return responseObject;
     }
     let menu = menuResults[0][0].menuJson;
     con.release();

@@ -54,7 +54,8 @@ app.get('/favoritesavailable/:uuid', (req, res)=>{
 app.post('/settings/:setting/:operation', (req, res)=>{
     let {setting, operation} = req.params;
     let {uuid, modification} = req.body;
-    modifySettings(uuid, setting, operation, modification, res);
+    let resString = modifySettings(uuid, setting, operation, modification);
+    res.send(resString);
 })
 
 app.get('/settings/:uuid', (req,res)=>{
@@ -75,67 +76,91 @@ app.get('/termsofservics', (req, res)=>{
 })
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
 
-async function modifySettings(uuid, setting, operation, modification, res)
+async function modifySettings(uuid, setting, operation, modification)
 {
-    let oldSetting;
-    let newSetting;
     let newEntry = false;
     let result = await returnSettings(uuid);
-    if(result != null)
-    {
-        oldSetting = result[setting];
-    } 
-    else
+    if(result === null)
     {
         newEntry = true;
-        oldSetting = [];
     }
-    if(operation === "delete")
+    if(setting === "collapsedSections" || setting === "favoriteSections")
     {
-        if(oldSetting.indexOf(modification) != -1)
-        {
-            oldSetting.splice(oldSetting.indexOf(modification), 1);
-            newSetting = oldSetting;
-        }
-    }
-    else if(operation === "add")
-    {
-        if(oldSetting.indexOf(modification) === -1)
-        {
-            newSetting = [...oldSetting, modification];
-        }
-    }
-    let con = await pool.getConnection();
-    let postSql;
-    if(setting === "collapsedSections")
-    {
+        let oldSetting;
+        let newSetting;
+        let validOperation;
         if(newEntry)
         {
-            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-            await con.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([]), NULL]);
+            console.log("Weird new entry");
+            oldSetting = [];
         }
         else
         {
-            postSql = "UPDATE settings SET collapsedSections = ? WHERE uuid = ?";
-            await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+            oldSetting = result[setting];
         }
-        
-    }
-    else if(setting === "favoriteSections")
-    {
-        if(newEntry)
+        if(operation === "delete")
         {
-            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting), NULL]);
+            if(oldSetting.indexOf(modification) != -1)
+            {
+                oldSetting.splice(oldSetting.indexOf(modification), 1);
+                newSetting = oldSetting;
+            }
+            else
+            {
+                return "Doesn't Exist";
+            }
+        }
+        else if(operation === "add")
+        {
+            if(oldSetting.indexOf(modification) === -1)
+            {
+                newSetting = [...oldSetting, modification];
+            }
+            else
+            {
+                return "Already Exists";
+            }
         }
         else
         {
-            postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
-            await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+            return "Invalid operation";
         }
+        let con = await pool.getConnection();
+        let postSql;
+        if(setting === "collapsedSections")
+        {
+            if(newEntry)
+            {
+                postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+                await con.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([]), null]);
+            }
+            else
+            {
+                postSql = "UPDATE settings SET collapsedSections = ? WHERE uuid = ?";
+                await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+            }
+            
+        }
+        else if(setting === "favoriteSections")
+        {
+            if(newEntry)
+            {
+                postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+                await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting), null]);
+            }
+            else
+            {
+                postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
+                await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+            }
+        }
+        con.release();
+        return "Success";
     }
     else if(setting === "pushToken")
     {
+        let con = await pool.getConnection();
+        let postSql;
         if(newEntry)
         {
             postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
@@ -143,15 +168,19 @@ async function modifySettings(uuid, setting, operation, modification, res)
         }
         else
         {
-            if(modification != oldSetting)
+            if(modification != result[setting])
             {
                 postSql = "UPDATE settings SET pushToken = ? WHERE uuid = ?";
                 await con.query(postSql, [modification, uuid]);
             }
         }
+        con.release();
+        return "Success";
     }
-    con.release();
-    res.send("Success");
+    else
+    {
+        return "This setting doesn't exist";
+    }
 }
 async function getSettings(uuid, res)
 {

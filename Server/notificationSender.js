@@ -34,7 +34,7 @@ async function processAllUUIDs(pool)
     con.release();
     for(let i=0; i<arrayOfUUIDs.length;i++)
     {
-        let message = await processFavoritesAvailable(arrayOfUUIDs[i].uuid);
+        let message = await processFavoritesAvailable(arrayOfUUIDs[i].uuid, pool);
         if(message != null)
         {
             messages.push({
@@ -45,11 +45,26 @@ async function processAllUUIDs(pool)
             });
         }
     }
-    expo.sendPushNotificationsAsync(messages);
+    let chunks = expo.chunkPushNotifications(messages);
+    sendNotifications(chunks);
     pool.end();
 }
 
-async function processFavoritesAvailable(uuid)
+async function sendNotifications(chunks)
+{
+    for(let chunk of chunks)
+    {
+        try {
+            let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+            console.log(ticketChunk);
+        } catch (error) {
+            console.log("error")
+            console.error(error);
+        }
+    }
+}
+
+async function processFavoritesAvailable(uuid, pool)
 {
     let responseObject = await returnFavoritesAvailable(uuid, pool);
     let favoritesAvailable = responseObject["favoritesAvailable"];
