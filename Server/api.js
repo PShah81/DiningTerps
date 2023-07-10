@@ -4,9 +4,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mysql from 'mysql2/promise';
-import returnFavoritesAvailable from './helperFunctions.js';
+import {returnFavoritesAvailable} from './helperFunctions.js';
 
-let pool = mysql.createPool({
+const pool = mysql.createPool({
     connectionLimit: 100, 
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

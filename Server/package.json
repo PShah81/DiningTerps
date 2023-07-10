@@ -1,4 +1,12 @@
 {
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./tests/setup.js"
+    ]
+  },
   "dependencies": {
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
@@ -14,7 +22,12 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.0.1",
     "ngrok": "^4.3.3",
-    "node-fetch": "^3.3.0"
+    "node-fetch": "^3.3.0",
+    "uuid": "^9.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "jest": "^29.6.0",
+    "supertest": "^6.3.3"
+  }
 }

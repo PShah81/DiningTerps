@@ -1,15 +1,42 @@
-async function returnFavoritesAvailable(uuid, pool)
+import {validate as isUUID} from 'uuid';
+//This function gets an array of ids of the favorite foods for a user
+async function getFavoriteFoodIds(uuid, pool)
 {
-    let con = await pool.getConnection();
-    let getFavoritesSql = "SELECT food_id FROM notifications WHERE uuid = ?";
-    let result = await con.query(getFavoritesSql, [uuid]);
-    let arrOfIdObjects = result[0];
-    let favoriteFoodIds = [];
-    for(let i=0; i<arrOfIdObjects.length; i++)
+    try
     {
-        favoriteFoodIds.push(arrOfIdObjects[i]['food_id']);
+        if(!isUUID(uuid))
+        {
+            throw new Error("invalid uuid");
+        }
+        let getFavoritesSql = "SELECT food_id FROM notifications WHERE uuid = ?";
+        let result = await pool.query(getFavoritesSql, [uuid]);
+        if(!Array.isArray(result[0]))
+        {
+            throw new Error("invalid query result");
+        }
+        //the first index of the array has the actual data
+        //the other indicies have details about the columns
+        let arrOfIdObjects = result[0];
+        let favoriteFoodIds = [];
+        for(let i=0; i<arrOfIdObjects.length; i++)
+        {
+            //looks like this because each food id comes in the form of an object with key food_id
+            favoriteFoodIds.push(arrOfIdObjects[i]['food_id']);
+        }
+        return favoriteFoodIds;
+    }
+    catch(err)
+    {
+        console.log(err.message);
+        return [];
     }
     
+}
+async function returnFavoritesAvailable(uuid, pool)
+{
+    let favoriteFoodIds = getFavoriteFoodIds(uuid, pool);
+    let con = await pool.getConnection();
+
     let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
     let getMenuSql = "SELECT menuJson FROM menus WHERE menuDate = ?";
     let menuResults = await con.query(getMenuSql, [date]);
@@ -74,4 +101,4 @@ async function returnFavoritesAvailable(uuid, pool)
     return responseObject;
 }
 
-export default returnFavoritesAvailable;
+export {returnFavoritesAvailable, getFavoriteFoodIds};
