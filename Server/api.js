@@ -4,7 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mysql from 'mysql2/promise';
-import {returnFavoritesAvailable} from './helperFunctions.js';
+import {getFavoriteFoodIds, returnFavoritesAvailable} from './helperFunctions.js';
 
 const pool = mysql.createPool({
     connectionLimit: 100, 
@@ -212,7 +212,7 @@ async function returnSettings(uuid)
 }
 async function getFavoritesAvailable(uuid, res)
 {
-    let responseObject = await returnFavoritesAvailable(uuid, pool);
+    let responseObject = await returnFavoritesAvailable(uuid, pool, getFavoriteFoodIds);
     res.send(responseObject);
 }
 

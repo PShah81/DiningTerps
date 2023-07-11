@@ -3,7 +3,7 @@ import {CronJob} from 'cron';
 import mysql from 'mysql2/promise';
 import * as dotenv from 'dotenv';
 dotenv.config()
-import returnFavoritesAvailable from './helperFunctions.js';
+import {getFavoriteFoodIds, returnFavoritesAvailable} from './helperFunctions.js';
 let expo = new Expo();
 
 let job = new CronJob(
@@ -66,7 +66,7 @@ async function sendNotifications(chunks)
 
 async function processFavoritesAvailable(uuid, pool)
 {
-    let responseObject = await returnFavoritesAvailable(uuid, pool);
+    let responseObject = await returnFavoritesAvailable(uuid, pool, getFavoriteFoodIds);
     let favoritesAvailable = responseObject["favoritesAvailable"];
     let messageArr = [];
     let message = "The ";
