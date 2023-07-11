@@ -8,7 +8,7 @@ async function getFavoriteFoodIds(uuid, pool)
         {
             throw new Error("invalid uuid");
         }
-        let getFavoritesSql = "SELECT food_id FROM notifications WHERE uuid = ?";
+        let getFavoritesSql = "SELECT food_id FROM favorites WHERE uuid = ?";
         let result = await pool.query(getFavoritesSql, [uuid]);
         if(!Array.isArray(result[0]))
         {
@@ -34,7 +34,7 @@ async function getFavoriteFoodIds(uuid, pool)
 }
 async function returnFavoritesAvailable(uuid, pool)
 {
-    let favoriteFoodIds = getFavoriteFoodIds(uuid, pool);
+    let favoriteFoodIds = await getFavoriteFoodIds(uuid, pool);
     let con = await pool.getConnection();
 
     let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});

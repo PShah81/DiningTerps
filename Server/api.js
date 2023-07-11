@@ -222,11 +222,11 @@ async function addOrDeleteFavorites(operation, uuid, food_id, res)
     if(operation === "add")
     {
         
-        let alreadyThereSql = "SELECT * FROM notifications WHERE food_id = ? AND uuid = ?";
+        let alreadyThereSql = "SELECT * FROM favorites WHERE food_id = ? AND uuid = ?";
         let result = await con.query(alreadyThereSql, [food_id, uuid]);
         if(result[0].length === 0)
         {
-            let sql = "INSERT INTO notifications (food_id, uuid) VALUES (?,?)";
+            let sql = "INSERT INTO favorites (food_id, uuid) VALUES (?,?)";
             await con.query(sql, [food_id, uuid]);
             console.log('added');
         }
@@ -235,7 +235,7 @@ async function addOrDeleteFavorites(operation, uuid, food_id, res)
     else if(operation === "delete")
     {
         console.log('deleted');
-        let sql = "DELETE FROM notifications WHERE food_id = ? AND uuid = ?";
+        let sql = "DELETE FROM favorites WHERE food_id = ? AND uuid = ?";
         await con.query(sql, [food_id, uuid]);
         con.release();
     }
