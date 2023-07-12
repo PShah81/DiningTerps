@@ -1,4 +1,4 @@
-import {getFavoriteFoodIds, returnFavoritesAvailable} from '../helperFunctions.js';
+import {getFavoriteFoodIds, returnFavoritesAvailable} from '../app/controllers/controller.js';
 import { jest } from '@jest/globals';
 import sampleMenu from './sampleMenuQuery.json';
 
@@ -97,4 +97,10 @@ describe("testing returnFavoritesAvailable", ()=>{
             expect(responseObject['favoriteFoodIds']).toEqual([]);
         })
     })
+})
+
+
+
+describe("testing getFavoritesAvailable", ()=>{
+    
 })
