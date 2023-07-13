@@ -161,40 +161,64 @@ async function addOrDeleteFavorites(operation, uuid, food_id, res, pool)
 }  
 async function retrieveDatabase(res, pool)
 {
-    let con = await pool.getConnection();
-    let sql = "SELECT * FROM food_database";
-    let results = await con.query(sql);
-    con.release();
-    let foodArr = results[0];
-    res.send(foodArr);
+    try
+    {
+        let sql = "SELECT * FROM food_database";
+        let results = await pool.query(sql);
+        if(results[0] === undefined)
+        {
+            throw new Error("query result was not in the proper format");
+        }
+        let foodArr = results[0];
+        res.status(200).send(foodArr);
+    }
+    catch(err)
+    {
+        console.error(err.message);
+        res.status(500).send([]);
+    }
+   
 }
 async function retrieveTodaysMenu(res, pool)
 {
-    let con = await pool.getConnection();
-    let sql = "SELECT menuJson FROM menus WHERE menuDate = ?";
-    let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
-    let results = await con.query(sql, [date]);
-    if(results[0][0] === undefined)
+    try
     {
-        res.send({});
-        return;
-    }
-    con.release();
-    let menu = results[0][0].menuJson;
-    for(let i=0; i< Object.keys(menu).length; i++)
-    {
-        let diningHall = Object.keys(menu)[i];
-        if(Object.keys(menu[diningHall]).length === 3)
+        //get menu for today
+        let sql = "SELECT menuJson FROM menus WHERE menuDate = ?";
+        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
+        let results = await pool.query(sql, [date]);
+        if(results[0] === undefined || results[0][0] === undefined || results[0][0].menuJson === undefined)
         {
-            menu[diningHall] = Object.assign({Breakfast: null, Lunch: null, Dinner: null}, menu[diningHall])
+            throw new Error("query result was not in the proper format");
         }
-        else if(Object.keys(menu[diningHall]).length === 2)
+
+        //query is formatted this way
+        let menu = results[0][0].menuJson;
+
+        //remformatting json so that the keys are in order of Breakfast, Lunch, Dinner
+        for(let i=0; i< Object.keys(menu).length; i++)
         {
-            menu[diningHall] = Object.assign({Brunch: null, Dinner: null}, menu[diningHall])
-        }   
+            let diningHall = Object.keys(menu)[i];
+            if(Object.keys(menu[diningHall]).length === 3)
+            {
+                menu[diningHall] = Object.assign({Breakfast: null, Lunch: null, Dinner: null}, menu[diningHall])
+            }
+            else if(Object.keys(menu[diningHall]).length === 2)
+            {
+                menu[diningHall] = Object.assign({Brunch: null, Dinner: null}, menu[diningHall])
+            }   
+        }
+        console.log('sending menu');
+        res.status(200).json(menu);
     }
-    console.log('sending');
-    res.json(menu);
+    catch(err)
+    {
+        console.error(err.message);
+        console.log('sending menu');
+        res.status(500).json({});
+    }
+    
+    
 }
 
 //This function gets an array of ids of the favorite foods for a user

@@ -1,13 +1,15 @@
 import {getFavoriteFoodIds, returnFavoritesAvailable} from '../app/controllers/controller.js';
 import { jest } from '@jest/globals';
 import sampleMenu from './sampleMenuQuery.json';
+import supertest from 'supertest';
+import createServer from '../createServer.js';
 
 //tests that use this without database mocking may fail if this uuid does exist in the system
 let sampleUUID = "3134fc51-a8e0-45a2-bd97-cd2ff4f5d243";
 beforeEach(()=>{
     jest.spyOn(console,'error').mockReset();
 })
-describe("testing getFavoriteFoodIds", ()=>{
+describe("testing getFavoriteFoodIds function", ()=>{
 
     describe("mocking database", ()=>{
         const mockPool = {query: jest.fn()};
@@ -48,9 +50,7 @@ describe("testing getFavoriteFoodIds", ()=>{
 })
 
 
-
-
-describe("testing returnFavoritesAvailable", ()=>{
+describe("testing returnFavoritesAvailable function", ()=>{
     describe("mocking database and getFavoriteFoodIds", ()=>{
         const mockPool = {query: jest.fn()};
         const mockFavoriteFoodIds = (uuid, pool) => [13265, 13320, 13355, 13361];
@@ -70,6 +70,17 @@ describe("testing returnFavoritesAvailable", ()=>{
             expect(Object.keys(responseObject['favoritesAvailable']['Yahentamitsi']['Breakfast']).length).toBe(0);
             expect(Object.keys(responseObject['favoritesAvailable']['Yahentamitsi']['Lunch']).length).toBe(2);
             expect(Object.keys(responseObject['favoritesAvailable']['Yahentamitsi']['Dinner']).length).toBe(3);
+
+            let mealTimeArr = ["Breakfast", "Lunch", "Dinner"];
+            let diningHallArr = ["South", "251 North", "Yahentamitsi"];
+            for(let j=0; j<3; j++)
+            {
+                for(let i=0; i<3; i++)
+                {
+                    expect(Object.keys(responseObject['favoritesAvailable'][diningHallArr[j]])[i]).toEqual(mealTimeArr[i]);
+                }
+            }
+            
         })
         
         test("invalid query return", async ()=>{
@@ -100,7 +111,11 @@ describe("testing returnFavoritesAvailable", ()=>{
 })
 
 
-
-describe("testing getFavoritesAvailable", ()=>{
-    
+describe("testing get favorites endpoint",()=> {
+    //this test might fail because this for a development account, so favorites might change
+    //can't really test status code for this endpoint because it doesn't reutrn one :<
+    test("does it send the correct values for a real UUID", async ()=>{
+        let response = await supertest(createServer(global.pool)).get('/favoritesavailable/'+'45576fc1-0bbe-4210-a501-63d1ae1c228a');
+        expect(response.body.favoriteFoodIds).toEqual([13262,13324,13325,13371,13154])
+    })
 })

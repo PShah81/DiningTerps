@@ -2,8 +2,8 @@ import { Expo } from 'expo-server-sdk';
 import {CronJob} from 'cron';
 import mysql from 'mysql2/promise';
 import * as dotenv from 'dotenv';
-dotenv.config()
-import {getFavoriteFoodIds, returnFavoritesAvailable} from './helperFunctions.js';
+dotenv.config({path: "../../.env"});
+import {getFavoriteFoodIds, returnFavoritesAvailable} from '../controllers/controller.js';
 let expo = new Expo();
 
 let job = new CronJob(

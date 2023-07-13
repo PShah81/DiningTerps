@@ -1,6 +1,6 @@
 import {CronJob} from 'cron';
 import * as dotenv from 'dotenv';
-dotenv.config()
+dotenv.config({path: "../../.env"});
 import webscrapeData from './webscrape.js';
 import mysql from 'mysql2/promise';
 
