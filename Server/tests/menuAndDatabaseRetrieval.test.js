@@ -4,10 +4,6 @@ import sampleMenu from './sampleMenuQuery.json';
 import supertest from 'supertest';
 import createServer from '../createServer.js';
 
-beforeEach(()=>{
-    jest.spyOn(console,'error').mockReset();
-})
-
 describe("testing retrieveTodaysMenu function",()=>{
     describe("mocking",()=>{ 
         const mockPool = {query: jest.fn()};

@@ -6,12 +6,11 @@ import createServer from '../createServer.js';
 
 //tests that use this without database mocking may fail if this uuid does exist in the system
 let sampleUUID = "3134fc51-a8e0-45a2-bd97-cd2ff4f5d243";
-beforeEach(()=>{
-    jest.spyOn(console,'error').mockReset();
-})
+let realUUID = "45576fc1-0bbe-4210-a501-63d1ae1c228a";
 describe("testing getFavoriteFoodIds function", ()=>{
 
     describe("mocking database", ()=>{
+        const consoleSpy = jest.spyOn(console, 'error');
         const mockPool = {query: jest.fn()};
         test("returns the correct values", async ()=>{
             mockPool.query.mockResolvedValue([[{food_id: 13154}, {food_id: 13157}, {food_id: 13160}], ["garbage"], ["garbage"]]);
@@ -20,18 +19,16 @@ describe("testing getFavoriteFoodIds function", ()=>{
             expect(mockPool.query.mock.calls.length).toBe(1);
         })  
         test("invalid query return", async ()=>{
-            const consoleSpy = jest.spyOn(console, 'error');
             mockPool.query.mockResolvedValue({});
             let favoriteFoodIds = await getFavoriteFoodIds(sampleUUID, mockPool);
             expect(favoriteFoodIds).toEqual([]);
-            expect(consoleSpy).toBeCalledWith('invalid query result');
+            expect(consoleSpy).toHaveBeenCalledWith('invalid query result');
         })
         test("invalid uuid", async ()=>{
-            const consoleSpy = jest.spyOn(console, 'error');
             mockPool.query.mockResolvedValue([[{food_id: 13154}, {food_id: 13157}, {food_id: 13160}], ["garbage"], ["garbage"]]);
             let favoriteFoodIds = await getFavoriteFoodIds("abcdefg", mockPool);
             expect(favoriteFoodIds).toEqual([]);
-            expect(consoleSpy).toBeCalledWith('invalid uuid');
+            expect(consoleSpy).toHaveBeenCalledWith('invalid uuid');
         });
     })
 
@@ -52,6 +49,7 @@ describe("testing getFavoriteFoodIds function", ()=>{
 
 describe("testing returnFavoritesAvailable function", ()=>{
     describe("mocking database and getFavoriteFoodIds", ()=>{
+        const consoleSpy = jest.spyOn(console, 'error');
         const mockPool = {query: jest.fn()};
         const mockFavoriteFoodIds = (uuid, pool) => [13265, 13320, 13355, 13361];
         test("returns the correct values", async ()=>{
@@ -84,22 +82,20 @@ describe("testing returnFavoritesAvailable function", ()=>{
         })
         
         test("invalid query return", async ()=>{
-            const consoleSpy = jest.spyOn(console, 'error');
             mockPool.query.mockResolvedValue({});
             let responseObject = await returnFavoritesAvailable(sampleUUID, mockPool, mockFavoriteFoodIds);
             expect(responseObject["favoriteFoodIds"]).toEqual([]);
             expect(responseObject["favoritesAvailable"]).toEqual({});
-            expect(consoleSpy).toBeCalledWith('menuResults is not in the proper format');
+            expect(consoleSpy).toHaveBeenCalledWith('menuResults is not in the proper format');
         })
 
         test("there is an error with getting data from getFavoriteFoodIds", async() => {
-            const consoleSpy = jest.spyOn(console, 'error');
             const newMockFavoriteFoodIds = (uuid, pool) => {};
             mockPool.query.mockResolvedValue(sampleMenu);
             let responseObject = await returnFavoritesAvailable(sampleUUID, mockPool, newMockFavoriteFoodIds);
             expect(responseObject["favoriteFoodIds"]).toEqual([]);
             expect(responseObject["favoritesAvailable"]).toEqual({});
-            expect(consoleSpy).toBeCalledWith('Favorite food array is not valid');
+            expect(consoleSpy).toHaveBeenCalledWith('Favorite food array is not valid');
         })
     })
     describe("no mocking", () => {
@@ -115,7 +111,7 @@ describe("testing get favorites endpoint",()=> {
     //this test might fail because this for a development account, so favorites might change
     //can't really test status code for this endpoint because it doesn't reutrn one :<
     test("does it send the correct values for a real UUID", async ()=>{
-        let response = await supertest(createServer(global.pool)).get('/favoritesavailable/'+'45576fc1-0bbe-4210-a501-63d1ae1c228a');
+        let response = await supertest(createServer(global.pool)).get('/favoritesavailable/'+realUUID);
         expect(response.body.favoriteFoodIds).toEqual([13262,13324,13325,13371,13154])
     })
 })

@@ -25,8 +25,7 @@ function routes(app, pool)
     app.post('/settings/:setting/:operation', (req, res)=>{
         let {setting, operation} = req.params;
         let {uuid, modification} = req.body;
-        let resString = modifySettings(uuid, setting, operation, modification, pool);
-        res.send(resString);
+        modifySettings(uuid, res, setting, operation, modification, pool, returnSettings);
     })
     
     app.get('/settings/:uuid', (req,res)=>{

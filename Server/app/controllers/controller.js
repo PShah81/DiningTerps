@@ -1,109 +1,137 @@
 import {validate as isUUID} from 'uuid';
 
-async function modifySettings(uuid, setting, operation, modification, pool)
+async function modifySettings(uuid, res, setting, operation, modification, pool, returnSettings)
 {
-    let newEntry = false;
-    let result = await returnSettings(uuid, pool);
-    if(result === null)
+    try 
     {
-        newEntry = true;
-    }
-    if(setting === "collapsedSections" || setting === "favoriteSections")
-    {
-        let oldSetting;
-        let newSetting;
-        let validOperation;
-        if(newEntry)
+        //message to res.send
+        let message = "Success";
+        //Check If Params are valid
+        if(!isUUID(uuid))
         {
-            console.log("Weird new entry");
-            oldSetting = [];
+            throw new TypeError("Invalid UUID");
         }
-        else
+        if(setting != "pushToken" && setting != "collapsedSections" && setting != "favoriteSections")
         {
-            oldSetting = result[setting];
+            throw new TypeError("Not a valid Setting");
         }
-        if(operation === "delete")
+        else if(setting === "pushToken" && modification != null && (typeof modification != "string" || !(modification.startsWith('ExponentPushToken'))))
         {
-            if(oldSetting.indexOf(modification) != -1)
+            throw new TypeError("Not a valid PushToken");
+        }
+        else if((setting === "collapsedSections" || setting === " favoriteSections") &&  typeof modification != "string")
+        {
+            throw new TypeError("Not a valid modification");
+        }
+        // Must check setting isn't pushToken because pushToken has its own different operations
+        else if(setting != "pushToken" && operation != "add" && operation != "delete")
+        {
+            throw new TypeError("Not a valid Operation");
+        }
+
+        // First we try to figure out if this is a newEntry for the uuid 
+        let newEntry = false;
+        let result = await returnSettings(uuid, pool);
+        if(result === null)
+        {
+            newEntry = true;
+        }
+        //We want to different things for if the setting is related to the sections vs the pushToken
+        if(setting === "collapsedSections" || setting === "favoriteSections")
+        {
+            let oldSetting;
+            let newSetting;
+            if(newEntry)
             {
-                oldSetting.splice(oldSetting.indexOf(modification), 1);
-                newSetting = oldSetting;
+                oldSetting = [];
             }
             else
             {
-                return "Doesn't Exist";
+                oldSetting = result[setting];
             }
-        }
-        else if(operation === "add")
-        {
-            if(oldSetting.indexOf(modification) === -1)
+            if(operation === "delete")
             {
-                newSetting = [...oldSetting, modification];
+                if(oldSetting.indexOf(modification) != -1)
+                {
+                    oldSetting.splice(oldSetting.indexOf(modification), 1);
+                    newSetting = oldSetting;
+                }
+                else
+                {
+                    message = "Nothing to delete";
+                }
             }
-            else
+            else if(operation === "add")
             {
-                return "Already Exists";
+                if(oldSetting.indexOf(modification) === -1)
+                {
+                    newSetting = [...oldSetting, modification];
+                }
+                else
+                {
+                    return "Nothing to add";
+                }
+            }
+            let postSql;
+            if(setting === "collapsedSections")
+            {
+                if(newEntry)
+                {
+                    postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+                    await pool.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([]), null]);
+                }
+                else
+                {
+                    postSql = "UPDATE settings SET collapsedSections = ? WHERE uuid = ?";
+                    await pool.query(postSql, [JSON.stringify(newSetting), uuid]);
+                }
+                
+            }
+            else if(setting === "favoriteSections")
+            {
+                if(newEntry)
+                {
+                    postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
+                    await pool.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting), null]);
+                }
+                else
+                {
+                    postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
+                    await pool.query(postSql, [JSON.stringify(newSetting), uuid]);
+                }
             }
         }
-        else
+        else if(setting === "pushToken")
         {
-            return "Invalid operation";
-        }
-        let con = await pool.getConnection();
-        let postSql;
-        if(setting === "collapsedSections")
-        {
+            let postSql;
             if(newEntry)
             {
                 postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-                await con.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([]), null]);
+                await pool.query(postSql, [uuid, JSON.stringify([]), JSON.stringify([]), modification]);
             }
             else
             {
-                postSql = "UPDATE settings SET collapsedSections = ? WHERE uuid = ?";
-                await con.query(postSql, [JSON.stringify(newSetting), uuid]);
-            }
-            
-        }
-        else if(setting === "favoriteSections")
-        {
-            if(newEntry)
-            {
-                postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-                await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting), null]);
-            }
-            else
-            {
-                postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
-                await con.query(postSql, [JSON.stringify(newSetting), uuid]);
+                if(modification != result[setting])
+                {
+                    postSql = "UPDATE settings SET pushToken = ? WHERE uuid = ?";
+                    await pool.query(postSql, [modification, uuid]);
+                }
             }
         }
-        con.release();
-        return "Success";
+        res.status(200).send(message);
     }
-    else if(setting === "pushToken")
+    catch(err)
     {
-        let con = await pool.getConnection();
-        let postSql;
-        if(newEntry)
+        console.error(err.message);
+        if(err instanceof TypeError)
         {
-            postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-            await con.query(postSql, [uuid, JSON.stringify([]), JSON.stringify([]), modification]);
+            res.status(400).send("Failure");
         }
         else
         {
-            if(modification != result[setting])
-            {
-                postSql = "UPDATE settings SET pushToken = ? WHERE uuid = ?";
-                await con.query(postSql, [modification, uuid]);
-            }
+            res.status(500).send("Failure");
         }
-        con.release();
-        return "Success";
-    }
-    else
-    {
-        return "This setting doesn't exist";
+        
     }
 }
 async function getSettings(uuid, res, pool, returnSettings)
@@ -111,53 +139,80 @@ async function getSettings(uuid, res, pool, returnSettings)
     let result = await returnSettings(uuid, pool);
     if(result === null)
     {
-        res.send({});
+        res.status(200).send({});
     }
     else
     {
-        res.send(result);
+        res.status(200).send(result);
     }
     
 }
 async function returnSettings(uuid, pool)
 {
-    let con = await pool.getConnection();
-    let getSettingsSql = "SELECT * FROM settings WHERE uuid = ?";
-    let result = await con.query(getSettingsSql, [uuid]);
-    con.release();
-    if(result[0].length === 0)
+    try
     {
+        if(!isUUID(uuid))
+        {
+            throw new Error("invalid uuid");
+        }
+        let getSettingsSql = "SELECT * FROM settings WHERE uuid = ?";
+        let result = await pool.query(getSettingsSql, [uuid]);
+        if(!Array.isArray(result[0]))
+        {
+            throw new Error("query result is not in the proper format");
+        }
+        if(result[0].length === 0)
+        {
+            return null;
+        }
+        else
+        {
+            return result[0][0];
+        }
+    }
+    catch(err)
+    {
+        console.error(err.message);
         return null;
     }
-    else
-    {
-        return result[0][0];
-    }
+    
 }
 async function addOrDeleteFavorites(operation, uuid, food_id, res, pool)
 {
-    let con = await pool.getConnection();
-    if(operation === "add")
+    try
     {
-        
-        let alreadyThereSql = "SELECT * FROM favorites WHERE food_id = ? AND uuid = ?";
-        let result = await con.query(alreadyThereSql, [food_id, uuid]);
-        if(result[0].length === 0)
+        if(!isUUID(uuid))
         {
-            let sql = "INSERT INTO favorites (food_id, uuid) VALUES (?,?)";
-            await con.query(sql, [food_id, uuid]);
-            console.log('added');
+            throw new Error("invalid uuid");
         }
-        con.release();
+        if(operation === "add")
+        {
+            let alreadyThereSql = "SELECT * FROM favorites WHERE food_id = ? AND uuid = ?";
+            let result = await pool.query(alreadyThereSql, [food_id, uuid]);
+            if(!Array.isArray(result[0]))
+            {
+                throw new Error("query result not in proper format");
+            }
+            if(result[0].length === 0)
+            {
+                let sql = "INSERT INTO favorites (food_id, uuid) VALUES (?,?)";
+                await pool.query(sql, [food_id, uuid]);
+                console.log('added');
+            }
+        }
+        else if(operation === "delete")
+        {
+            let sql = "DELETE FROM favorites WHERE food_id = ? AND uuid = ?";
+            await pool.query(sql, [food_id, uuid]);
+            console.log('deleted');
+        }
+        res.status(200).send("Success");
     }
-    else if(operation === "delete")
+    catch(err)
     {
-        console.log('deleted');
-        let sql = "DELETE FROM favorites WHERE food_id = ? AND uuid = ?";
-        await con.query(sql, [food_id, uuid]);
-        con.release();
+        console.error(err.message);
+        res.status(500).send("Error");
     }
-    res.send("Success");
 }  
 async function retrieveDatabase(res, pool)
 {
