@@ -6,10 +6,22 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "npx jest"
   },
   "jest": {
-    "clearMocks": true
+    "preset": "react-native",
+    "clearMocks": true,
+    "testEnviornment": "node",
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-modules"
+    ]
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.2",
@@ -27,7 +39,7 @@
     "https": "^1.0.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-native": "0.70.5",
+    "react-native": "^0.70.8",
     "react-native-date-picker": "^4.2.6",
     "react-native-dropdown-picker": "^5.4.4",
     "react-native-easy-grid": "^0.2.2",
@@ -48,7 +60,10 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.22.9",
+    "@testing-library/react": "^14.0.0",
+    "babel-jest": "^29.6.1"
   },
   "resolutions": {
     "react-native-picker-select/@react-native-picker/picker": "^2.4.8"
