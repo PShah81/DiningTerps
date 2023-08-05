@@ -8,9 +8,6 @@
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
-  "jest": {
-    "clearMocks": true
-  },
   "dependencies": {
     "@expo/webpack-config": "^0.17.2",
     "@react-native-picker/picker": "^2.4.8",
