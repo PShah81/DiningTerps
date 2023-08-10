@@ -9,7 +9,7 @@ export default function MenuSearchBar(props)
         inputContainerStyle={styles.inputContainerStyle} inputStyle={styles.inputStyle} 
         onChangeText={(updatedSearch)=>{props.onSearch(updatedSearch)}} 
         onClear={()=>{props.onSearch("")}}
-        value={[props.value]} searchIcon={styles.iconStyle}
+        value={props.value} searchIcon={styles.iconStyle}
         clearIcon={styles.iconStyle}
         round="true"
         ></SearchBar>

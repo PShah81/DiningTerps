@@ -1,23 +1,23 @@
 import { StyleSheet } from 'react-native';
+import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
     searchBarContainer:{
-        width: "82%", 
-        padding: '0.5%', 
-        marginLeft: '3%',
-        backgroundColor: "white", 
+        width: "85%", 
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        backgroundColor: colorObject["grey"]["4"], 
         borderBottomColor: 'transparent',
         borderTopColor: 'transparent'
     },
     inputContainerStyle:{
-        backgroundColor: '#CDCDCD'
+        backgroundColor: colorObject["grey"]["6"]
     },
     inputStyle:{
-        color:'black', 
-        outline: '0'
+        color: colorObject["grey"]["1"]
     },
     iconStyle:{
         iconStyle: {
-            color: 'black'
+            color: colorObject["grey"]["1"]
         }
     }
 

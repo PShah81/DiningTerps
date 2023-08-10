@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, Modal, Button, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
 import styles from './PageStyles/nutritionStyles.js';
+import CustomText from './../HelperComponents/CustomText.js';
 function Nutrition(props)
 {
     let statsArr = [];
@@ -31,19 +32,20 @@ function Nutrition(props)
             statsArr.push(
                 <View key={i} style={styles.nutritionMetric}>
                     <View style={styles.metricContainer}>
-                        <Text style={{...styles.metrics, marginLeft: marginLeftForName, fontWeight: fontWeightForName}}>{modifiedName}</Text>
+                        <CustomText style={{...styles.metrics, marginLeft: marginLeftForName, fontWeight: fontWeightForName}} text={modifiedName}/>
                         <View style={styles.gramAmountContainer}>
-                            <Text style={styles.gramAmount}>{stats[statName]["gram amount"]}</Text>
+                            <CustomText style={styles.gramAmount} text={stats[statName]["gram amount"]}/>
                         </View>
                         
                     </View>
                     <View>
-                        <Text style={styles.metricDV}>{stats[statName]["daily value"]}</Text>
+                        <CustomText style={styles.metricDV} text={stats[statName]["daily value"]}/>
                     </View>
                 </View>
             )
         }
     }
+    //<Text> is used here because I need to treat it as a span
     return(
         <View>
             <Modal
@@ -60,36 +62,36 @@ function Nutrition(props)
                             <Icon size={30} name="arrow-back-outline" type='ionicon' color='orange'></Icon>
                     </TouchableOpacity>
                     {props.foodObject.nutritionFacts === undefined ? 
-                    <Text style={styles.emptyDataSet}>NO NUTRITION DATA AVAILABLE</Text> :
+                    <CustomText style={styles.emptyDataSet} text={"NO NUTRITION DATA AVAILABLE"}/> :
                     <View style={styles.nutritionFactsContainer}>
                         <View style={styles.nutritionFacts}>
                             <View style={styles.nutritionFactsTitleContainer}>
-                                <Text style={styles.nutritionFactsTitle}>Nutrition Facts</Text>
+                                <CustomText style={styles.nutritionFactsTitle} text={"Nutrition Facts"}/>
                             </View>
                             <View style={styles.servingSize}>
-                                <Text style={styles.servingSizeText}>Serving Size</Text>
-                                <Text style={styles.servingSizeAmount}>{props.foodObject.nutritionFacts["serving size"]}</Text>
+                                <CustomText style={styles.servingSizeText} text={"Serving Size"}/>
+                                <CustomText style={styles.servingSizeAmount} text={props.foodObject.nutritionFacts["serving size"]}/>
                             </View>
                             <View style={styles.servingAndCalorieContainer}>
                                 <View>
-                                    <Text style={styles.amountPerServing}>Amount per serving </Text>
-                                    <Text style={styles.calories}>Calories</Text>
+                                    <CustomText style={styles.amountPerServing} text={"Amount per serving"}/> 
+                                    <CustomText style={styles.calories} text={"Calories"} />
                                 </View>
                                 <View>
-                                    <Text style={styles.calorieAmount}>{props.foodObject.nutritionFacts["calories"]}</Text>
+                                    <CustomText style={styles.calorieAmount} text={props.foodObject.nutritionFacts["calories"]}/> 
                                 </View>
                             </View>
                             <View>
                                 <View style={styles.dailyValue}>
-                                    <Text style={styles.dailyValueTitle}>% Daily Value</Text>
+                                    <CustomText style={styles.dailyValueTitle} text={"% Daily Value"}/>
                                 </View>
                                 {statsArr}
                             </View>
                             <View style={styles.ingredientsContainer}>
                                 <ScrollView>
-                                    <Text style={styles.ingredients}>
-                                        <Text style={styles.ingredientsTitle}>INGREDIENTS: </Text> 
-                                        {ingredients}
+                                    <Text>
+                                        <CustomText style={styles.ingredientsTitle} text={"INGREDIENTS:"}/> 
+                                        <Text style={{fontFamily: 'Roboto-Regular',...styles.ingredients}}>{ingredients}</Text> 
                                     </Text>
                                 </ScrollView>
                             </View>
@@ -98,9 +100,8 @@ function Nutrition(props)
                     }
                     <View style={styles.favoriteButtonContainer}>
                         <TouchableOpacity onPress={()=>{props.toggleFavoriteFoods(props.foodObject["food_id"])}} style={styles.favoriteButton}>
-                            <Text style={styles.favoriteButtonText}>
-                                {props.alreadyAddedFavorite? "Delete From Favorites": "Add to Favorites"}
-                            </Text>
+                            <CustomText style={styles.favoriteButtonText}
+                                text={props.alreadyAddedFavorite? "Delete From Favorites": "Add to Favorites"}/>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -1,6 +1,7 @@
-import { View, Text, TouchableOpacity} from 'react-native';
+import { View, TouchableOpacity} from 'react-native';
 import styles from './HelperComponentStyles/helperFunctionStyles.js';
 import {moderateScale} from '../HelperComponents/Scale.js';
+import CustomText from './../HelperComponents/CustomText.js';
 export function processAllergyArr(allergyArr, exclusionArr, inclusionArr)
 {
     if(allergyArr === undefined)
@@ -68,8 +69,8 @@ export function createAllergyImages(allergyArr)
             let infoObjectKey = Object.keys(infoObject)[0];
             cardArr.push(
                 <View key={i} style={{...styles.allergyCircle, backgroundColor: infoObject[infoObjectKey]}}>
-                    <Text style={{...styles.allergyCircleText, 
-                    fontSize: infoObjectKey.length > 1 ? moderateScale(12) : moderateScale(14)}}>{infoObjectKey}</Text>
+                    <CustomText style={{...styles.allergyCircleText, 
+                    fontSize: infoObjectKey.length > 1 ? moderateScale(12) : moderateScale(14)}} text={infoObjectKey}/>
                 </View>
             )
         }

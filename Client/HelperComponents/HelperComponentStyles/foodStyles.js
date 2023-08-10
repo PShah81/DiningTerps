@@ -1,26 +1,29 @@
 import { StyleSheet } from 'react-native';
-import { useFonts } from 'expo-font';
 import {verticalScale, moderateScale, horizontalScale} from '../Scale.js';
+import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
     foodBorder: {
-        borderTopWidth: verticalScale(0.8),
-        borderColor: "#cacccf"
+        borderTopWidth: verticalScale(1),
+        borderColor: colorObject['grey']['6']
     },
     foodButton: {
         height: moderateScale(40),
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        alignItems: 'center'
     },
     foodAllergies: {
         display: 'flex', 
         flexDirection:'row', 
         marginLeft: 'auto',
-        marginRight: '4%'
+        paddingRight: '4%',
+        alignItems: 'center'
     },
     foodName: {
-        marginLeft: '3%',
-        fontWeight: '550',
-        width: '60%'
+        paddingLeft: '3%',
+        fontWeight: '500',
+        width: '60%',
+        color: colorObject['grey']['3']
     }
 });
 

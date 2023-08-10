@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity, Text} from 'react-native';
+import { StyleSheet, View, TouchableOpacity} from 'react-native';
 import { useEffect, useState, useLayoutEffect} from "react";
 import {Icon} from 'react-native-elements';
 import Menu from './Pages/Menu';
@@ -11,6 +11,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import {moderateScale, verticalScale, horizontalScale} from  './HelperComponents/Scale.js';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import colorObject from './HelperComponents/Colors.js';
+import CustomText from './HelperComponents/CustomText.js';
+import { useFonts } from 'expo-font';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -87,9 +90,17 @@ export default function App() {
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [favoriteSectionNames, setFavoriteSectionNames] = useState([]);
   const [collapsedSectionNames, setCollapsedSectionNames] = useState([]);
+  const [didFontLoadYet, setDidFontLoadYet] = useState(false);
+  const [fontsLoaded] = useFonts({
+    "Roboto-Regular" : require('./assets/fonts/Roboto-Regular.ttf')
+  })
 
   useEffect(()=>{
-    if(loadingMenu === false)
+    setDidFontLoadYet(true)
+  }, [fontsLoaded])
+  
+  useEffect(()=>{
+    if(loadingMenu === false && fontsLoaded === true)
     {
       setTimeout(async () => {
         await SplashScreen.hideAsync();
@@ -359,9 +370,10 @@ export default function App() {
     Notifications.setBadgeCountAsync(0);
   },[])
 
-
+//Don't render if the menu and fonts aren't done loading 
   return (
-    <View style={styles.container}>
+    (loadingMenu === false && fontsLoaded === true ?
+    (<View style={styles.container}>
       {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} 
       menu={todaysMenu} database={database} changeMode= {changeMode} favoriteFoodIds={favoriteFoodIds} 
       toggleFavoriteFoods={toggleFavoriteFoods} favoriteSectionNames={favoriteSectionNames} 
@@ -370,23 +382,24 @@ export default function App() {
       {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} favoritesAvailable={favoritesAvailable} favoriteFoodIds={favoriteFoodIds} toggleFavoriteFoods={toggleFavoriteFoods}></Favorites> : null}
       <View style= {styles.navBar}>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
-              <Text style={styles.navText}>251 North</Text>
-              <Icon size={moderateScale(30)} name="restaurant" type='material' color='orange'></Icon>
+              <CustomText style={styles.navText} text={"251 North"}/>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["red"]["5"]}></Icon>
           </TouchableOpacity>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('Yahentamitsi')}}>
-              <Text style={styles.navText}>Yahentamitsi</Text>
-              <Icon size={moderateScale(30)} name="restaurant" type='material' color='orange'></Icon>
+              <CustomText style={styles.navText} text={"Yahentamitsi"}/>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["red"]["5"]}></Icon>
           </TouchableOpacity>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('South')}}>
-              <Text style={styles.navText}>South</Text>
-              <Icon size={moderateScale(30)} name="restaurant" type='material' color='orange'></Icon>
+              <CustomText style={styles.navText} text={"South"}/>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["red"]["5"]}></Icon>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? moderateScale(2) : 0), ...styles.navButton}}>
-              <Text style={styles.navText}>Favorites</Text>
-              <Icon size={moderateScale(30)} name="heart-outline" type='ionicon' color='orange'></Icon>
+              <CustomText style={styles.navText} text={"Favorites"}/>
+              <Icon size={moderateScale(30)} name="heart-outline" type='ionicon' color={colorObject["red"]["5"]}></Icon>
           </TouchableOpacity>
       </View>
     </View>
+    ) : null)
   );
 }
 

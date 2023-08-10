@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import { View, TouchableOpacity, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
 import Nutrition from "./Nutrition";
 import Food from "../HelperComponents/Food";
 import {createAllergyImages} from '../HelperComponents/HelperFunctions.js';
 import styles from './PageStyles/favoritesStyles.js';
 import {moderateScale, verticalScale, horizontalScale} from  '../HelperComponents/Scale.js';
+import CustomText from './../HelperComponents/CustomText.js';
 
 export default function Favorites(props)
 {
@@ -49,7 +50,7 @@ export default function Favorites(props)
                 }
                 scrollViewDivs.push(
                     <View key={i} style={styles.scrollViewDivs}>
-                        <Text key={i} style={styles.sectionTitle}>{mealTimeName}</Text>
+                        <CustomTextText key={i} style={styles.sectionTitle} text={mealTimeName}/>
                         {arrOfItems}
                     </View>
                 );
@@ -58,7 +59,7 @@ export default function Favorites(props)
         }
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={styles.emptyDataSet}>NO FAVORITES AVAILABLE</Text>)
+            scrollViewDivs.push(<CustomText key={1} style={styles.emptyDataSet} text={"NO FAVORITES AVAILABLE"}/>)
         }
     }
 
@@ -80,17 +81,17 @@ export default function Favorites(props)
             <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} toggleFavoriteFoods={props.toggleFavoriteFoods}  
             foodObject = {itemClicked} alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false} />
             <View style= {styles.titleContainer}>
-                <Text style={styles.title}>Favorites</Text>
+                <CustomText style={styles.title} text={"Favorites"}/>
             </View>
             <View style={styles.navBarContainer}>
                 <TouchableOpacity key={"251 North"} onPress={()=>{props.changeDiningHall('251 North')}} style={{borderBottomWidth: (props.diningHall==="251 North") ? moderateScale(2) : 0, ...styles.navButton}}>
-                    <Text style={styles.navName}>251 North</Text>
+                    <CustomText style={styles.navName} text={"251 North"}/>
                 </TouchableOpacity>
                 <TouchableOpacity key={"Yahentamitsi"} onPress={()=>{props.changeDiningHall('Yahentamitsi')}} style={{borderBottomWidth: (props.diningHall==="Yahentamitsi") ? moderateScale(2) : 0, ...styles.navButton}}>
-                    <Text style={styles.navName}>Yahentamitsi</Text>
+                    <CustomText style={styles.navName} text={"Yahentamitsi"}/>
                 </TouchableOpacity>
                 <TouchableOpacity key={"South"} onPress={()=>{props.changeDiningHall('South')}} style={{borderBottomWidth: (props.diningHall==="South") ? moderateScale(2) : 0, ...styles.navButton}}>
-                    <Text style={styles.navName}>South</Text>
+                    <CustomText style={styles.navName} text={"South"}/>
                 </TouchableOpacity>
             </View>
             <View style={styles.scrollViewContainer}>

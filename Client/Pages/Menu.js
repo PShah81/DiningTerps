@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Modal, Image} from 'react-native';
+import { View, TouchableOpacity, ScrollView, Modal, Image} from 'react-native';
 import {Icon} from 'react-native-elements';
 import MenuSearchBar from "../HelperComponents/MenuSearchBar";
 import Filter from "./Filter";
@@ -9,6 +9,8 @@ import Food from "../HelperComponents/Food";
 import {processAllergyArr, createAllergyImages} from "../HelperComponents/HelperFunctions.js";
 import styles from './PageStyles/menuStyles.js';
 import {moderateScale, verticalScale, horizontalScale} from  '../HelperComponents/Scale.js';
+import colorObject from './../HelperComponents/Colors.js';
+import CustomText from './../HelperComponents/CustomText.js';
 
 export default function Menu(props)
 {
@@ -55,8 +57,6 @@ export default function Menu(props)
         }
         setFilters(newFilters);
     }
-    
-    
     function searchFilter(foodName)
     {
         let foodNameLower = foodName.toLowerCase();
@@ -84,8 +84,6 @@ export default function Menu(props)
             }
         }
     }
-
-    
     function createInclusionAndExclusionArrays()
     {
         let exclusionArr = [];
@@ -106,14 +104,6 @@ export default function Menu(props)
         }
         return [inclusionArr, exclusionArr];
     }
-
-    let [inclusionArr, exclusionArr] = createInclusionAndExclusionArrays();
-    
-    //Create Exclusion Inclusion Arrays
-    //Wrap items in a div
-    let mealTimeArrTabs = [];
-    let scrollViewDivs = [];
-    let nonFavoriteDivs = [];
     function generateDatabaseItems()
     {
         if(search.length != 0)
@@ -152,11 +142,11 @@ export default function Menu(props)
         {
             if(search.length > 0)
             {
-                scrollViewDivs.push(<Text key={1} style={styles.databaseSearch}>NO DATA AVAILABLE</Text>)
+                scrollViewDivs.push(<CustomText key={1} style={styles.databaseSearch} text={"NO DATA AVAILABLE"}/>)
             }
             else
             {
-                scrollViewDivs.push(<Text key={1} style={styles.databaseSearch}>SEARCH TO DISPLAY DATA</Text>)
+                scrollViewDivs.push(<CustomText key={1} style={styles.databaseSearch} text={"SEARCH TO DISPLAY DATA"}/>)
             }
            
         }
@@ -171,8 +161,9 @@ export default function Menu(props)
             {
                 let mealTimeTabName = Object.keys(props.menu[props.diningHall])[i];
                 mealTimeArrTabs.push(
-                <TouchableOpacity key={i} onPress={()=>{props.setMealTime(mealTimeTabName)}} style={{borderBottomWidth: (mealTimeTabName === props.mealTime) ? moderateScale(2) : 0, ...styles.mealTimeTab}}>
-                    <Text style={styles.tabTitle}>{mealTimeTabName}</Text>
+                <TouchableOpacity key={i} onPress={()=>{props.setMealTime(mealTimeTabName)}} 
+                style={{borderBottomWidth: (mealTimeTabName === props.mealTime) ? moderateScale(2) : 0, ...styles.mealTimeTab}}>
+                    <CustomText style={styles.tabTitle} text={mealTimeTabName}/>
                 </TouchableOpacity>
                 );
                 
@@ -204,19 +195,19 @@ export default function Menu(props)
                         <View key={i} style={styles.scrollViewDivs}>
                             <View style={styles.sectionContainer}>
                                 <View style={{position: 'absolute'}}>
-                                    <Text key={i} style={{...styles.sectionTitle, fontSize: sectionName.length > 20 ? moderateScale(18) : moderateScale(24)}}>{sectionName}</Text>
+                                    <CustomText key={i} style={{...styles.sectionTitle, fontSize: sectionName.length > 20 ? moderateScale(18) : moderateScale(24)}} text = {sectionName}/>
                                 </View>
                                 <View style={styles.buttonContainer}>
                                     <TouchableOpacity onPress={()=>{props.toggleFavoriteSection(sectionName)}}>
                                         <Icon size= {moderateScale(30)} 
                                         name={props.favoriteSectionNames.indexOf(sectionName) === -1 ? 'star-outline' : 'star'} 
-                                        type='material' color='orange'></Icon>
+                                        type='material' color={colorObject["red"]["6"]}></Icon>
                                     </TouchableOpacity>
                                     
                                     <TouchableOpacity onPress={()=>{props.toggleCollapsable(sectionName)}}>
                                         <Icon size= {moderateScale(30)} 
                                         name={props.collapsedSectionNames.indexOf(sectionName) === -1 ? 'remove-outline' : 'add-outline'} 
-                                        type='ionicon' color='orange'></Icon>
+                                        type='ionicon' color={colorObject["red"]["6"]}></Icon>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -239,9 +230,17 @@ export default function Menu(props)
     
         if(scrollViewDivs.length === 0)
         {
-            scrollViewDivs.push(<Text key={1} style={styles.emptyDataSet}>NO DATA AVAILABLE</Text>)
+            scrollViewDivs.push(<CustomText key={1} style={styles.emptyDataSet} text={"NO DATA AVAILABLE"}/>)
         }
     }
+
+    let [inclusionArr, exclusionArr] = createInclusionAndExclusionArrays();
+    
+    //Create Exclusion Inclusion Arrays
+    //Wrap items in a div
+    let mealTimeArrTabs = [];
+    let scrollViewDivs = [];
+    let nonFavoriteDivs = [];
     
     if(displayType === "Menu")
     {
@@ -259,12 +258,14 @@ export default function Menu(props)
                 foodObject = {itemClicked} alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
                 <View style= {styles.menuFilters}>
                     <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
-                    <TouchableOpacity onPress={()=>{setFiltering(true)}} style={styles.menuFilterButton}><Icon size= {moderateScale(30)} name='filter-outline' type='ionicon' color='orange'></Icon></TouchableOpacity>
+                    <View style={styles.menuFilterButton}>
+                        <TouchableOpacity onPress={()=>{setFiltering(true)}}><Icon size= {moderateScale(30)} name='filter-outline' type='ionicon' color={colorObject["red"]["4"]}></Icon></TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.mealTimeTabContainer}>
                     {mealTimeArrTabs}
                 </View>
-                <View style={styles.scrollDivHeight}>
+                <View style={styles.scrollView}>
                     <ScrollView>
                         {scrollViewDivs}
                     </ScrollView>
@@ -272,6 +273,3 @@ export default function Menu(props)
         </View>
     );
 }
-
-
-//ISSUE WITH NOT BEING ABLE TO SWITCH TO THE LAST TAB

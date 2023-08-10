@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Modal} from 'react-native';
+import { View, TouchableOpacity, Modal} from 'react-native';
 import {Icon} from 'react-native-elements';
 import FilterBox from "../HelperComponents/FilterBox";
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import styles from './PageStyles/filterStyles.js';
 import {moderateScale} from '../HelperComponents/Scale.js';
+import CustomText from './../HelperComponents/CustomText.js';
 function Filter(props)
 {
     return(
@@ -31,7 +32,7 @@ function Filter(props)
                     
                     <View style={styles.filters}>
                         <View>
-                            <Text style={styles.excludeOrInclude}>Exclude</Text>
+                            <CustomText style={styles.excludeOrInclude} text={"Exclude"}/>
                             <FilterBox attribute ={"Dairy"} checked={props.filters["Exclude"]["Dairy"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Egg"} checked={props.filters["Exclude"]["Egg"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Fish"} checked={props.filters["Exclude"]["Fish"]} changeFilter={props.changeFilter}/>
@@ -42,7 +43,7 @@ function Filter(props)
                             <FilterBox attribute ={"Sesame"} checked={props.filters["Exclude"]["Sesame"]} changeFilter={props.changeFilter}/>
                         </View>
                         <View>
-                            <Text style={styles.excludeOrInclude}>Include</Text>
+                            <CustomText style={styles.excludeOrInclude} text={"Include"}/>
                             <FilterBox attribute ={"Vegetarian"} checked={props.filters["Include"]["Vegetarian"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"HalalFriendly"} checked={props.filters["Include"]["HalalFriendly"]} changeFilter={props.changeFilter}/>
                             <FilterBox attribute ={"Vegan"} checked={props.filters["Include"]["Vegan"]} changeFilter={props.changeFilter}/>
