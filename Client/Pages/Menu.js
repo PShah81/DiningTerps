@@ -121,7 +121,7 @@ export default function Menu(props)
                         scrollViewDivs.push(
                             <Food key={uniqueFoodIndex} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
                             foodName={lastItemObject.foodname} foodData={lastItemObject.fooddata} foodAllergies={lastItemObject.foodallergies}
-                            lastItem={false}/>
+                            lastItem={false} mode= {displayType}/>
                         )
                     }
                     firstItem = false;
@@ -133,7 +133,7 @@ export default function Menu(props)
                 scrollViewDivs.push(
                     <Food key={scrollViewDivs.length} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
                     foodName={lastItemObject.foodname} foodData={lastItemObject.fooddata} foodAllergies={lastItemObject.foodallergies}
-                    lastItem={true}/>
+                    lastItem={true} mode={displayType}/>
                 )
             }
             
@@ -186,7 +186,7 @@ export default function Menu(props)
                             arrOfItems.push(
                                 <Food key={j} createAllergyImages={createAllergyImages} onItemClick={onItemClick} 
                                 foodName={foodName} foodData={foodData}
-                                foodAllergies={foodAllergies} lastItem={false}/>
+                                foodAllergies={foodAllergies} lastItem={false} mode={displayType}/>
                             )
                         }
                             

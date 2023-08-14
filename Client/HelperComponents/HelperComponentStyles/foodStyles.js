@@ -4,8 +4,7 @@ import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
     foodContainer: {
         borderTopWidth: verticalScale(1),
-        borderColor: colorObject['grey']['6'],
-        backgroundColor: colorObject["grey"]["7"]
+        borderColor: colorObject['grey']['6']
     },
     foodButton: {
         height: moderateScale(40),
