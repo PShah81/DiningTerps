@@ -5,7 +5,8 @@ export default StyleSheet.create({
     databaseSearch: {
         fontSize: moderateScale(24), 
         textAlign: 'center', 
-        marginTop: '5%'
+        marginTop: '5%',
+        color: colorObject["yellow"]["1"]
     },
     mealTimeTab: {
         flexGrow: 1, 
@@ -30,7 +31,8 @@ export default StyleSheet.create({
     emptyDataSet: {
         fontSize: moderateScale(24), 
         textAlign: 'center', 
-        marginTop: '5%'
+        marginTop: '5%',
+        color: colorObject["yellow"]["1"]
     },
     menuPageContainer: {
         display: 'flex', 

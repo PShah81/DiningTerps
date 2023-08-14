@@ -23,7 +23,8 @@ export default StyleSheet.create({
     foodTitle: {
         textAlign: 'center',
         color: colorObject["yellow"]["1"],
-        fontSize: moderateScale(24)
+        fontSize: moderateScale(24),
+        fontFamily: 'Roboto-Bold'
     },
     nutritionMetric: {
         display: 'flex', 
@@ -121,7 +122,7 @@ export default StyleSheet.create({
         flex: 1
     },
     ingredientsTitle: {
-        fontWeight: '700'
+        
     },
     metrics: {
         fontSize: moderateScale(12)

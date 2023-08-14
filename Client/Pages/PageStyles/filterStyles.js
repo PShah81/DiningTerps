@@ -1,14 +1,34 @@
 import { StyleSheet } from 'react-native';
 import {moderateScale} from '../../HelperComponents/Scale.js';
+import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
-    modalContainer: {
-        paddingTop: '10%'
+    topBar: {
+        backgroundColor: colorObject["red"]["1"],
+        paddingTop: '10%',
+        height: '12%',
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     closeButton: {
         display: 'flex', 
         flexDirection: 'row', 
-        justifyContent: 'flex-start', 
-        marginBottom: '2%'
+        justifyContent: 'flex-start',  
+        paddingLeft: '2%',
+        width: '20%'
+    },
+    filterTitleView: {
+        width: '80%', 
+        paddingRight: '20%'
+    },
+    filterTitle: {
+        textAlign: 'center',
+        color: colorObject["yellow"]["1"],
+        fontSize: moderateScale(24),
+        fontFamily: 'Roboto-Bold'
+    },
+    modalContainer: {
+        height: '100%',
+        backgroundColor: colorObject["grey"]["2"]
     },
     filterContainer: {
         marginLeft: '7%', 
@@ -23,7 +43,16 @@ export default StyleSheet.create({
         justifyContent: 'space-around', 
         marginTop: '3%'
     },
-    excludeOrInclude: {
-        fontSize: moderateScale(24)
+    scrollViewContainer: {
+        height: '100%'
+    },
+    scrollViewDivs: {
+        margin: "3%",
+        backgroundColor: colorObject["grey"]["7"],  
+        borderRadius: moderateScale(10)
+    },
+    sectionTitle: {
+        fontSize: moderateScale(24), 
+        textAlign: 'center'
     }
 });

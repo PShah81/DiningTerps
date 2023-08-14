@@ -37,6 +37,9 @@ function FilterBox(props)
                 checked={props.checked}
                 onPress={()=>{props.changeFilter(props.attribute)}}
                 containerStyle= {styles.checkBox}
+                size = {moderateScale(24)}
+                fontFamily = {"Roboto-Regular"}
+                textStyle = {styles.textStyle}
             />
             <View style={{...styles.allergyCircle, backgroundColor: infoObject[infoObjectKey]}}>
                 <CustomText style={{...styles.allergyCircleText, 

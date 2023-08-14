@@ -13,9 +13,10 @@ export default StyleSheet.create({
         fontWeight: '300'
     },
     emptyDataSet: {
-        fontSize: moderateScale(30), 
+        fontSize: moderateScale(24), 
         textAlign: 'center', 
-        marginTop: '5%'
+        marginTop: '5%',
+        color: colorObject["yellow"]["1"]
     },
     favoritePageContainer: {
         display: 'flex', 

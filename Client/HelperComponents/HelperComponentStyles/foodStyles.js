@@ -2,9 +2,10 @@ import { StyleSheet } from 'react-native';
 import {verticalScale, moderateScale, horizontalScale} from '../Scale.js';
 import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
-    foodBorder: {
+    foodContainer: {
         borderTopWidth: verticalScale(1),
-        borderColor: colorObject['grey']['6']
+        borderColor: colorObject['grey']['6'],
+        backgroundColor: colorObject["grey"]["7"]
     },
     foodButton: {
         height: moderateScale(40),

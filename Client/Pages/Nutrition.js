@@ -96,7 +96,7 @@ function Nutrition(props)
                             <View style={styles.ingredientsContainer}>
                                 <ScrollView>
                                     <Text>
-                                        <CustomText style={styles.ingredientsTitle} text={"INGREDIENTS:"}/> 
+                                        <CustomText style={styles.ingredientsTitle} text={"Ingredients: "}/> 
                                         <Text style={{fontFamily: 'Roboto-Regular',...styles.ingredients}}>{ingredients}</Text> 
                                     </Text>
                                 </ScrollView>
