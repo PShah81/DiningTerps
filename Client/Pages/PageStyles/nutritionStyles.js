@@ -1,6 +1,30 @@
 import { StyleSheet } from 'react-native';
 import {verticalScale, moderateScale, horizontalScale} from '../../HelperComponents/Scale.js';
+import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
+    topBar: {
+        backgroundColor: colorObject["red"]["1"],
+        paddingTop: '10%',
+        height: '12%',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    closeButton: {
+        display: 'flex', 
+        flexDirection: 'row', 
+        justifyContent: 'flex-start',  
+        paddingLeft: '2%',
+        width: '20%'
+    },
+    foodTitleView: {
+        width: '80%', 
+        paddingRight: '20%'
+    },
+    foodTitle: {
+        textAlign: 'center',
+        color: colorObject["yellow"]["1"],
+        fontSize: moderateScale(24)
+    },
     nutritionMetric: {
         display: 'flex', 
         flexDirection: 'row', 
@@ -18,25 +42,20 @@ export default StyleSheet.create({
         fontSize: moderateScale(12)
     },
     modalContainer: {
-        marginTop: '10%', 
-        height: '80%'
+        height: '100%',
+        backgroundColor: colorObject["grey"]["2"]
     },
     emptyDataSet: {
         textAlign: 'center', 
         fontSize: moderateScale(24)
     },
-    closeButton: {
-        display: 'flex', 
-        flexDirection: 'row', 
-        justifyContent: 'flex-start', 
-        marginBottom: '2%', 
-        marginLeft: '2%'
-    },
     nutritionFactsContainer: {
         marginLeft: '10%', 
         marginRight: '10%', 
+        marginTop: '10%',
         borderWidth: verticalScale(1),
-        height: '65%'
+        height: '60%',
+        backgroundColor: colorObject["grey"]["7"]
     },
     nutritionFacts: {
         marginLeft: '3%', 
@@ -83,17 +102,17 @@ export default StyleSheet.create({
     favoriteButtonContainer: {
         marginLeft: '10%', 
         marginRight: '10%', 
-        marginTop: 'auto'
+        paddingTop: '20%'
     },
     favoriteButton: {
-        backgroundColor: "orange", 
+        backgroundColor: colorObject["yellow"]["1"], 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center', 
         height: verticalScale(40)
     },
     favoriteButtonText: {
-        color: 'white', 
+        color: colorObject["grey"]["2"], 
         textAlign:'center', 
         fontSize: moderateScale(20)
     },

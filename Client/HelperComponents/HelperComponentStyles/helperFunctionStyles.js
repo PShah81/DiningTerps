@@ -5,7 +5,8 @@ export default StyleSheet.create({
         borderWidth: moderateScale(1), 
         borderRadius: moderateScale(25),
         width: moderateScale(20),
-        height: moderateScale(20)
+        height: moderateScale(20),
+        marginRight: moderateScale(2)
     },
     allergyCircleText: {
         lineHeight: moderateScale(18),

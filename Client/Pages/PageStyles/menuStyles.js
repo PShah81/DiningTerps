@@ -9,13 +9,14 @@ export default StyleSheet.create({
     },
     mealTimeTab: {
         flexGrow: 1, 
-        borderBottomColor: colorObject["red"]["3"], 
+        borderBottomColor: colorObject["grey"]["7"], 
         width: '33%'
     },
     tabTitle: {
         fontSize: moderateScale(18), 
         color: colorObject["yellow"]["1"], 
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Roboto-Bold'
     },
     scrollViewDivs: {
         margin: "5%",
@@ -35,17 +36,18 @@ export default StyleSheet.create({
         display: 'flex', 
         flexDirection: 'column', 
         height: '100%',
-        backgroundColor: colorObject["red"]["7"]
+        backgroundColor: colorObject["grey"]["2"]
     },
     menuFilters: {
         display: 'flex', 
         flexDirection: 'row', 
         justifyContent: 'space-around', 
         width: '100%',
-        height: '8%'
+        height: '12%',
+        paddingTop: '5%',
+        backgroundColor: colorObject["red"]["1"]
     },
     menuFilterButton: {
-        backgroundColor: colorObject["grey"]["4"], 
         width: '15%', 
         justifyContent: 'center',
         paddingRight: '3%'
@@ -55,7 +57,7 @@ export default StyleSheet.create({
         display: 'flex', 
         flexDirection: 'row', 
         paddingTop: '1%',
-        backgroundColor: colorObject["grey"]["4"],
+        backgroundColor: colorObject["red"]["1"],
         height: '4%',
         shadowColor: colorObject["grey"]["1"], 
         shadowOffset: {width: 0, height: moderateScale(4)}, 
@@ -64,7 +66,7 @@ export default StyleSheet.create({
         zIndex: 1
     },
     scrollView:{
-        height: Platform.OS === 'ios' ? '80%' : '79%'
+        height: Platform.OS === 'ios' ? '75%' : '73%'
     },
     sectionContainer: {
         display: 'flex',

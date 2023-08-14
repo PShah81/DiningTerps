@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Modal, Button, ScrollView} from 'react-na
 import {Icon} from 'react-native-elements';
 import styles from './PageStyles/nutritionStyles.js';
 import CustomText from './../HelperComponents/CustomText.js';
+import colorObject from '../HelperComponents/Colors.js';
 function Nutrition(props)
 {
     let statsArr = [];
@@ -58,9 +59,14 @@ function Nutrition(props)
                 }}
             >
                 <View style={styles.modalContainer}>
-                    <TouchableOpacity onPress={()=>{props.unclickItem()}} style={styles.closeButton}>
-                            <Icon size={30} name="arrow-back-outline" type='ionicon' color='orange'></Icon>
-                    </TouchableOpacity>
+                    <View style={styles.topBar}>
+                        <TouchableOpacity onPress={()=>{props.unclickItem()}} style={styles.closeButton}>
+                                <Icon size={30} name="arrow-back-outline" type='ionicon' color={colorObject["grey"]["7"]}></Icon>
+                        </TouchableOpacity>
+                        <View style={styles.foodTitleView}>
+                            <CustomText style={styles.foodTitle} text={props.foodObject.foodname}/>
+                        </View>
+                    </View>
                     {props.foodObject.nutritionFacts === undefined ? 
                     <CustomText style={styles.emptyDataSet} text={"NO NUTRITION DATA AVAILABLE"}/> :
                     <View style={styles.nutritionFactsContainer}>

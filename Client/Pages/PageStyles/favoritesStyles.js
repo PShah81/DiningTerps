@@ -1,14 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {verticalScale, moderateScale, horizontalScale} from '../../HelperComponents/Scale.js';
+import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
     scrollViewDivs: {
-        margin: "3%", 
-        shadowColor: 'black', 
-        shadowOffset: {width: 0, height: 1}, 
-        shadowOpacity: 0.3, 
-        shadowRadius: 13, 
-        elevation: 30,
-        backgroundColor: 'white',  
+        margin: "3%",
+        backgroundColor: colorObject["grey"]["7"],  
         borderRadius: moderateScale(10)
     }, 
     sectionTitle: {
@@ -24,31 +20,46 @@ export default StyleSheet.create({
     favoritePageContainer: {
         display: 'flex', 
         flexDirection: 'column', 
-        height: '100%'
+        height: '100%',
+        backgroundColor: colorObject["grey"]["2"]
     },
     scrollViewContainer: {
-        height: "83%"
+        height: Platform.OS === 'ios' ? '75%' : '73%',
     },
     titleContainer:{
-        marginBottom: '3%'
+        backgroundColor: colorObject["red"]["1"],
+        height: '12%',
+        paddingTop: '5%',
+        justifyContent: 'center'
     },
     title:{
         fontSize: moderateScale(30), 
-        textAlign: 'center'
+        textAlign: 'center',
+        color: colorObject["yellow"]["1"],
+        fontFamily: 'Roboto-Bold'
     },
     navBarContainer:{
         width: '100%', 
         display: 'flex', 
-        flexDirection: 'row'
+        flexDirection: 'row', 
+        paddingTop: '1%',
+        backgroundColor: colorObject["red"]["1"],
+        height: '4%',
+        shadowColor: colorObject["grey"]["1"], 
+        shadowOffset: {width: 0, height: moderateScale(4)}, 
+        shadowOpacity: 0.3, 
+        shadowRadius: 0,
+        zIndex: 1
     },
     navButton:{
         flexGrow: 1, 
-        borderBottomColor: "orange", 
+        borderBottomColor: colorObject["grey"]["7"], 
         width: '33%'
     },
     navName:{
         fontSize: moderateScale(18), 
-        color: 'green', 
-        textAlign: 'center'
+        color: colorObject["yellow"]["1"], 
+        textAlign: 'center',
+        fontFamily: 'Roboto-Bold'
     }
 });

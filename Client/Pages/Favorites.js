@@ -50,7 +50,7 @@ export default function Favorites(props)
                 }
                 scrollViewDivs.push(
                     <View key={i} style={styles.scrollViewDivs}>
-                        <CustomTextText key={i} style={styles.sectionTitle} text={mealTimeName}/>
+                        <CustomText key={i} style={styles.sectionTitle} text={mealTimeName}/>
                         {arrOfItems}
                     </View>
                 );

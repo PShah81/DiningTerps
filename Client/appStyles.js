@@ -3,9 +3,7 @@ import {moderateScale, verticalScale, horizontalScale} from  './HelperComponents
 import colorObject from './HelperComponents/Colors.js';
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: colorObject["grey"]["4"],
-        paddingTop: '10%'
+        flex: 1
     },
     navBar: {
         display: 'flex', 
@@ -14,7 +12,7 @@ export default StyleSheet.create({
         width: '100%', 
         position: 'absolute', 
         bottom: 0, 
-        backgroundColor: colorObject["grey"]["4"], 
+        backgroundColor: colorObject["red"]["1"], 
         paddingBottom: '5%',
         height: '9%',
         shadowColor: colorObject["grey"]["6"], 
@@ -26,12 +24,13 @@ export default StyleSheet.create({
     navButton: {
         height: '100%',
         justifyContent: 'center',
-        borderTopColor: colorObject["red"]["3"], 
+        borderTopColor: colorObject["grey"]["7"], 
         width: '25%'
     },
     navText: {
         textAlign: 'center', 
         fontSize: moderateScale(14),
-        color: colorObject["yellow"]["1"]
+        color: colorObject["yellow"]["1"],
+        fontFamily: 'Roboto-Bold'
     }
 });

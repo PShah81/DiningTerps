@@ -92,7 +92,8 @@ export default function App() {
   const [collapsedSectionNames, setCollapsedSectionNames] = useState([]);
   const [didFontLoadYet, setDidFontLoadYet] = useState(false);
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular" : require('./assets/fonts/Roboto-Regular.ttf')
+    "Roboto-Regular" : require('./assets/fonts/Roboto-Regular.ttf'),
+    "Roboto-Bold"    : require('./assets/fonts/Roboto-Bold.ttf')
   })
 
   useEffect(()=>{
@@ -383,19 +384,19 @@ export default function App() {
       <View style= {styles.navBar}>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="251 North" && mode === "Menu"? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('251 North')}}>
               <CustomText style={styles.navText} text={"251 North"}/>
-              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["red"]["5"]}></Icon>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["grey"]["7"]}></Icon>
           </TouchableOpacity>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="Yahentamitsi" && mode === "Menu" ? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('Yahentamitsi')}}>
               <CustomText style={styles.navText} text={"Yahentamitsi"}/>
-              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["red"]["5"]}></Icon>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["grey"]["7"]}></Icon>
           </TouchableOpacity>
           <TouchableOpacity style={{borderTopWidth: (diningHall==="South" && mode === "Menu" ? moderateScale(2) : 0), ...styles.navButton}} onPress={()=>{changeMode("Menu"); changeDiningHall('South')}}>
               <CustomText style={styles.navText} text={"South"}/>
-              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["red"]["5"]}></Icon>
+              <Icon size={moderateScale(30)} name="restaurant" type='material' color={colorObject["grey"]["7"]}></Icon>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>{changeMode("Favorites")}} style={{borderTopWidth: (mode==="Favorites"? moderateScale(2) : 0), ...styles.navButton}}>
               <CustomText style={styles.navText} text={"Favorites"}/>
-              <Icon size={moderateScale(30)} name="heart-outline" type='ionicon' color={colorObject["red"]["5"]}></Icon>
+              <Icon size={moderateScale(30)} name="heart-outline" type='ionicon' color={colorObject["grey"]["7"]}></Icon>
           </TouchableOpacity>
       </View>
     </View>

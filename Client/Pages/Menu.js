@@ -201,13 +201,13 @@ export default function Menu(props)
                                     <TouchableOpacity onPress={()=>{props.toggleFavoriteSection(sectionName)}}>
                                         <Icon size= {moderateScale(30)} 
                                         name={props.favoriteSectionNames.indexOf(sectionName) === -1 ? 'star-outline' : 'star'} 
-                                        type='material' color={colorObject["red"]["6"]}></Icon>
+                                        type='material' color={colorObject["red"]["5"]}></Icon>
                                     </TouchableOpacity>
                                     
                                     <TouchableOpacity onPress={()=>{props.toggleCollapsable(sectionName)}}>
                                         <Icon size= {moderateScale(30)} 
                                         name={props.collapsedSectionNames.indexOf(sectionName) === -1 ? 'remove-outline' : 'add-outline'} 
-                                        type='ionicon' color={colorObject["red"]["6"]}></Icon>
+                                        type='ionicon' color={colorObject["red"]["5"]}></Icon>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -259,7 +259,7 @@ export default function Menu(props)
                 <View style= {styles.menuFilters}>
                     <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
                     <View style={styles.menuFilterButton}>
-                        <TouchableOpacity onPress={()=>{setFiltering(true)}}><Icon size= {moderateScale(30)} name='filter-outline' type='ionicon' color={colorObject["red"]["4"]}></Icon></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>{setFiltering(true)}}><Icon size= {moderateScale(30)} name='filter-outline' type='ionicon' color={colorObject["grey"]["7"]}></Icon></TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.mealTimeTabContainer}>
