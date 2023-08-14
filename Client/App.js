@@ -89,7 +89,7 @@ export default function App() {
   const [mealTime, setMealTime] = useState('');
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [favoriteSectionNames, setFavoriteSectionNames] = useState([]);
-  const [collapsedSectionNames, setCollapsedSectionNames] = useState([]);
+  const [uncollapsedSectionNames, setUncollapsedSectionNames] = useState([]);
   const [didFontLoadYet, setDidFontLoadYet] = useState(false);
   const [fontsLoaded] = useFonts({
     "Roboto-Regular" : require('./assets/fonts/Roboto-Regular.ttf'),
@@ -248,45 +248,15 @@ export default function App() {
   }
   function toggleCollapsable(sectionName)
   {
-    if(collapsedSectionNames.indexOf(sectionName) === -1)
+    if(uncollapsedSectionNames.indexOf(sectionName) === -1)
     {
-      setCollapsedSectionNames([...collapsedSectionNames, sectionName]);
-      let url = "https://nutritionserver.link/settings/collapsedSections/add";
-      let bodyJson = {};
-      bodyJson["uuid"] = UUID;
-      bodyJson["modification"] = sectionName;
-      fetch(url,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyJson)
-      })
-      .then(()=>{
-        fetchSettings(UUID);
-      })
-      .catch((error)=>{console.log(error)});
+      setUncollapsedSectionNames([...uncollapsedSectionNames, sectionName]);
     }
     else
     {
-      let newCollapsedSectionNames = [...collapsedSectionNames];
-      newCollapsedSectionNames.splice(newCollapsedSectionNames.indexOf(sectionName), 1);
-      setCollapsedSectionNames(newCollapsedSectionNames);
-      let url = "https://nutritionserver.link/settings/collapsedSections/delete";
-      let bodyJson = {};
-      bodyJson["uuid"] = UUID;
-      bodyJson["modification"] = sectionName;
-      fetch(url,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyJson)
-      })
-      .then(()=>{
-        fetchSettings(UUID);
-      })
-      .catch((error)=>{console.log(error)});
+      let newUncollapsedSectionNames = [...uncollapsedSectionNames];
+      newUncollapsedSectionNames.splice(newUncollapsedSectionNames.indexOf(sectionName), 1);
+      setUncollapsedSectionNames(newUncollapsedSectionNames);
     }
   }
   function fetchTodaysMenu()
@@ -350,7 +320,6 @@ export default function App() {
       if(Object.keys(data).length != 0)
       {
         setFavoriteSectionNames(data['favoriteSections']);
-        setCollapsedSectionNames(data['collapsedSections']);
       }
     })
     .catch((error)=>{
@@ -378,7 +347,7 @@ export default function App() {
       {mode === "Menu" ? <Menu mealTime={mealTime} setMealTime={setMealTime} diningHall={diningHall} 
       menu={todaysMenu} database={database} changeMode= {changeMode} favoriteFoodIds={favoriteFoodIds} 
       toggleFavoriteFoods={toggleFavoriteFoods} favoriteSectionNames={favoriteSectionNames} 
-      toggleFavoriteSection={toggleFavoriteSection} collapsedSectionNames={collapsedSectionNames} 
+      toggleFavoriteSection={toggleFavoriteSection} uncollapsedSectionNames={uncollapsedSectionNames} 
       toggleCollapsable={toggleCollapsable}></Menu> : null}
       {mode === "Favorites" ? <Favorites diningHall={diningHall} changeDiningHall={changeDiningHall} changeMode= {changeMode} favoritesAvailable={favoritesAvailable} favoriteFoodIds={favoriteFoodIds} toggleFavoriteFoods={toggleFavoriteFoods}></Favorites> : null}
       <View style= {styles.navBar}>

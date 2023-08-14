@@ -20,7 +20,8 @@ export default StyleSheet.create({
         fontFamily: 'Roboto-Bold'
     },
     scrollViewDivs: {
-        margin: "5%",
+        marginRight: "5%",
+        marginLeft: "5%",
         backgroundColor: colorObject["grey"]["7"],  
         borderRadius: moderateScale(12)
     }, 

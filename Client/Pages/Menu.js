@@ -192,7 +192,7 @@ export default function Menu(props)
                             
                     }
                     let section = 
-                        <View key={i} style={styles.scrollViewDivs}>
+                        <View key={i} style={{...styles.scrollViewDivs, margin: props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? "1% 5%" : "5% 5%"}}>
                             <View style={styles.sectionContainer}>
                                 <View style={{position: 'absolute'}}>
                                     <CustomText key={i} style={{...styles.sectionTitle, fontSize: sectionName.length > 20 ? moderateScale(18) : moderateScale(24)}} text = {sectionName}/>
@@ -206,12 +206,12 @@ export default function Menu(props)
                                     
                                     <TouchableOpacity onPress={()=>{props.toggleCollapsable(sectionName)}}>
                                         <Icon size= {moderateScale(30)} 
-                                        name={props.collapsedSectionNames.indexOf(sectionName) === -1 ? 'remove-outline' : 'add-outline'} 
+                                        name={props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? 'add-outline' : 'remove-outline'} 
                                         type='ionicon' color={colorObject["red"]["5"]}></Icon>
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            {props.collapsedSectionNames.indexOf(sectionName) === -1 ? arrOfItems : ""}
+                            {props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? null : arrOfItems}
                         </View>;
                     
                     if(props.favoriteSectionNames.indexOf(sectionName) === -1)
