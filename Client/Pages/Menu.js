@@ -199,15 +199,15 @@ export default function Menu(props)
                                 </View>
                                 <View style={styles.buttonContainer}>
                                     <TouchableOpacity onPress={()=>{props.toggleFavoriteSection(sectionName)}}>
-                                        <Icon size= {moderateScale(30)} 
+                                        <Icon size= {moderateScale(24)} 
                                         name={props.favoriteSectionNames.indexOf(sectionName) === -1 ? 'star-outline' : 'star'} 
                                         type='material' color={colorObject["red"]["5"]}></Icon>
                                     </TouchableOpacity>
                                     
                                     <TouchableOpacity onPress={()=>{props.toggleCollapsable(sectionName)}}>
                                         <Icon size= {moderateScale(30)} 
-                                        name={props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? 'add-outline' : 'remove-outline'} 
-                                        type='ionicon' color={colorObject["red"]["5"]}></Icon>
+                                        name={props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? 'expand-more' : 'expand-less'} 
+                                        type='material' color={colorObject["red"]["5"]}></Icon>
                                     </TouchableOpacity>
                                 </View>
                             </View>

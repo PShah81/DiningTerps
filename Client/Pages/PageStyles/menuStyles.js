@@ -80,6 +80,7 @@ export default StyleSheet.create({
     buttonContainer: {
         display: 'flex',
         flexDirection: 'row',
-        marginLeft: 'auto'
+        marginLeft: 'auto',
+        alignItems: 'center'
     }
 });
