@@ -11,7 +11,7 @@ async function modifySettings(uuid, res, setting, operation, modification, pool,
         {
             throw new TypeError("Invalid UUID");
         }
-        if(setting != "pushToken" && setting != "collapsedSections" && setting != "favoriteSections")
+        if(setting != "pushToken" && setting != "favoriteSections")
         {
             throw new TypeError("Not a valid Setting");
         }
@@ -19,7 +19,7 @@ async function modifySettings(uuid, res, setting, operation, modification, pool,
         {
             throw new TypeError("Not a valid PushToken");
         }
-        else if((setting === "collapsedSections" || setting === " favoriteSections") &&  typeof modification != "string")
+        else if(setting === " favoriteSections" &&  typeof modification != "string")
         {
             throw new TypeError("Not a valid modification");
         }
@@ -37,7 +37,7 @@ async function modifySettings(uuid, res, setting, operation, modification, pool,
             newEntry = true;
         }
         //We want to different things for if the setting is related to the sections vs the pushToken
-        if(setting === "collapsedSections" || setting === "favoriteSections")
+        if(setting === "favoriteSections")
         {
             let oldSetting;
             let newSetting;
@@ -54,12 +54,12 @@ async function modifySettings(uuid, res, setting, operation, modification, pool,
                 if(oldSetting.indexOf(modification) != -1)
                 {
                     oldSetting.splice(oldSetting.indexOf(modification), 1);
-                    newSetting = oldSetting;
                 }
                 else
                 {
                     message = "Nothing to delete";
                 }
+                newSetting = oldSetting;
             }
             else if(operation === "add")
             {
@@ -73,41 +73,25 @@ async function modifySettings(uuid, res, setting, operation, modification, pool,
                 }
             }
             let postSql;
-            if(setting === "collapsedSections")
+            if(newEntry)
             {
-                if(newEntry)
-                {
-                    postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-                    await pool.query(postSql, [uuid, JSON.stringify(newSetting), JSON.stringify([]), null]);
-                }
-                else
-                {
-                    postSql = "UPDATE settings SET collapsedSections = ? WHERE uuid = ?";
-                    await pool.query(postSql, [JSON.stringify(newSetting), uuid]);
-                }
-                
+                postSql = "INSERT INTO settings (uuid, favoriteSections, pushToken) VALUES (?,?,?)";
+                await pool.query(postSql, [uuid, JSON.stringify(newSetting), null]);
             }
-            else if(setting === "favoriteSections")
+            else
             {
-                if(newEntry)
-                {
-                    postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-                    await pool.query(postSql, [uuid, JSON.stringify([]), JSON.stringify(newSetting), null]);
-                }
-                else
-                {
-                    postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
-                    await pool.query(postSql, [JSON.stringify(newSetting), uuid]);
-                }
+                postSql = "UPDATE settings SET favoriteSections = ? WHERE uuid = ?";
+                await pool.query(postSql, [JSON.stringify(newSetting), uuid]);
             }
+            
         }
         else if(setting === "pushToken")
         {
             let postSql;
             if(newEntry)
             {
-                postSql = "INSERT INTO settings (uuid, collapsedSections, favoriteSections, pushToken) VALUES (?,?,?,?)";
-                await pool.query(postSql, [uuid, JSON.stringify([]), JSON.stringify([]), modification]);
+                postSql = "INSERT INTO settings (uuid, favoriteSections, pushToken) VALUES (?,?,?)";
+                await pool.query(postSql, [uuid, JSON.stringify([]), modification]);
             }
             else
             {

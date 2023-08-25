@@ -74,7 +74,7 @@ describe("testing modifySettings function", ()=>{
             expect(mockRes.status).toHaveBeenCalledWith(500);
         })
         test("invalid uuid", async ()=>{
-            setting = "collapsedSections";
+            setting = "favoriteSections";
             operation = "add";
             modification = "sampleSection";
             await modifySettings("abcdefg", mockRes, setting, operation, modification, mockPool, returnSettings);
@@ -88,7 +88,7 @@ describe("testing modifySettings function", ()=>{
             expect(mockRes.status).toHaveBeenCalledWith(400);
         })
         test("invalid operation", async ()=>{
-            setting = "collapsedSections";
+            setting = "favoriteSections";
             operation = "create";
             modification = "sampleSection";
             await modifySettings(sampleUUID, mockRes, setting, operation, modification, mockPool, returnSettings);
@@ -102,7 +102,7 @@ describe("testing modifySettings function", ()=>{
             expect(mockRes.status).toHaveBeenCalledWith(400);
         })
         test("invalid modification with sections", async ()=>{
-            setting = "collapsedSections";
+            setting = "favoriteSections";
             operation = "create";
             modification = null;
             await modifySettings(sampleUUID, mockRes, setting, operation, modification, mockPool, returnSettings);
