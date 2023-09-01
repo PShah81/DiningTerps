@@ -3,7 +3,7 @@ import {verticalScale, moderateScale, horizontalScale} from '../Scale.js';
 import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
     searchBarContainer:{
-        width: "85%", 
+        width: "75%", 
         paddingLeft: '5%',
         paddingRight: '5%',
         backgroundColor: colorObject["red"]["1"], 

@@ -16,11 +16,11 @@ export default StyleSheet.create({
         paddingLeft: '2%',
         width: '20%'
     },
-    filterTitleView: {
+    helpTitleView: {
         width: '80%', 
         paddingRight: '20%'
     },
-    filterTitle: {
+    helpTitle: {
         textAlign: 'center',
         color: colorObject["yellow"]["1"],
         fontSize: moderateScale(24),
@@ -30,29 +30,34 @@ export default StyleSheet.create({
         height: '100%',
         backgroundColor: colorObject["grey"]["2"]
     },
-    filterContainer: {
+    helpContainer: {
         marginLeft: '6%', 
         marginRight: '6%'
-    },
-    segmentedControl: {
-        width: '100%'
-    },
-    filters: {
-        display: 'flex', 
-        flexDirection: "row", 
-        justifyContent: 'space-around', 
-        marginTop: '3%'
     },
     scrollViewContainer: {
         height: '100%'
     },
     scrollViewDivs: {
         margin: "3%",
+        padding: "1%",
+        flexDirection: 'row',
+        alignItems: 'baseline',
         backgroundColor: colorObject["grey"]["7"],  
         borderRadius: moderateScale(10)
     },
     sectionTitle: {
         fontSize: moderateScale(24), 
         textAlign: 'center'
+    },
+    descriptionText: {
+        fontSize: moderateScale(16),
+        fontFamily: 'Roboto-Regular'
+    },
+    descriptionTextTitle: {
+        fontSize: moderateScale(18),
+        color: colorObject["red"]["5"]
+    },
+    icons: {
+        paddingLeft: "5%"
     }
 });

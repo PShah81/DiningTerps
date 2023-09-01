@@ -5,6 +5,7 @@ import {Icon} from 'react-native-elements';
 import MenuSearchBar from "../HelperComponents/MenuSearchBar";
 import Filter from "./Filter";
 import Nutrition from "./Nutrition";
+import Help from "./Help";
 import Food from "../HelperComponents/Food";
 import {processAllergyArr, createAllergyImages} from "../HelperComponents/HelperFunctions.js";
 import styles from './PageStyles/menuStyles.js';
@@ -14,6 +15,7 @@ import CustomText from './../HelperComponents/CustomText.js';
 
 export default function Menu(props)
 {
+    const [helpOpen, setHelpOpen] = useState(false);
     const [filtering, setFiltering] = useState(false);
     const [displayType, setDisplayType] = useState("Menu");
     const [filters, setFilters] = useState({"Exclude": {"Dairy" : false, "Egg" : false, "Fish" : false, "Gluten": false, "Soy" : false, "Nuts": false, "Shellfish": false, "Sesame" : false}, "Include" :{"HalalFriendly" : false, "LocallyGrown" : false, "Vegetarian" : false, "Vegan" : false}})
@@ -192,7 +194,7 @@ export default function Menu(props)
                             
                     }
                     let section = 
-                        <View key={i} style={{...styles.scrollViewDivs, margin: props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? "1% 5%" : "5% 5%"}}>
+                        <View key={i} style={{...styles.scrollViewDivs, margin: props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? "2.5% 5%" : "5% 5%"}}>
                             <View style={styles.sectionContainer}>
                                 <View style={{position: 'absolute'}}>
                                     <CustomText key={i} style={{...styles.sectionTitle, fontSize: sectionName.length > 20 ? moderateScale(18) : moderateScale(24)}} text = {sectionName}/>
@@ -256,8 +258,12 @@ export default function Menu(props)
                 <Filter displayTypes={['Menu', 'Database']} filtering={filtering} stopFiltering={stopFiltering} changeDisplayType={changeDisplayType} displayType={displayType} filters={filters} changeFilter={changeFilter}/>
                 <Nutrition unclickItem={unclickItem} isItemClicked={isItemClicked} toggleFavoriteFoods={props.toggleFavoriteFoods} 
                 foodObject = {itemClicked} alreadyAddedFavorite={props.favoriteFoodIds.indexOf(itemClicked['food_id']) != -1? true: false}/>
+                <Help helpOpen = {helpOpen} setHelpOpen={setHelpOpen}/>
                 <View style= {styles.menuFilters}>
                     <MenuSearchBar onSearch={onSearch} value={search}></MenuSearchBar>
+                    <View style={styles.menuHelpButton}>
+                        <TouchableOpacity onPress={()=>{setHelpOpen(true)}}><Icon size= {moderateScale(30)} name='help' type='ionicon' color={colorObject["grey"]["7"]}></Icon></TouchableOpacity>
+                    </View>
                     <View style={styles.menuFilterButton}>
                         <TouchableOpacity onPress={()=>{setFiltering(true)}}><Icon size= {moderateScale(30)} name='filter-outline' type='ionicon' color={colorObject["grey"]["7"]}></Icon></TouchableOpacity>
                     </View>

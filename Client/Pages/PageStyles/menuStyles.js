@@ -50,6 +50,10 @@ export default StyleSheet.create({
         paddingTop: '5%',
         backgroundColor: colorObject["red"]["1"]
     },
+    menuHelpButton: {
+        width: '10%', 
+        justifyContent: 'center'
+    },
     menuFilterButton: {
         width: '15%', 
         justifyContent: 'center',

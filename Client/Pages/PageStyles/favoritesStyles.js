@@ -3,7 +3,10 @@ import {verticalScale, moderateScale, horizontalScale} from '../../HelperCompone
 import colorObject from '../../HelperComponents/Colors.js';
 export default StyleSheet.create({
     scrollViewDivs: {
-        margin: "3%",
+        marginTop: "3%",
+        marginBottom: "3%",
+        marginLeft: "5%",
+        marginRight: "5%",
         backgroundColor: colorObject["grey"]["7"],  
         borderRadius: moderateScale(10)
     }, 
