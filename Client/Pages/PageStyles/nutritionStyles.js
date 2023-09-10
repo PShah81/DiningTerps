@@ -47,8 +47,11 @@ export default StyleSheet.create({
         backgroundColor: colorObject["grey"]["2"]
     },
     emptyDataSet: {
+        fontSize: moderateScale(24), 
         textAlign: 'center', 
-        fontSize: moderateScale(24)
+        marginTop: '10%',
+        height: '60%',
+        color: colorObject["yellow"]["1"]
     },
     nutritionFactsContainer: {
         marginLeft: '10%', 
@@ -120,9 +123,6 @@ export default StyleSheet.create({
     ingredientsContainer: {
         marginTop: '2%',
         flex: 1
-    },
-    ingredientsTitle: {
-        
     },
     metrics: {
         fontSize: moderateScale(12)

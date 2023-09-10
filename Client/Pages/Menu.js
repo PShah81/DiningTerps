@@ -195,7 +195,7 @@ export default function Menu(props)
                     }
                     let section = 
                         <View key={i} style={{...styles.scrollViewDivs, margin: props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? "2.5% 5%" : "5% 5%"}}>
-                            <View style={styles.sectionContainer}>
+                            <TouchableOpacity style={styles.sectionContainer} onPress={()=>{props.toggleCollapsable(sectionName)}}>
                                 <View style={{position: 'absolute'}}>
                                     <CustomText key={i} style={{...styles.sectionTitle, fontSize: sectionName.length > 20 ? moderateScale(18) : moderateScale(24)}} text = {sectionName}/>
                                 </View>
@@ -212,17 +212,23 @@ export default function Menu(props)
                                         type='material' color={colorObject["red"]["5"]}></Icon>
                                     </TouchableOpacity>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                             {props.uncollapsedSectionNames.indexOf(sectionName) === -1 ? null : arrOfItems}
                         </View>;
                     
                     if(props.favoriteSectionNames.indexOf(sectionName) === -1)
                     {
-                        nonFavoriteDivs.push(section);
+                        if(arrOfItems.length != 0)
+                        {     
+                            nonFavoriteDivs.push(section);
+                        }
                     }
                     else
                     {
-                        scrollViewDivs.push(section);
+                        if(arrOfItems.length != 0)
+                        {
+                            scrollViewDivs.push(section);
+                        }
                     }
                 }
                 scrollViewDivs = scrollViewDivs.concat(nonFavoriteDivs);

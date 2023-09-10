@@ -68,7 +68,7 @@ export default StyleSheet.create({
         height: '4%',
         shadowColor: colorObject["grey"]["1"], 
         shadowOffset: {width: 0, height: moderateScale(4)}, 
-        shadowOpacity: 0.3, 
+        shadowOpacity: 0.5, 
         shadowRadius: 0,
         zIndex: 1
     },

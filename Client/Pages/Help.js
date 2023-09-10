@@ -54,7 +54,7 @@ function Help(props)
                             <View style={styles.scrollViewDivs}>
                                     <Text style={styles.descriptionText}>
                                         <Icon containerStyle={styles.icons} size= {moderateScale(24)} name='expand-more' type='material' color={colorObject["red"]["5"]}></Icon>
-                                        <Text> Click this button to display the section's items</Text>
+                                        <Text> Click on this or anywhere else on the section title to display the its items</Text>
                                     </Text>
                             </View>
                         </ScrollView>
