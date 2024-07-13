@@ -21,7 +21,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Project Demo
 <p align="center">
-  This project has been deprecated due to server costs. There is now a similar version on the UMD Campus App in the Menu and Nutrition Section, which was also developed by me. However, here is a video describing how it worked. Users can select their dining hall and mealtime to see the items being served at that time. They can click on an item to see its nutrition facts, and they can add items to their favorites. Notifications are sent daily in the morning for available favorites. Users can also filter items on 12 different allergens. 
+  This project has been deprecated due to server costs. There is now a similar version on the UMD Campus App in the Menu and Nutrition Section, which was also developed by me. Here is a video describing how it worked. Users can select their dining hall and mealtime to see the items being served at that time. They can click on an item to see its nutrition facts and add items to their favorites. Notifications are sent daily in the morning for available favorites. Users can also filter items on 12 different allergens. 
 </p>
 
 ![Product Demo][product-video]
