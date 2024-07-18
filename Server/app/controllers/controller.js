@@ -19,7 +19,7 @@ async function modifySettings(uuid, res, setting, operation, modification, pool,
         {
             throw new TypeError("Not a valid PushToken");
         }
-        else if(setting === " favoriteSections" &&  typeof modification != "string")
+        else if(setting === "favoriteSections" &&  typeof modification != "string")
         {
             throw new TypeError("Not a valid modification");
         }

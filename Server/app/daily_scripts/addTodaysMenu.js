@@ -30,7 +30,7 @@ async function dailyDataScript(date, pool)
     data = await getIds(data, pool);
     await updateMenu(data, pool, date);
     pool.end();
-    console.log('FR FINISHED')
+    console.log('FINISHED');
 }
 
 async function updateMenu(menu, pool, date)
@@ -120,7 +120,7 @@ async function processSection(menu, diningHall, mealTime, sectionName, pool)
     con.release();
 }
 
-function getIds(menu, pool)
+async function getIds(menu, pool)
 {
     let diningHall;
     let mealTime;
@@ -135,13 +135,11 @@ function getIds(menu, pool)
             for(let k=0; k< Object.keys(menu[diningHall][mealTime]).length; k++)
             {
                 sectionName = Object.keys(menu[diningHall][mealTime])[k];
-                promiseArr.push(getIdForFood(menu, diningHall, mealTime, sectionName, pool));
+                await getIdForFood(menu, diningHall, mealTime, sectionName, pool);
             }
         }
     }        
-    return Promise.all(promiseArr).then(()=>{
-        return menu;
-    })
+    return menu;
 }
 
 async function getIdForFood(menu, diningHall, mealTime, sectionName, pool)

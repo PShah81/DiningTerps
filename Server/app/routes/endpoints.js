@@ -41,7 +41,7 @@ function routes(app, pool)
         res.send("Privacy Policy");
     })
     
-    app.get('/termsofservics', (req, res)=>{
+    app.get('/termsofservice', (req, res)=>{
         res.send("TOS");
     })
 }
