@@ -218,13 +218,13 @@ async function retrieveDatabase(res, pool)
     }
    
 }
-async function retrieveTodaysMenu(res, pool)
+async function retrieveMostRecentMenu(res, pool)
 {
     try
     {
         //get menu for today
-        let sql = "SELECT menuJson FROM menus WHERE menuDate = ?";
-        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'});
+        let sql = "SELECT menuJson FROM menus WHERE menuDate <= ? ORDER BY menuDate DESC LIMIT 1";
+        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York', day: "2-digit", month: "2-digit", year: "numeric"});
         let results = await pool.query(sql, [date]);
         if(results[0] === undefined || results[0][0] === undefined || results[0][0].menuJson === undefined)
         {
@@ -387,4 +387,4 @@ async function getFavoritesAvailable(uuid, res, pool, returnFavoritesAvailable, 
     res.send(responseObject);
 }
 export {modifySettings, getSettings, returnSettings, getFavoritesAvailable, addOrDeleteFavorites, 
-    retrieveDatabase, retrieveTodaysMenu, returnFavoritesAvailable, getFavoriteFoodIds}
+    retrieveDatabase, retrieveMostRecentMenu, returnFavoritesAvailable, getFavoriteFoodIds}

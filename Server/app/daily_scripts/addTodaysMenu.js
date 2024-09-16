@@ -14,7 +14,7 @@ let job = new CronJob(
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME
         });
-        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'})
+        let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York', day: "2-digit", month: "2-digit", year: "numeric"});
         console.log(date);
         dailyDataScript(date, pool);
 	},
@@ -25,12 +25,22 @@ let job = new CronJob(
 
 async function dailyDataScript(date, pool)
 {
-    let data = await webscrapeData(date);
-    await addToDatabase(data, pool);
-    data = await getIds(data, pool);
-    await updateMenu(data, pool, date);
-    pool.end();
-    console.log('FINISHED');
+    try
+    {
+        let data = await webscrapeData(date);
+        await addToDatabase(data, pool);
+        data = await getIds(data, pool);
+        await updateMenu(data, pool, date);
+        console.log('FINISHED');
+    }
+    catch(e)
+    {
+        console.error(e)
+    }
+    finally
+    {
+        pool.end();
+    }
 }
 
 async function updateMenu(menu, pool, date)

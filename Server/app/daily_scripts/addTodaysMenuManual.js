@@ -12,7 +12,7 @@ let pool = mysql.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
 });
-let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York'})
+let date = new Date().toLocaleDateString('en-US', {timeZone: 'America/New_York', day: "2-digit", month: "2-digit", year: "numeric"});
 dailyDataScript(date, pool);
 
 

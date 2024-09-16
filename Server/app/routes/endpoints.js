@@ -1,10 +1,10 @@
-import {retrieveTodaysMenu, retrieveDatabase, addOrDeleteFavorites, 
+import {retrieveMostRecentMenu, retrieveDatabase, addOrDeleteFavorites, 
     getFavoritesAvailable, modifySettings, getSettings, returnSettings,
     returnFavoritesAvailable, getFavoriteFoodIds} from '../controllers/controller.js';
 function routes(app, pool)
 {
     app.get('/menu', (req, res) => {
-        retrieveTodaysMenu(res, pool);
+        retrieveMostRecentMenu(res, pool);
     });
     
     app.get('/database', (req, res) =>{
