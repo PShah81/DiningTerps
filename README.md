@@ -8,7 +8,7 @@
 <h3 align="center">DiningTerps</h3>
 
   <p align="center">
-    This is a mobile app I made for my university(UMD) that makes navigating their dining halls easier. 
+    This is a mobile app I made for my university, UMD, that makes navigating their dining halls easier. 
     <br />
     <a href="https://github.com/PShah81/DiningTerps"><strong>Explore the docs »</strong></a>
     <br />
@@ -24,11 +24,10 @@
 <!-- ABOUT THE PROJECT -->
 ## Project Demo
 <p align="center">
-  This project has been deprecated due to server costs. There is now a similar version on the UMD Campus App in the Menu and Nutrition Section, which was also developed by me. Here is a video describing how it worked. Users can select their dining hall and mealtime to see the items being served at that time. They can click on an item to see its nutrition facts and add items to their favorites. Notifications are sent daily in the morning for available favorites. Users can also filter items on 12 different allergens. 
+  Dining Terps is a mobile app that gives students at the University of Maryland a better dining experience at the dining halls. It helps students navigate the dining halls and quickly discover their favorite meals or diet-friendly options. The app’s standout feature is a daily updated, user-friendly menu. Students can easily filter items using a search bar or one of 12 allergen filters. Additionally, they can favorite specific foods and receive notifications when those items are available.
 </p>
 
 ![Product Demo][product-video]
-
 
 ### Built With
 
@@ -44,7 +43,7 @@
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-video]: https://github.com/PShah81/DiningTerps/assets/99997224/559c4fd8-1364-4bd5-8246-b4a5be39df7d
-[React Native]: https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React Native]: https://img.shields.io/badge/React_Native-v0.72.4-61DAFB?style=for-the-badge&logo=react&logoColor=black
 [React-url]: https://reactnative.dev
 [Node.js]: https://img.shields.io/badge/Node.js-v20.8.0-green?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/en
