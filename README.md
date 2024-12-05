@@ -31,11 +31,11 @@
 
 ### Built With
 
-* [![React Native][React Native]][React-url]
-* [![Node][Node.js]][Node-url]
-* [![Expo][Expo]][Expo-url]
-* [![MySql][MySql]][MySql-url]
-* [![AWS][AWS]][AWS-url]
+[![React Native][React Native]][React-url]  
+[![Node][Node.js]][Node-url]  
+[![Expo][Expo]][Expo-url]  
+[![MySql][MySql]][MySql-url]  
+[![AWS][AWS]][AWS-url]  
 
 
 
