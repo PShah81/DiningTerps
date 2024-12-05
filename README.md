@@ -43,11 +43,11 @@
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-video]: https://github.com/PShah81/DiningTerps/assets/99997224/559c4fd8-1364-4bd5-8246-b4a5be39df7d
-[React Native]: https://img.shields.io/badge/React_Native-v0.72.4-61DAFB?style=for-the-badge&logo=react&logoColor=black
+[React Native]: https://img.shields.io/badge/React_Native-v0.74.3-61DAFB?style=for-the-badge&logo=react&logoColor=black
 [React-url]: https://reactnative.dev
 [Node.js]: https://img.shields.io/badge/Node.js-v20.8.0-green?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/en
-[Expo]: https://img.shields.io/badge/Expo-v49.0.0-000020?style=for-the-badge&logo=expo&logoColor=white
+[Expo]: https://img.shields.io/badge/Expo-v51.0.0-000020?style=for-the-badge&logo=expo&logoColor=white
 [Expo-url]: https://docs.expo.dev/versions/latest/sdk/url/
 [MySql]: https://img.shields.io/badge/MySQL-v8.0.34-4479A1?style=for-the-badge&logo=mysql&logoColor=white
 [MySql-url]: https://www.mysql.com
